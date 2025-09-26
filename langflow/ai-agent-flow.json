@@ -1,0 +1,308 @@
+{
+  "data": {
+    "nodes": [
+      {
+        "id": "input-node",
+        "type": "CustomComponent",
+        "position": {"x": 100, "y": 100},
+        "data": {
+          "type": "TextInput",
+          "node": {
+            "template": {
+              "input_value": {
+                "required": true,
+                "placeholder": "",
+                "show": true,
+                "multiline": true,
+                "value": "",
+                "password": false,
+                "name": "input_value",
+                "display_name": "Input Value",
+                "type": "str",
+                "list": false,
+                "file_types": []
+              }
+            },
+            "description": "Input node for YAML/CloudFormation content",
+            "base_classes": ["str"],
+            "display_name": "Content Input",
+            "documentation": "",
+            "custom_fields": {},
+            "output_types": ["str"],
+            "pinned": false,
+            "conditional_paths": [],
+            "frozen": false,
+            "outputs": [
+              {
+                "types": ["str"],
+                "selected": "str",
+                "name": "text",
+                "display_name": "Text",
+                "method": "text_response"
+              }
+            ],
+            "field_order": ["input_value"],
+            "beta": false,
+            "edited": false
+          }
+        }
+      },
+      {
+        "id": "yaml-parser",
+        "type": "CustomComponent", 
+        "position": {"x": 300, "y": 100},
+        "data": {
+          "type": "YAMLProcessor",
+          "node": {
+            "template": {
+              "yaml_content": {
+                "required": true,
+                "show": true,
+                "name": "yaml_content",
+                "display_name": "YAML Content",
+                "type": "str"
+              },
+              "validation_mode": {
+                "required": false,
+                "show": true,
+                "name": "validation_mode",
+                "display_name": "Validation Mode",
+                "type": "str",
+                "options": ["syntax", "schema", "best_practices", "security"],
+                "value": "syntax"
+              }
+            },
+            "description": "Parse and validate YAML content",
+            "base_classes": ["dict"],
+            "display_name": "YAML Parser",
+            "outputs": [
+              {
+                "types": ["dict"],
+                "selected": "dict",
+                "name": "parsed_yaml",
+                "display_name": "Parsed YAML"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "cf-validator",
+        "type": "CustomComponent",
+        "position": {"x": 500, "y": 100}, 
+        "data": {
+          "type": "CloudFormationValidator",
+          "node": {
+            "template": {
+              "template_content": {
+                "required": true,
+                "show": true,
+                "name": "template_content",
+                "display_name": "Template Content",
+                "type": "dict"
+              },
+              "region": {
+                "required": false,
+                "show": true,
+                "name": "region",
+                "display_name": "AWS Region",
+                "type": "str",
+                "value": "us-east-1"
+              },
+              "strict_mode": {
+                "required": false,
+                "show": true,
+                "name": "strict_mode",
+                "display_name": "Strict Mode",
+                "type": "bool",
+                "value": true
+              }
+            },
+            "description": "Validate CloudFormation templates",
+            "base_classes": ["dict"],
+            "display_name": "CloudFormation Validator",
+            "outputs": [
+              {
+                "types": ["dict"],
+                "selected": "dict",
+                "name": "validation_result",
+                "display_name": "Validation Result"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "ai-analyzer",
+        "type": "CustomComponent",
+        "position": {"x": 300, "y": 300},
+        "data": {
+          "type": "OpenAIModel",
+          "node": {
+            "template": {
+              "input_value": {
+                "required": true,
+                "show": true,
+                "name": "input_value",
+                "display_name": "Input",
+                "type": "str"
+              },
+              "model_name": {
+                "required": false,
+                "show": true,
+                "name": "model_name", 
+                "display_name": "Model Name",
+                "type": "str",
+                "options": ["gpt-4", "gpt-3.5-turbo", "claude-3-sonnet"],
+                "value": "gpt-4"
+              },
+              "system_message": {
+                "required": false,
+                "show": true,
+                "name": "system_message",
+                "display_name": "System Message",
+                "type": "str",
+                "multiline": true,
+                "value": "You are an expert AWS CloudFormation and YAML analyst. Analyze the provided content for:\n1. Syntax errors\n2. Best practices violations\n3. Security concerns\n4. Cost optimization opportunities\n\nProvide specific, actionable recommendations with line numbers when possible."
+              },
+              "max_tokens": {
+                "required": false,
+                "show": true,
+                "name": "max_tokens",
+                "display_name": "Max Tokens",
+                "type": "int",
+                "value": 2000
+              },
+              "temperature": {
+                "required": false,
+                "show": true,
+                "name": "temperature",
+                "display_name": "Temperature",
+                "type": "float",
+                "value": 0.1
+              }
+            },
+            "description": "AI-powered analysis and suggestions",
+            "base_classes": ["str"],
+            "display_name": "AI Analyzer",
+            "outputs": [
+              {
+                "types": ["str"],
+                "selected": "str",
+                "name": "ai_response",
+                "display_name": "AI Response"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "response-formatter",
+        "type": "CustomComponent",
+        "position": {"x": 700, "y": 200},
+        "data": {
+          "type": "ResponseFormatter",
+          "node": {
+            "template": {
+              "validation_result": {
+                "required": true,
+                "show": true,
+                "name": "validation_result",
+                "display_name": "Validation Result",
+                "type": "dict"
+              },
+              "ai_analysis": {
+                "required": true,
+                "show": true,
+                "name": "ai_analysis",
+                "display_name": "AI Analysis", 
+                "type": "str"
+              },
+              "format_type": {
+                "required": false,
+                "show": true,
+                "name": "format_type",
+                "display_name": "Format Type",
+                "type": "str",
+                "options": ["sck_envelope", "raw", "mcp_response"],
+                "value": "sck_envelope"
+              }
+            },
+            "description": "Format response according to SCK API standards",
+            "base_classes": ["dict"],
+            "display_name": "Response Formatter",
+            "outputs": [
+              {
+                "types": ["dict"],
+                "selected": "dict",
+                "name": "formatted_response",
+                "display_name": "Formatted Response"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "input-to-parser",
+        "source": "input-node",
+        "sourceHandle": "text",
+        "target": "yaml-parser", 
+        "targetHandle": "yaml_content"
+      },
+      {
+        "id": "parser-to-validator",
+        "source": "yaml-parser",
+        "sourceHandle": "parsed_yaml",
+        "target": "cf-validator",
+        "targetHandle": "template_content"
+      },
+      {
+        "id": "input-to-ai",
+        "source": "input-node", 
+        "sourceHandle": "text",
+        "target": "ai-analyzer",
+        "targetHandle": "input_value"
+      },
+      {
+        "id": "validator-to-formatter",
+        "source": "cf-validator",
+        "sourceHandle": "validation_result",
+        "target": "response-formatter",
+        "targetHandle": "validation_result"
+      },
+      {
+        "id": "ai-to-formatter",
+        "source": "ai-analyzer",
+        "sourceHandle": "ai_response", 
+        "target": "response-formatter",
+        "targetHandle": "ai_analysis"
+      }
+    ]
+  },
+  "description": "AI agent workflow for YAML and CloudFormation linting, validation, and intelligent suggestions",
+  "name": "YAML CloudFormation AI Agent",
+  "id": "yaml-cf-ai-agent-v1",
+  "flow_id": "yaml-cf-ai-agent-v1",
+  "tweaks": {
+    "input-node": {
+      "input_value": ""
+    },
+    "yaml-parser": {
+      "validation_mode": "syntax"
+    },
+    "cf-validator": {
+      "region": "us-east-1",
+      "strict_mode": true
+    },
+    "ai-analyzer": {
+      "model_name": "gpt-4",
+      "temperature": 0.1,
+      "max_tokens": 2000
+    },
+    "response-formatter": {
+      "format_type": "sck_envelope"
+    }
+  }
+}
