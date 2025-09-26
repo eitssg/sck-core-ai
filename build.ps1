@@ -11,6 +11,9 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+# Set UV configuration to avoid hardlink warnings
+$env:UV_LINK_MODE = "copy"
+
 Write-Host "Building sck-core-ai..." -ForegroundColor Green
 
 # Clean previous build if requested

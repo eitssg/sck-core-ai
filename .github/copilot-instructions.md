@@ -104,34 +104,41 @@ uv run pytest                   # Verify installation
 - **Langflow Tests**: Validate workflow execution and outputs
 - **Performance Tests**: Response times for large CloudFormation templates
 
-### Code Quality Standards
-```python
-# CORRECT: Type hints and documentation
-from typing import Dict, List, Optional
-import structlog
+### RST Documentation Requirements
+**MANDATORY**: All docstrings must be RST-compatible for Sphinx documentation generation:
+- Use proper RST syntax: `::` for code blocks (not markdown triple backticks)
+- Code blocks must be indented 4+ spaces relative to preceding text
+- Add blank line after `::` before code content
+- Bullet lists must end with blank line before continuing text
+- Use RST field lists for parameters: `:param name: description`
+- Use RST directives: `.. note::`, `.. warning::`, etc.
+- Test docstrings with Sphinx build - code is source of truth, not docstrings
 
-logger = structlog.get_logger(__name__)
+## Code Quality Standards
+Example of RST-compatible docstring::
 
-async def lint_yaml_content(
-    content: str,
-    options: Optional[Dict[str, Any]] = None
-) -> Dict[str, Any]:
-    """
-    Lint YAML content using AI agent.
-    
-    Args:
-        content: Raw YAML string to validate
-        options: Optional validation configuration
+    from typing import Dict, List, Optional
+    import structlog
+
+    logger = structlog.get_logger(__name__)
+
+    async def lint_yaml_content(
+        content: str,
+        options: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """
+        Lint YAML content using AI agent.
         
-    Returns:
-        Validation result with errors and suggestions
+        :param content: Raw YAML string to validate
+        :param options: Optional validation configuration
+        :returns: Validation result with errors and suggestions
+        :raises ValidationError: If content cannot be processed
         
-    Raises:
-        ValidationError: If content cannot be processed
-    """
-    logger.info("Starting YAML validation", content_length=len(content))
-    # Implementation here
-```
+        Example::
+        
+            logger.info("Starting YAML validation", content_length=len(content))
+            # Implementation here
+        """
 
 ## Contradiction Detection & Resolution
 

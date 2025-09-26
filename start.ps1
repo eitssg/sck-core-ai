@@ -11,6 +11,9 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+# Set UV configuration to avoid hardlink warnings
+$env:UV_LINK_MODE = "copy"
+
 # Check if uv is available
 $uvAvailable = $false
 try {
