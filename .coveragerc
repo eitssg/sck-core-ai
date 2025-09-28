@@ -1,0 +1,15 @@
+[run]
+branch = True
+omit =
+    core_ai/langflow/sck_mcp_tools.py
+    core_ai/langflow/sck_tools_component.py
+    core_ai/langflow/simple_sck_tools.py
+    core_ai/mcp_server.py
+    core_ai/request.py
+
+[report]
+show_missing = True
+skip_covered = False
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.: 

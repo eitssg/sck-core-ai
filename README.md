@@ -1,18 +1,30 @@
-# SCK Core AI - Intelligent YAML/CloudFormation Agent
+# SCK Core AI - Intelligent Development Assistant
 
-An AI-powered agent built with Langflow for YAML and CloudFormation template linting, validation, and code completion. This service runs as an AWS Lambda function behind API Gateway and can also serve as a Model Context Protocol (MCP) server.
+An AI-powered development assistant that combines YAML/CloudFormation analysis with comprehensive documentation and codebase indexing. Features semantic search across SCK documentation and source code, plus AI-powered development assistance through multiple interfaces.
 
-## Features
+## 🚀 Features
 
+### Core AI Capabilities
 - **YAML Linting & Validation**: Advanced YAML syntax checking and best practices validation
 - **CloudFormation Analysis**: Deep CloudFormation template analysis, resource validation, and policy checking
 - **AI-Powered Code Completion**: Intelligent suggestions for YAML and CloudFormation resources
-- **Multi-Interface Support**: 
-  - AWS Lambda + API Gateway for production
-  - FastAPI server for local development
-  - MCP server for integration with AI assistants
+
+### Advanced Indexing & Search
+- **Documentation Indexing**: Semantic search across built Sphinx documentation (Technical Reference, Developer Guide, User Guide)
+- **Codebase Analysis**: Index and search Python source code across all SCK projects (functions, classes, modules)
+- **Vector Database**: ChromaDB-powered semantic search with sentence transformers
+- **Context-Aware Assistance**: RAG (Retrieval Augmented Generation) for development queries
+
+### Multi-Interface Support
+- **AWS Lambda + API Gateway**: Production-ready serverless deployment
+- **FastAPI Server**: Local development and testing
+- **MCP Server**: Integration with AI assistants (VS Code Copilot, Claude, etc.)
+- **CLI Tools**: Command-line testing and administration
+
+### Integration & Compatibility
 - **Langflow Integration**: Visual workflow builder for AI agent logic
-- **SCK Framework Compatible**: Integrates seamlessly with Simple Cloud Kit ecosystem
+- **SCK Framework Compatible**: Native integration with Simple Cloud Kit ecosystem
+- **Vector Store Persistence**: Persistent semantic indexes for fast startup
 
 ## Architecture
 
@@ -37,13 +49,41 @@ An AI-powered agent built with Langflow for YAML and CloudFormation template lin
    cd sck-core-ai
    ```
 
-2. **Install dependencies**:
-   ```bash
-   # Using uv (recommended)
-   uv sync --dev
+2. **Install dependencies (Hybrid Approach - RECOMMENDED)**:
    
-   # Or using pip
-   pip install -e .[dev]
+   **⚠️ Important**: uv has limitations with local wheel installations. Use this proven approach:
+   
+   ```bash
+   # Step 1: Build sck-core-framework wheel first
+   cd ../sck-core-framework
+   poetry build                    # Creates wheel in dist/
+   
+   # Step 2: Create and activate virtual environment manually
+   cd ../sck-core-ai
+   python -m venv .venv           # Create clean venv
+   .\.venv\Scripts\Activate.ps1   # Windows PowerShell
+   # OR
+   source .venv/bin/activate      # Linux/Mac
+   
+   # Step 3: Install local wheel with pip (RELIABLE)
+   pip install ../sck-core-framework/dist/sck_core_framework-*.whl
+   
+   # Step 4: Install remaining dependencies
+   pip install -e .
+   pip install pytest black flake8 mypy  # Dev dependencies
+   
+   # Step 5: Verify installation
+   python -c "import core_logging; print('Success!')"
+   ```
+   
+   **Alternative (Pure pip approach)**:
+   ```bash
+   python -m venv .venv
+   .\.venv\Scripts\Activate.ps1  # Windows
+   source .venv/bin/activate     # Linux/Mac
+   pip install ../sck-core-framework/dist/sck_core_framework-*.whl
+   pip install -e .
+   pip install -r requirements-dev.txt  # If available
    ```
 
 3. **Set up environment**:
@@ -59,7 +99,7 @@ An AI-powered agent built with Langflow for YAML and CloudFormation template lin
 
 ### Production Deployment
 
-The service is designed to be deployed as an AWS Lambda function. See [deployment documentation](docs/deployment.md) for details.
+The service is designed to be deployed as an AWS Lambda function. Deployment patterns align with the rest of the Simple Cloud Kit modules (see root repository docs).
 
 ## Configuration
 
@@ -82,6 +122,15 @@ ANTHROPIC_API_KEY=your-anthropic-key  # Optional: for Claude models
 # Local Development
 LOCAL_MODE=true
 LOG_LEVEL=DEBUG
+
+# Internal Idempotency (local service layer cache)
+CORE_AI_INTERNAL_IDEMPOTENCY_ENABLED=true
+CORE_AI_INTERNAL_IDEMPOTENCY_TTL=600  # seconds
+
+# Vector Search (optional)
+# Install extras: pip install scikit-learn sentence-transformers
+# If not installed, search endpoints return empty results gracefully.
+VECTOR_STORE_PERSIST_DIR=./data/vectordb
 ```
 
 ### Langflow Configuration
@@ -103,42 +152,76 @@ sam deploy --config-file samconfig.toml
 ### As Local FastAPI Server
 
 ```bash
-# Start development server
-uv run sck-ai-server
+# Start development server (PowerShell helper script)
+./start.ps1  # defaults to port 8200
 
-# Or with uvicorn directly
-uvicorn core_ai.server:app --reload --port 8000
+# Or start with uvicorn directly
+uvicorn core_ai.server:app --reload --port 8200
+
+# Or using uv (if installed)
+uv run uvicorn core_ai.server:app --reload --port 8200
 ```
+
+Port selection note:
+> The default port was changed from 8000 to 8200 to avoid conflict with local DynamoDB Local which commonly binds to 8000. The precedence rules are: explicit `-Port` parameter to `start.ps1` > `SCK_AI_PORT` env var > legacy `SERVER_PORT` env var > script default (8200).
 
 Test endpoints:
 ```bash
 # Health check
-curl http://localhost:8000/health
+curl http://localhost:8200/health
 
 # Lint YAML
-curl -X POST http://localhost:8000/api/v1/lint/yaml \
+curl -X POST http://localhost:8200/api/v1/lint/yaml \
   -H "Content-Type: application/json" \
   -d '{"content": "key: value\n  invalid: indentation"}'
 
 # Validate CloudFormation
-curl -X POST http://localhost:8000/api/v1/validate/cloudformation \
+curl -X POST http://localhost:8200/api/v1/validate/cloudformation \
   -H "Content-Type: application/json" \
   -d @examples/template.json
 ```
 
-### As MCP Server
+### As MCP Server (Enhanced)
+
+The MCP server now includes comprehensive documentation and codebase indexing:
 
 ```bash
-# Start MCP server
-uv run sck-ai-mcp --port 3000
+# Test the indexing system
+python test_indexing.py
 
-# Configure in your MCP client (VS Code, etc.)
+# Start MCP server with indexing
+python run_mcp_server.py --initialize-indexes
+
+# Or start without initializing (faster startup)
+python run_mcp_server.py
+```
+
+**MCP Tools Available:**
+
+1. **YAML/CloudFormation Tools** (original):
+   - `lint_yaml`: YAML linting and validation
+   - `validate_cloudformation`: CloudFormation template validation
+   - `suggest_completion`: AI-powered code completion
+   - `analyze_template`: Deep template analysis
+
+2. **Documentation & Codebase Tools** (new):
+   - `search_documentation`: Search SCK documentation
+   - `search_codebase`: Search Python source code
+   - `get_context_for_query`: Comprehensive development context
+   - `initialize_indexes`: Build/rebuild search indexes
+   - `get_indexing_stats`: Index statistics and health
+
+**Configure in VS Code (`settings.json`):**
+```json
 {
-  "mcpServers": {
-    "sck-ai": {
-      "command": "uv",
-      "args": ["run", "sck-ai-mcp"],
-      "cwd": "/path/to/sck-core-ai"
+  "mcp.servers": {
+    "sck-core-ai": {
+      "command": "python",
+      "args": ["run_mcp_server.py"],
+      "cwd": "/path/to/sck-core-ai",
+      "env": {
+        "LOG_LEVEL": "INFO"
+      }
     }
   }
 }
@@ -263,7 +346,7 @@ This AI agent integrates with other Simple Cloud Kit modules:
 - **core-api**: API patterns and middleware
 - **core-helper**: AWS service helpers
 
-See [SCK Integration Guide](docs/sck-integration.md) for details.
+See the root Simple Cloud Kit documentation for broader integration details.
 
 ## Contributing
 
@@ -277,11 +360,11 @@ See [SCK Integration Guide](docs/sck-integration.md) for details.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the root repository LICENSE for details.
 
 ## Support
 
-- **Documentation**: [docs/](docs/)
+- **Documentation**: Refer to root repository docs and inline docstrings
 - **Issues**: GitHub Issues
 - **Discussions**: GitHub Discussions
 - **SCK Community**: [Simple Cloud Kit Documentation](https://github.com/eitssg/simple-cloud-kit)

@@ -1,3 +1,47 @@
+param(
+    [string]$Tag = "sck-core-ai:dev",
+    [string]$Push = "false",
+    [string]$Extras = "",           # e.g. ai or ai,vectordb
+    [string]$Platforms = "linux/amd64", # extend to linux/arm64 if needed
+    [switch]$NoCache
+)
+
+Write-Host "=== Building SCK Core AI Container ===" -ForegroundColor Cyan
+Write-Host " Tag:        $Tag" -ForegroundColor DarkGray
+Write-Host " Extras:     $Extras" -ForegroundColor DarkGray
+Write-Host " Platforms:  $Platforms" -ForegroundColor DarkGray
+
+$buildArgs = @()
+if ($Extras) { $buildArgs += "--build-arg"; $buildArgs += "EXTRAS=$Extras" }
+if ($NoCache) { $buildArgs += "--no-cache" }
+
+# Ensure buildx is available
+docker buildx ls | Out-Null
+if ($LASTEXITCODE -ne 0) {
+  Write-Error "docker buildx not available. Install or enable BuildKit."; exit 1
+}
+
+$cmd = @(
+  "docker","buildx","build",
+  "--platform", $Platforms,
+  "-t", $Tag
+)
+
+if ($Push -eq "true") { $cmd += "--push" } else { $cmd += "--load" }
+
+if ($buildArgs.Count -gt 0) { $cmd += $buildArgs }
+
+$cmd += "."
+
+Write-Host "Executing: $($cmd -join ' ')" -ForegroundColor Yellow
+& $cmd
+if ($LASTEXITCODE -ne 0) { Write-Error "Build failed"; exit 1 }
+
+Write-Host "Build complete." -ForegroundColor Green
+if ($Push -eq "true") { Write-Host "Image pushed: $Tag" -ForegroundColor Green }
+
+Write-Host "Run locally:" -ForegroundColor Cyan
+Write-Host " docker run --rm -p 8080:8080 $Tag" -ForegroundColor Yellow
 #!/usr/bin/env pwsh
 
 # Build script for sck-core-ai (PowerShell)

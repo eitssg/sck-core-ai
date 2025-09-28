@@ -1,0 +1,42 @@
+# SCK Core AI Container (MCP / AI Service)
+# This compose file builds and runs ONLY the SCK Core AI image.
+# The Langflow playground lives under ./langflow/compose.yml and is separate.
+
+services:
+  sck-core-ai:
+    build:
+      context: ..               # monorepo root so sibling packages (framework, etc.) are visible
+      dockerfile: sck-core-ai/Dockerfile
+      args:
+        EXTRAS: "ai"           # include optional AI extras (embeddings/langchain)
+    image: sck-core-ai:dev
+    container_name: sck-core-ai
+    environment:
+      - LOCAL_MODE=True
+      - CLIENT=test-client
+      - LOG_LEVEL=INFO
+      - SCK_AI_HOST=0.0.0.0
+      - SCK_AI_PORT=8200
+      # If Langflow workbench is running separately and you want to call it:
+      - LANGFLOW_BASE_URL=http://host.docker.internal:7860
+      # Provide provider keys at runtime, not baked:
+      # - OPENAI_API_KEY=replace_me
+    ports:
+      - "8200:8200"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8200/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    restart: unless-stopped
+
+    # Uncomment for rapid code iteration (bind-mount source over installed package)
+    # volumes:
+    #   - ./core_ai:/app/core_ai:ro
+
+networks:
+  default:
+    name: sck-ai-network
+    external: true
+      

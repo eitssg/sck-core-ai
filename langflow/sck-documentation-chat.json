@@ -1,0 +1,183 @@
+{
+  "data": {
+    "edges": [
+      {
+        "source": "ChatInput-1",
+        "sourceHandle": "text",
+        "target": "PromptTemplate-1",
+        "targetHandle": "user_query",
+        "id": "edge-1"
+      },
+      {
+        "source": "PromptTemplate-1",
+        "sourceHandle": "text",
+        "target": "OpenAIModel-1",
+        "targetHandle": "input_value",
+        "id": "edge-2"
+      },
+      {
+        "source": "OpenAIModel-1",
+        "sourceHandle": "text",
+        "target": "ChatOutput-1",
+        "targetHandle": "input_value",
+        "id": "edge-3"
+      }
+    ],
+    "nodes": [
+      {
+        "id": "ChatInput-1",
+        "type": "ChatInput",
+        "position": {
+          "x": 100,
+          "y": 200
+        },
+        "data": {
+          "type": "ChatInput",
+          "node": {
+            "template": {
+              "input_value": {
+                "display_name": "User Question",
+                "info": "Ask a question about SCK documentation",
+                "type": "str",
+                "value": "",
+                "placeholder": "What is the SCK framework? How do I use core_logging?"
+              },
+              "sender": {
+                "display_name": "Sender Type",
+                "options": ["Machine", "User"],
+                "type": "str",
+                "value": "User"
+              },
+              "sender_name": {
+                "display_name": "Sender Name",
+                "type": "str",
+                "value": "User"
+              }
+            },
+            "description": "Chat input for SCK documentation questions",
+            "base_classes": ["Message"],
+            "display_name": "SCK Question Input"
+          }
+        }
+      },
+      {
+        "id": "PromptTemplate-1",
+        "type": "PromptTemplate",
+        "position": {
+          "x": 400,
+          "y": 200
+        },
+        "data": {
+          "type": "PromptTemplate",
+          "node": {
+            "template": {
+              "template": {
+                "display_name": "Template",
+                "info": "The prompt template with variables",
+                "type": "str",
+                "value": "You are an expert assistant for the Simple Cloud Kit (SCK) framework. Answer the user's question about SCK based on your knowledge of the framework.\n\nThe SCK framework includes these key components:\n- sck-core-framework: Base utilities and configuration\n- sck-core-logging: Structured logging with core_logging module (use 'import core_logging as log' and 'logger = log')\n- sck-core-db: Database interfaces and DynamoDB helpers\n- sck-core-api: FastAPI server and Lambda handlers\n- sck-core-ui: React TypeScript UI with Redux\n- Multi-tenant architecture with client_id and tenant slug\n- AWS Lambda runtime (Python 3.11, synchronous handlers only)\n- S3 bucket organization: packages/, files/, artefacts/ prefixes\n- MagicS3Bucket for S3 operations, ProxyEvent for Lambda\n\nUser Question: {user_query}\n\nProvide a helpful, accurate answer based on SCK framework knowledge:",
+                "multiline": true
+              },
+              "user_query": {
+                "display_name": "User Query",
+                "info": "The user's question about SCK",
+                "type": "str",
+                "value": ""
+              }
+            },
+            "description": "Template for SCK documentation queries",
+            "base_classes": ["BasePromptTemplate"],
+            "display_name": "SCK Documentation Prompt"
+          }
+        }
+      },
+      {
+        "id": "OpenAIModel-1",
+        "type": "OpenAIModel",
+        "position": {
+          "x": 700,
+          "y": 200
+        },
+        "data": {
+          "type": "OpenAIModel",
+          "node": {
+            "template": {
+              "api_key": {
+                "display_name": "OpenAI API Key",
+                "info": "Your ChatGPT API key",
+                "type": "str",
+                "value": "",
+                "password": true,
+                "required": true
+              },
+              "input_value": {
+                "display_name": "Input",
+                "type": "str",
+                "value": ""
+              },
+              "max_tokens": {
+                "display_name": "Max Tokens",
+                "type": "int",
+                "value": 1500,
+                "advanced": true
+              },
+              "model_name": {
+                "display_name": "Model Name",
+                "options": ["gpt-4", "gpt-4-turbo", "gpt-3.5-turbo", "gpt-4o"],
+                "type": "str",
+                "value": "gpt-4"
+              },
+              "temperature": {
+                "display_name": "Temperature",
+                "type": "float",
+                "value": 0.2,
+                "advanced": true
+              }
+            },
+            "description": "OpenAI model for SCK documentation assistance",
+            "base_classes": ["BaseLanguageModel"],
+            "display_name": "SCK Assistant"
+          }
+        }
+      },
+      {
+        "id": "ChatOutput-1",
+        "type": "ChatOutput",
+        "position": {
+          "x": 1000,
+          "y": 200
+        },
+        "data": {
+          "type": "ChatOutput",
+          "node": {
+            "template": {
+              "input_value": {
+                "display_name": "Response",
+                "info": "SCK documentation response",
+                "type": "str",
+                "value": ""
+              },
+              "sender": {
+                "display_name": "Sender Type",
+                "options": ["Machine", "User"],
+                "type": "str",
+                "value": "Machine"
+              },
+              "sender_name": {
+                "display_name": "Sender Name",
+                "type": "str",
+                "value": "SCK Assistant"
+              }
+            },
+            "description": "Chat output for SCK documentation responses",
+            "base_classes": ["Message"],
+            "display_name": "SCK Response"
+          }
+        }
+      }
+    ]
+  },
+  "description": "Simple Cloud Kit documentation assistant using ChatGPT",
+  "name": "SCK Documentation Chat",
+  "last_tested_version": "1.0.0"
+}

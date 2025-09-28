@@ -3,34 +3,40 @@ name = "sck-core-ai"
 version = "0.1.0"
 description = "AI agent for YAML/CloudFormation linting and code completion using Langflow"
 readme = "README.md"
-authors = [
-    { name = "James Barwick", email = "jbarwick@me.com" }
-]
-requires-python = ">=3.11"
+authors = [{ name = "James Barwick", email = "jbarwick@me.com" }]
+requires-python = ">=3.11,<3.13.0"
 dependencies = [
-    # FastAPI for local dev and API structure
+    # SCK Core Framework (install manually with pip first)
+    "sck-core-framework",
+    # Web framework and server
     "fastapi>=0.104.0",
     "uvicorn>=0.24.0",
-    
+    "mangum>=0.17.0",   # ASGI adapter for AWS Lambda
     # HTTP client and utilities
     "httpx>=0.25.0",
     "pydantic>=2.5.0",
-    
     # YAML and CloudFormation processing
     "pyyaml>=6.0.1",
     "jinja2>=3.1.2",
-    
-    # Logging
-    "structlog>=23.2.0",
-    
-    # Optional dependencies for full functionality
-    # Uncomment when developing with full features:
-    "boto3>=1.34.0",
-    "mangum>=0.17.0",  # ASGI adapter for AWS Lambda
-    "langflow>=0.6.0",
-    "langchain>=0.1.0",
     "cfn-lint>=0.83.0",
+    # Logging (additional to core_logging from sck-core-framework)
+    "structlog>=23.2.0",
+    # MCP server support
     "mcp>=0.9.0",
+    # AWS integration
+    "boto3>=1.34.0,<1.35.0", # Version constraint for langflow compatibility
+    # Document processing and indexing
+    "sentence-transformers>=2.2.2",
+    "beautifulsoup4>=4.12.0",
+    "markdownify>=0.11.6",
+    "tiktoken>=0.5.0",
+    # Machine learning (lightweight alternatives to ChromaDB)
+    "numpy>=1.24.0",
+    "scikit-learn>=1.3.0",
+    # Vector DB (align with Langflow 1.1.x which pins chromadb==0.5.23)
+    "chromadb==0.5.23",
+    # Environment configuration
+    "python-dotenv>=1.0.0",
 ]
 
 [build-system]
@@ -47,23 +53,44 @@ dev = [
     "pytest-asyncio>=0.21.0",
     "pytest-cov>=4.1.0",
     "pytest-mock>=3.12.0",
-    
-    # Code quality
-    "black>=23.11.0",
-    "flake8>=6.1.0",
     "mypy>=1.7.0",
     "isort>=5.12.0",
-    
+
     # Local development
     "python-dotenv>=1.0.0",
     "pre-commit>=3.6.0",
-    
-    # Langflow development tools
-    "langflow[dev]>=0.6.0",
-    
+
     # Documentation
     "mkdocs>=1.5.0",
     "mkdocs-material>=9.4.0",
+]
+
+# AI/ML dependencies (optional, install with: uv pip install --extra ai)
+# Note: These may have build issues on Python 3.13, use Python 3.11/3.12 if needed
+ai = [
+    # Langflow orchestrates UI + flow execution.
+    "langflow>=1.5.0,<1.6.0",
+    # LangChain stack: allow both late 0.2.x (needed by Langflow 1.5.x) and 0.3.x when supported
+    # Using >=0.2.30 as compromise floor (post tool consolidation) while retaining <0.4.0 ceiling
+    "langchain-core>=0.2.30,<0.4.0",
+    "langchain-community>=0.2.30,<0.4.0",
+    "langchain>=0.2.30,<0.4.0",
+    # Langflow 1.5.x via langchain-pinecone>=0.2.8 requires langchain-openai>=0.3.11
+    "langchain-openai>=0.3.11,<0.4.0",
+    # AWS integration layer (Bedrock, etc.) – pin alongside 0.2.x LangChain
+    # Upgrade to 0.2.x line to align with langchain-core 0.3.x (pre-0.2 requires core <0.3)
+    "langchain-aws>=0.2.0,<0.3.0",
+    # Model provider SDKs
+    "openai>=1.37.0,<2.0.0",
+    "anthropic>=0.29.0,<1.0.0",
+]
+
+# Vector database dependencies (optional, install with: uv pip install --extra vectordb)
+# Note: ChromaDB requires Rust toolchain and may fail to build
+vectordb = [
+    # Provide explicit chromadb pin to allow installing vectordb extra without ai extra
+    "chromadb==0.5.23",
+    "qdrant-client>=1.7.0,<2.0.0", # Alternative vector database
 ]
 
 [project.scripts]
@@ -71,22 +98,11 @@ sck-ai-server = "core_ai.server:main"
 sck-ai-mcp = "core_ai.mcp_server:main"
 
 [tool.black]
-line-length = 88
+line-length = 132
 target-version = ['py311']
-include = '\.pyi?$'
-extend-exclude = '''
-/(
-  # directories
-  \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | build
-  | dist
-)/
-'''
+include = '\\.pyi?$'
+skip-string-normalization = true
+extend-exclude = ''' /(.venv|build|dist|htmlcov)/ '''
 
 [tool.isort]
 profile = "black"
@@ -104,4 +120,8 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = "--cov=core_ai --cov-report=html --cov-report=term-missing"
+# Rely on .coveragerc for coverage configuration; keep output concise.
+addopts = "-q"
+
+[tool.uv.sources]
+sck-core-framework = { path = "../sck-core-framework", editable = true }

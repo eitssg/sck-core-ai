@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "sck-core-ai": {
+      "command": "python",
+      "args": ["-m", "core_ai.mcp_server"],
+      "cwd": "D:/Development/simple-cloud-kit-oss/simple-cloud-kit/sck-core-ai",
+      "env": {
+        "PYTHONPATH": "D:/Development/simple-cloud-kit-oss/simple-cloud-kit/sck-core-ai",
+        "LOCAL_MODE": "True",
+        "CLIENT": "test-client",
+        "LOG_LEVEL": "INFO"
+      }
+    }
+  }
+}

@@ -1,0 +1,336 @@
+{
+  "data": {
+    "edges": [
+      {
+        "source": "ChatInput-1",
+        "sourceHandle": "text",
+        "target": "MCPClient-1",
+        "targetHandle": "query",
+        "id": "edge-1"
+      },
+      {
+        "source": "MCPClient-1",
+        "sourceHandle": "result",
+        "target": "OpenAIModel-1",
+        "targetHandle": "input_value",
+        "id": "edge-2"
+      },
+      {
+        "source": "OpenAIModel-1",
+        "sourceHandle": "text",
+        "target": "ChatOutput-1",
+        "targetHandle": "input_value",
+        "id": "edge-3"
+      }
+    ],
+    "nodes": [
+      {
+        "id": "ChatInput-1",
+        "type": "ChatInput",
+        "position": {
+          "x": 100,
+          "y": 200
+        },
+        "data": {
+          "type": "ChatInput",
+          "node": {
+            "template": {
+              "input_value": {
+                "display_name": "Text",
+                "info": "Message to be passed as input.",
+                "type": "str",
+                "value": "",
+                "placeholder": "Ask about SCK documentation..."
+              },
+              "sender": {
+                "display_name": "Sender Type",
+                "options": ["Machine", "User"],
+                "type": "str",
+                "value": "User"
+              },
+              "sender_name": {
+                "display_name": "Sender Name",
+                "type": "str",
+                "value": "User"
+              },
+              "session_id": {
+                "display_name": "Session ID",
+                "type": "str",
+                "value": ""
+              },
+              "should_store_message": {
+                "display_name": "Store Messages",
+                "type": "bool",
+                "value": true
+              }
+            },
+            "description": "A chat input component that allows you to send messages to the flow.",
+            "base_classes": ["Message"],
+            "display_name": "Chat Input"
+          }
+        }
+      },
+      {
+        "id": "MCPClient-1",
+        "type": "CustomComponent",
+        "position": {
+          "x": 400,
+          "y": 200
+        },
+        "data": {
+          "type": "CustomComponent",
+          "node": {
+            "template": {
+              "query": {
+                "display_name": "Query",
+                "info": "User query to search documentation",
+                "type": "str",
+                "value": "",
+                "required": true
+              },
+              "mcp_server_command": {
+                "display_name": "MCP Server Command",
+                "info": "Command to start MCP server",
+                "type": "str",
+                "value": "python -m core_ai.mcp_server",
+                "advanced": true
+              },
+              "server_working_directory": {
+                "display_name": "Server Working Directory",
+                "info": "Directory where MCP server should run",
+                "type": "str",
+                "value": "D:\\Development\\simple-cloud-kit-oss\\simple-cloud-kit\\sck-core-ai",
+                "advanced": true
+              },
+              "search_type": {
+                "display_name": "Search Type",
+                "options": ["documentation", "codebase", "both"],
+                "type": "str",
+                "value": "documentation"
+              }
+            },
+            "description": "Custom MCP client that connects to SCK Core AI MCP server for documentation search.",
+            "base_classes": ["str"],
+            "display_name": "SCK MCP Client",
+            "custom_fields": {
+              "code": """
+import subprocess
+import json
+import asyncio
+from typing import Dict, Any
+
+class SCKMCPClient:
+    def __init__(self):
+        self.process = None
+        
+    async def search_documentation(self, query: str, search_type: str = "documentation") -> str:
+        \"\"\"Search SCK documentation using MCP server.\"\"\"
+        try:
+            # Start MCP server process
+            self.process = subprocess.Popen(
+                ["python", "-m", "core_ai.mcp_server"],
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                cwd="D:\\\\Development\\\\simple-cloud-kit-oss\\\\simple-cloud-kit\\\\sck-core-ai"
+            )
+            
+            # Initialize MCP connection
+            init_msg = {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "initialize",
+                "params": {
+                    "protocolVersion": "2024-11-05",
+                    "capabilities": {"tools": {}},
+                    "clientInfo": {"name": "langflow-client", "version": "1.0.0"}
+                }
+            }
+            
+            self.process.stdin.write(json.dumps(init_msg) + "\\n")
+            self.process.stdin.flush()
+            
+            # Read initialization response
+            init_response = self.process.stdout.readline()
+            
+            # Send initialized notification
+            initialized_msg = {
+                "jsonrpc": "2.0",
+                "method": "notifications/initialized",
+                "params": {}
+            }
+            
+            self.process.stdin.write(json.dumps(initialized_msg) + "\\n")
+            self.process.stdin.flush()
+            
+            # Search documentation
+            if search_type == "documentation":
+                tool_name = "search_documentation"
+            elif search_type == "codebase":
+                tool_name = "search_codebase"
+            else:
+                tool_name = "search_documentation"  # Default
+                
+            search_msg = {
+                "jsonrpc": "2.0",
+                "id": 2,
+                "method": "tools/call",
+                "params": {
+                    "name": tool_name,
+                    "arguments": {
+                        "query": query,
+                        "limit": 5
+                    }
+                }
+            }
+            
+            self.process.stdin.write(json.dumps(search_msg) + "\\n")
+            self.process.stdin.flush()
+            
+            # Read search response
+            search_response = self.process.stdout.readline()
+            response_data = json.loads(search_response)
+            
+            if "result" in response_data:
+                return response_data["result"][0]["text"]
+            else:
+                return f"No documentation found for: {query}"
+                
+        except Exception as e:
+            return f"Error searching documentation: {str(e)}"
+        finally:
+            if self.process:
+                self.process.terminate()
+
+def build_component(
+    query: str,
+    mcp_server_command: str = "python -m core_ai.mcp_server",
+    server_working_directory: str = "D:\\\\Development\\\\simple-cloud-kit-oss\\\\simple-cloud-kit\\\\sck-core-ai",
+    search_type: str = "documentation"
+) -> str:
+    \"\"\"Build the MCP client component.\"\"\"
+    import asyncio
+    
+    client = SCKMCPClient()
+    
+    # Run the async search in a sync context
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        result = loop.run_until_complete(client.search_documentation(query, search_type))
+        loop.close()
+        return result
+    except Exception as e:
+        return f"Error: {str(e)}"
+"""
+            }
+          }
+        }
+      },
+      {
+        "id": "OpenAIModel-1",
+        "type": "OpenAIModel",
+        "position": {
+          "x": 700,
+          "y": 200
+        },
+        "data": {
+          "type": "OpenAIModel",
+          "node": {
+            "template": {
+              "api_key": {
+                "display_name": "OpenAI API Key",
+                "info": "The OpenAI API Key to use for the OpenAI model.",
+                "type": "str",
+                "value": "",
+                "password": true,
+                "required": true
+              },
+              "input_value": {
+                "display_name": "Input",
+                "type": "str",
+                "value": ""
+              },
+              "max_tokens": {
+                "display_name": "Max Tokens",
+                "type": "int",
+                "value": 1000,
+                "advanced": true
+              },
+              "model_name": {
+                "display_name": "Model Name",
+                "options": ["gpt-4", "gpt-4-turbo", "gpt-3.5-turbo"],
+                "type": "str",
+                "value": "gpt-4"
+              },
+              "system_message": {
+                "display_name": "System Message",
+                "type": "str",
+                "value": "You are an expert assistant for the Simple Cloud Kit (SCK) framework. Use the provided documentation context to answer questions accurately and helpfully. If the context doesn't contain enough information, say so clearly.",
+                "multiline": true
+              },
+              "temperature": {
+                "display_name": "Temperature",
+                "type": "float",
+                "value": 0.1,
+                "advanced": true
+              }
+            },
+            "description": "Generates text using OpenAI's language models.",
+            "base_classes": ["BaseLanguageModel", "str"],
+            "display_name": "OpenAI"
+          }
+        }
+      },
+      {
+        "id": "ChatOutput-1",
+        "type": "ChatOutput",
+        "position": {
+          "x": 1000,
+          "y": 200
+        },
+        "data": {
+          "type": "ChatOutput",
+          "node": {
+            "template": {
+              "input_value": {
+                "display_name": "Text",
+                "info": "Message to be passed as output.",
+                "type": "str",
+                "value": ""
+              },
+              "sender": {
+                "display_name": "Sender Type",
+                "options": ["Machine", "User"],
+                "type": "str",
+                "value": "Machine"
+              },
+              "sender_name": {
+                "display_name": "Sender Name",
+                "type": "str",
+                "value": "AI Assistant"
+              },
+              "session_id": {
+                "display_name": "Session ID",
+                "type": "str",
+                "value": ""
+              },
+              "should_store_message": {
+                "display_name": "Store Messages",
+                "type": "bool",
+                "value": true
+              }
+            },
+            "description": "A chat output component that displays messages from the flow.",
+            "base_classes": ["Message"],
+            "display_name": "Chat Output"
+          }
+        }
+      }
+    ]
+  },
+  "description": "SCK Documentation Chat using MCP Server",
+  "name": "SCK MCP Chat",
+  "last_tested_version": "1.0.0"
+}

@@ -4,7 +4,7 @@
 
 param(
     [string]$Mode = "api",  # api, mcp, or both
-    [int]$Port = 8000,
+    [int]$Port = 8200,
     [string]$ServerHost = "0.0.0.0",
     [switch]$NoReload = $false
 )
@@ -22,7 +22,8 @@ try {
         $uvAvailable = $true
         Write-Host "Using uv: $uvVersion" -ForegroundColor Cyan
     }
-} catch {
+}
+catch {
     Write-Host "uv not found, using direct commands" -ForegroundColor Yellow
 }
 
@@ -35,6 +36,24 @@ if (-not (Test-Path ".env")) {
     Write-Host "Please edit .env file with your configuration" -ForegroundColor Cyan
 }
 
+# Load .env values (simple parser) to allow overriding defaults without changing script
+$envFile = Get-Content .env | Where-Object { $_ -match '^[A-Za-z_][A-Za-z0-9_]*=' }
+foreach ($line in $envFile) {
+    $k, $v = $line -split '=', 2
+    if (-not [string]::IsNullOrWhiteSpace($k)) {
+        # Only set if not already defined in the process environment
+        if (-not (Test-Path env:$k)) {
+            Set-Item -Path env:$k -Value $v
+        }
+    }
+}
+
+# Port precedence: explicit -Port parameter > SCK_AI_PORT env > SERVER_PORT env > script default
+if ($PSBoundParameters.ContainsKey('Port') -eq $false) {
+    if ($env:SCK_AI_PORT) { $Port = [int]$env:SCK_AI_PORT }
+    elseif ($env:SERVER_PORT) { $Port = [int]$env:SERVER_PORT }
+}
+
 try {
     switch ($Mode.ToLower()) {
         "api" {
@@ -44,7 +63,8 @@ try {
             
             if (-not $NoReload) {
                 Invoke-Expression "$runPrefix uvicorn core_ai.server:app --host $ServerHost --port $Port --reload"
-            } else {
+            }
+            else {
                 Invoke-Expression "$runPrefix uvicorn core_ai.server:app --host $ServerHost --port $Port"
             }
         }
@@ -77,7 +97,8 @@ try {
         }
     }
     
-} catch {
+}
+catch {
     Write-Host "Server startup failed: $($_.Exception.Message)" -ForegroundColor Red
     
     # Clean up background job if it exists

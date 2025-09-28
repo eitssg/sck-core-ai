@@ -1,0 +1,265 @@
+2025-09-26 23:50:20 [-] [core_ai.mcp_server.__init__] [INFO] Initializing SCK Core AI MCP Server
+2025-09-26 23:52:09 [-] [core_ai.mcp_server.__init__] [INFO] Initializing SCK Core AI MCP Server
+2025-09-26 23:52:09 [-] [core_ai.mcp_server.__init__] [INFO] LOCAL_MODE: True
+2025-09-26 23:52:09 [-] [core_ai.mcp_server.__init__] [INFO] LOG_DIR: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\core\logs
+2025-09-26 23:52:09 [-] [core_ai.mcp_server.__init__] [INFO] VOLUME: Not set
+2025-09-26 23:52:09 [-] [core_ai.mcp_server.__init__] [INFO] CLIENT: test-client
+2025-09-26 23:52:09 [-] [core_ai.mcp_server.__init__] [INFO] LOG_LEVEL: DEBUG
+2025-09-26 23:52:16 [-] [core_ai.indexing.vector_store.__init__] [INFO] Vector store initialized with persist directory: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\data\vectordb
+2025-09-26 23:52:16 [-] [core_ai.indexing.documentation_indexer.__init__] [INFO] Documentation indexer initialized for: D:\Development\simple-cloud-kit-oss\sck-core-docs\build
+2025-09-26 23:52:16 [-] [core_ai.indexing.codebase_indexer.__init__] [INFO] Codebase indexer initialized for workspace: D:\Development\simple-cloud-kit-oss
+2025-09-26 23:52:16 [-] [core_ai.indexing.context_manager.__init__] [INFO] Context manager initialized
+2025-09-26 23:52:16 [-] [__main__.__init__] [INFO] Indexing system initialized with workspace: D:\Development\simple-cloud-kit-oss
+2025-09-26 23:52:16 [-] [__main__.run] [INFO] Starting SCK Core AI MCP server
+2025-09-26 23:53:39 [-] [core_ai.mcp_server.__init__] [INFO] Initializing SCK Core AI MCP Server
+2025-09-26 23:53:39 [-] [core_ai.mcp_server.__init__] [INFO] LOCAL_MODE: True
+2025-09-26 23:53:39 [-] [core_ai.mcp_server.__init__] [INFO] LOG_DIR: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\core\logs
+2025-09-26 23:53:39 [-] [core_ai.mcp_server.__init__] [INFO] VOLUME: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\core
+2025-09-26 23:53:39 [-] [core_ai.mcp_server.__init__] [INFO] CLIENT: test-client
+2025-09-26 23:53:39 [-] [core_ai.mcp_server.__init__] [INFO] LOG_LEVEL: DEBUG
+2025-09-26 23:53:46 [-] [core_ai.indexing.vector_store.__init__] [INFO] Vector store initialized with persist directory: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\data\vectordb
+2025-09-26 23:53:46 [-] [core_ai.indexing.documentation_indexer.__init__] [INFO] Documentation indexer initialized for: D:\Development\simple-cloud-kit-oss\sck-core-docs\build
+2025-09-26 23:53:46 [-] [core_ai.indexing.codebase_indexer.__init__] [INFO] Codebase indexer initialized for workspace: D:\Development\simple-cloud-kit-oss
+2025-09-26 23:53:46 [-] [core_ai.indexing.context_manager.__init__] [INFO] Context manager initialized
+2025-09-26 23:53:46 [-] [__main__.__init__] [INFO] Indexing system initialized with workspace: D:\Development\simple-cloud-kit-oss
+2025-09-26 23:53:46 [-] [__main__.run] [INFO] Starting SCK Core AI MCP server
+2025-09-26 23:56:58 [-] [__main__.__init__] [INFO] Initializing SCK Core AI MCP Server
+2025-09-26 23:56:58 [-] [__main__.__init__] [INFO] LOCAL_MODE: True
+2025-09-26 23:56:58 [-] [__main__.__init__] [INFO] LOG_DIR: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\core\logs
+2025-09-26 23:56:58 [-] [__main__.__init__] [INFO] VOLUME: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\core
+2025-09-26 23:56:58 [-] [__main__.__init__] [INFO] CLIENT: test-client
+2025-09-26 23:56:58 [-] [__main__.__init__] [INFO] LOG_LEVEL: DEBUG
+2025-09-26 23:57:05 [-] [core_ai.indexing.vector_store.__init__] [INFO] Vector store initialized with persist directory: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\data\vectordb
+2025-09-26 23:57:06 [-] [core_ai.indexing.documentation_indexer.__init__] [INFO] Documentation indexer initialized for: D:\Development\simple-cloud-kit-oss\sck-core-docs\build
+2025-09-26 23:57:06 [-] [core_ai.indexing.codebase_indexer.__init__] [INFO] Codebase indexer initialized for workspace: D:\Development\simple-cloud-kit-oss
+2025-09-26 23:57:06 [-] [core_ai.indexing.context_manager.__init__] [INFO] Context manager initialized
+2025-09-26 23:57:06 [-] [__main__.__init__] [INFO] Indexing system initialized with workspace: D:\Development\simple-cloud-kit-oss
+2025-09-26 23:57:06 [-] [__main__.run] [INFO] Starting SCK Core AI MCP server
+2025-09-27 00:05:30 [-] [__main__.__init__] [INFO] Initializing SCK Core AI MCP Server
+2025-09-27 00:05:30 [-] [__main__.__init__] [INFO] LOCAL_MODE: True
+2025-09-27 00:05:30 [-] [__main__.__init__] [INFO] LOG_DIR: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\core\logs
+2025-09-27 00:05:30 [-] [__main__.__init__] [INFO] VOLUME: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\core
+2025-09-27 00:05:30 [-] [__main__.__init__] [INFO] CLIENT: test-client
+2025-09-27 00:05:30 [-] [__main__.__init__] [INFO] LOG_LEVEL: DEBUG
+2025-09-27 00:05:38 [-] [core_ai.indexing.vector_store.__init__] [INFO] Vector store initialized with persist directory: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\data\vectordb
+2025-09-27 00:05:38 [-] [core_ai.indexing.documentation_indexer.__init__] [INFO] Documentation indexer initialized for: D:\Development\simple-cloud-kit-oss\sck-core-docs\build
+2025-09-27 00:05:38 [-] [core_ai.indexing.codebase_indexer.__init__] [INFO] Codebase indexer initialized for workspace: D:\Development\simple-cloud-kit-oss
+2025-09-27 00:05:38 [-] [core_ai.indexing.context_manager.__init__] [INFO] Context manager initialized
+2025-09-27 00:05:38 [-] [__main__.__init__] [INFO] Indexing system initialized with workspace: D:\Development\simple-cloud-kit-oss
+2025-09-27 00:05:38 [-] [__main__.run] [INFO] Starting SCK Core AI MCP server
+2025-09-27 00:10:02 [-] [__main__.__init__] [INFO] Initializing SCK Core AI MCP Server
+2025-09-27 00:10:02 [-] [__main__.__init__] [INFO] LOCAL_MODE: True
+2025-09-27 00:10:02 [-] [__main__.__init__] [INFO] LOG_DIR: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\core\logs
+2025-09-27 00:10:02 [-] [__main__.__init__] [INFO] VOLUME: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\core
+2025-09-27 00:10:02 [-] [__main__.__init__] [INFO] CLIENT: test-client
+2025-09-27 00:10:02 [-] [__main__.__init__] [INFO] LOG_LEVEL: DEBUG
+2025-09-27 00:10:16 [-] [core_ai.indexing.vector_store.__init__] [INFO] Vector store initialized with persist directory: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\data\vectordb
+2025-09-27 00:10:16 [-] [core_ai.indexing.documentation_indexer.__init__] [INFO] Documentation indexer initialized for: D:\Development\simple-cloud-kit-oss\sck-core-docs\build
+2025-09-27 00:10:16 [-] [core_ai.indexing.codebase_indexer.__init__] [INFO] Codebase indexer initialized for workspace: D:\Development\simple-cloud-kit-oss
+2025-09-27 00:10:16 [-] [core_ai.indexing.context_manager.__init__] [INFO] Context manager initialized
+2025-09-27 00:10:16 [-] [__main__.__init__] [INFO] Indexing system initialized with workspace: D:\Development\simple-cloud-kit-oss
+2025-09-27 00:10:16 [-] [__main__.run] [INFO] Starting SCK Core AI MCP server
+2025-09-27 00:12:04 [-] [__main__.__init__] [INFO] Initializing SCK Core AI MCP Server
+2025-09-27 00:12:04 [-] [__main__.__init__] [INFO] LOCAL_MODE: True
+2025-09-27 00:12:04 [-] [__main__.__init__] [INFO] LOG_DIR: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\core\logs
+2025-09-27 00:12:04 [-] [__main__.__init__] [INFO] VOLUME: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\core
+2025-09-27 00:12:04 [-] [__main__.__init__] [INFO] CLIENT: test-client
+2025-09-27 00:12:04 [-] [__main__.__init__] [INFO] LOG_LEVEL: DEBUG
+2025-09-27 00:12:11 [-] [core_ai.indexing.vector_store.__init__] [INFO] Vector store initialized with persist directory: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\data\vectordb
+2025-09-27 00:12:11 [-] [core_ai.indexing.documentation_indexer.__init__] [INFO] Documentation indexer initialized for: D:\Development\simple-cloud-kit-oss\sck-core-docs\build
+2025-09-27 00:12:11 [-] [core_ai.indexing.codebase_indexer.__init__] [INFO] Codebase indexer initialized for workspace: D:\Development\simple-cloud-kit-oss
+2025-09-27 00:12:11 [-] [core_ai.indexing.context_manager.__init__] [INFO] Context manager initialized
+2025-09-27 00:12:11 [-] [__main__.__init__] [INFO] Indexing system initialized with workspace: D:\Development\simple-cloud-kit-oss
+2025-09-27 00:12:11 [-] [__main__.run] [INFO] Starting SCK Core AI MCP server
+2025-09-27 01:24:07 [-] [__main__.__init__] [INFO] Initializing SCK Core AI MCP Server
+2025-09-27 01:24:07 [-] [__main__.__init__] [INFO] LOCAL_MODE: True
+2025-09-27 01:24:07 [-] [__main__.__init__] [INFO] LOG_DIR: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\core\logs
+2025-09-27 01:24:07 [-] [__main__.__init__] [INFO] VOLUME: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\core
+2025-09-27 01:24:07 [-] [__main__.__init__] [INFO] CLIENT: test-client
+2025-09-27 01:24:07 [-] [__main__.__init__] [INFO] LOG_LEVEL: DEBUG
+2025-09-27 01:24:14 [-] [core_ai.indexing.vector_store.__init__] [INFO] Vector store initialized with persist directory: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\data\vectordb
+2025-09-27 01:24:14 [-] [core_ai.indexing.documentation_indexer.__init__] [INFO] Documentation indexer initialized for: D:\Development\simple-cloud-kit-oss\sck-core-docs\build
+2025-09-27 01:24:14 [-] [core_ai.indexing.codebase_indexer.__init__] [INFO] Codebase indexer initialized for workspace: D:\Development\simple-cloud-kit-oss
+2025-09-27 01:24:14 [-] [core_ai.indexing.context_manager.__init__] [INFO] Context manager initialized
+2025-09-27 01:24:14 [-] [__main__.__init__] [INFO] Indexing system initialized with workspace: D:\Development\simple-cloud-kit-oss
+2025-09-27 01:24:14 [-] [__main__.run] [INFO] Starting SCK Core AI MCP server
+2025-09-27 09:00:40 [-] [__main__.__init__] [INFO] Initializing SCK Core AI MCP Server
+2025-09-27 09:00:40 [-] [__main__.__init__] [INFO] LOCAL_MODE: True
+2025-09-27 09:00:40 [-] [__main__.__init__] [INFO] LOG_DIR: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\core\logs
+2025-09-27 09:00:40 [-] [__main__.__init__] [INFO] VOLUME: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\core
+2025-09-27 09:00:40 [-] [__main__.__init__] [INFO] CLIENT: test-client
+2025-09-27 09:00:40 [-] [__main__.__init__] [INFO] LOG_LEVEL: DEBUG
+2025-09-27 09:00:47 [-] [core_ai.indexing.vector_store.__init__] [INFO] Vector store initialized with persist directory: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\data\vectordb
+2025-09-27 09:00:47 [-] [core_ai.indexing.documentation_indexer.__init__] [INFO] Documentation indexer initialized for: D:\Development\simple-cloud-kit-oss\sck-core-docs\build
+2025-09-27 09:00:47 [-] [core_ai.indexing.codebase_indexer.__init__] [INFO] Codebase indexer initialized for workspace: D:\Development\simple-cloud-kit-oss
+2025-09-27 09:00:47 [-] [core_ai.indexing.context_manager.__init__] [INFO] Context manager initialized
+2025-09-27 09:00:47 [-] [__main__.__init__] [INFO] Indexing system initialized with workspace: D:\Development\simple-cloud-kit-oss
+2025-09-27 09:00:47 [-] [__main__.run] [INFO] Starting SCK Core AI MCP server
+2025-09-27 23:27:25 [-] [core_ai.langflow.client.__init__] [INFO] Langflow client initialized
+2025-09-27 23:27:25 [-] [core_ai.server.lifespan] [INFO] Langflow client initialized successfully
+2025-09-27 23:27:32 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: documentation
+2025-09-27 23:27:32 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: codebase
+2025-09-27 23:27:32 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: architecture
+2025-09-27 23:27:32 [-] [core_ai.indexing.vector_store.__init__] [INFO] Vector store initialized with persist directory: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\data\vectordb
+2025-09-27 23:27:32 [-] [core_ai.indexing.documentation_indexer.__init__] [INFO] Documentation indexer initialized for: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-docs\build
+2025-09-27 23:27:32 [-] [core_ai.indexing.codebase_indexer.__init__] [INFO] Codebase indexer initialized for workspace: D:\Development\simple-cloud-kit-oss\simple-cloud-kit
+2025-09-27 23:27:32 [-] [core_ai.indexing.context_manager.__init__] [INFO] Context manager initialized
+2025-09-27 23:27:32 [-] [core_ai.server.lifespan] [INFO] ContextManager initialized
+2025-09-27 23:32:52 [-] [core_ai.server.lifespan] [INFO] Shutting down SCK Core AI server
+2025-09-27 23:32:57 [-] [core_ai.langflow.client.__init__] [INFO] Langflow client initialized
+2025-09-27 23:32:57 [-] [core_ai.server.lifespan] [INFO] Langflow client initialized successfully
+2025-09-27 23:33:05 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: documentation
+2025-09-27 23:33:05 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: codebase
+2025-09-27 23:33:05 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: architecture
+2025-09-27 23:33:05 [-] [core_ai.indexing.vector_store.__init__] [INFO] Vector store initialized with persist directory: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\data\vectordb
+2025-09-27 23:33:05 [-] [core_ai.indexing.documentation_indexer.__init__] [INFO] Documentation indexer initialized for: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-docs\build
+2025-09-27 23:33:05 [-] [core_ai.indexing.codebase_indexer.__init__] [INFO] Codebase indexer initialized for workspace: D:\Development\simple-cloud-kit-oss\simple-cloud-kit
+2025-09-27 23:33:05 [-] [core_ai.indexing.context_manager.__init__] [INFO] Context manager initialized
+2025-09-27 23:33:05 [-] [core_ai.server.lifespan] [INFO] ContextManager initialized
+2025-09-27 23:33:10 [-] [core_ai.langflow.client.__init__] [INFO] Langflow client initialized
+2025-09-27 23:33:10 [-] [core_ai.server.lifespan] [INFO] Langflow client initialized successfully
+2025-09-27 23:33:16 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: documentation
+2025-09-27 23:33:16 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: codebase
+2025-09-27 23:33:16 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: architecture
+2025-09-27 23:33:16 [-] [core_ai.indexing.vector_store.__init__] [INFO] Vector store initialized with persist directory: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\data\vectordb
+2025-09-27 23:33:16 [-] [core_ai.indexing.documentation_indexer.__init__] [INFO] Documentation indexer initialized for: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-docs\build
+2025-09-27 23:33:16 [-] [core_ai.indexing.codebase_indexer.__init__] [INFO] Codebase indexer initialized for workspace: D:\Development\simple-cloud-kit-oss\simple-cloud-kit
+2025-09-27 23:33:16 [-] [core_ai.indexing.context_manager.__init__] [INFO] Context manager initialized
+2025-09-27 23:33:16 [-] [core_ai.server.lifespan] [INFO] ContextManager initialized
+2025-09-27 23:35:32 [-] [core_ai.server.lifespan] [INFO] Shutting down SCK Core AI server
+2025-09-27 23:58:34 [-] [core_ai.langflow.client.__init__] [INFO] Langflow client initialized
+2025-09-27 23:58:34 [-] [core_ai.server._init_langflow_once] [INFO] Langflow client initialized successfully
+2025-09-27 23:58:34 [-] [core_ai.server.lifespan] [INFO] Langflow auto-reconnect loop started
+2025-09-27 23:58:40 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: documentation
+2025-09-27 23:58:40 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: codebase
+2025-09-27 23:58:40 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: architecture
+2025-09-27 23:58:40 [-] [core_ai.indexing.vector_store.__init__] [INFO] Vector store initialized with persist directory: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\data\vectordb
+2025-09-27 23:58:41 [-] [core_ai.indexing.documentation_indexer.__init__] [INFO] Documentation indexer initialized for: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-docs\build
+2025-09-27 23:58:41 [-] [core_ai.indexing.codebase_indexer.__init__] [INFO] Codebase indexer initialized for workspace: D:\Development\simple-cloud-kit-oss\simple-cloud-kit
+2025-09-27 23:58:41 [-] [core_ai.indexing.context_manager.__init__] [INFO] Context manager initialized
+2025-09-27 23:58:41 [-] [core_ai.server.lifespan] [INFO] ContextManager initialized
+2025-09-27 23:59:55 [-] [core_ai.indexing.vector_store.search_documents] [DEBUG] Found 1 results for query in documentation
+2025-09-27 23:59:55 [-] [core_ai.indexing.vector_store.search_documents] [DEBUG] Found 1 results for query in codebase
+2025-09-27 23:59:55 [-] [core_ai.cache.run_idempotent] [DEBUG] AI local idempotent store
+2025-09-27 23:59:55 [-] [core_ai.langflow.client.process_sync] [INFO] Starting Langflow processing
+2025-09-27 23:59:55 [-] [core_ai.langflow.client.process_sync] [ERROR] Langflow processing failed
+2025-09-27 23:59:55 [-] [core_ai.server.chat_endpoint] [ERROR] Chat generation failed
+2025-09-28 00:00:45 [-] [core_ai.server.lifespan] [INFO] Shutting down SCK Core AI server
+2025-09-28 00:00:50 [-] [core_ai.langflow.client.__init__] [INFO] Langflow client initialized
+2025-09-28 00:00:50 [-] [core_ai.server._init_langflow_once] [INFO] Langflow client initialized successfully
+2025-09-28 00:00:50 [-] [core_ai.server.lifespan] [INFO] Langflow auto-reconnect loop started
+2025-09-28 00:00:56 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: documentation
+2025-09-28 00:00:56 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: codebase
+2025-09-28 00:00:56 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: architecture
+2025-09-28 00:00:56 [-] [core_ai.indexing.vector_store.__init__] [INFO] Vector store initialized with persist directory: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\data\vectordb
+2025-09-28 00:00:57 [-] [core_ai.indexing.documentation_indexer.__init__] [INFO] Documentation indexer initialized for: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-docs\build
+2025-09-28 00:00:57 [-] [core_ai.indexing.codebase_indexer.__init__] [INFO] Codebase indexer initialized for workspace: D:\Development\simple-cloud-kit-oss\simple-cloud-kit
+2025-09-28 00:00:57 [-] [core_ai.indexing.context_manager.__init__] [INFO] Context manager initialized
+2025-09-28 00:00:57 [-] [core_ai.server.lifespan] [INFO] ContextManager initialized
+2025-09-28 00:00:59 [-] [core_ai.server.lifespan] [INFO] Shutting down SCK Core AI server
+2025-09-28 00:01:04 [-] [core_ai.langflow.client.__init__] [INFO] Langflow client initialized
+2025-09-28 00:01:04 [-] [core_ai.server._init_langflow_once] [INFO] Langflow client initialized successfully
+2025-09-28 00:01:04 [-] [core_ai.server.lifespan] [INFO] Langflow auto-reconnect loop started
+2025-09-28 00:01:10 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: documentation
+2025-09-28 00:01:10 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: codebase
+2025-09-28 00:01:10 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: architecture
+2025-09-28 00:01:10 [-] [core_ai.indexing.vector_store.__init__] [INFO] Vector store initialized with persist directory: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\data\vectordb
+2025-09-28 00:01:10 [-] [core_ai.indexing.documentation_indexer.__init__] [INFO] Documentation indexer initialized for: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-docs\build
+2025-09-28 00:01:10 [-] [core_ai.indexing.codebase_indexer.__init__] [INFO] Codebase indexer initialized for workspace: D:\Development\simple-cloud-kit-oss\simple-cloud-kit
+2025-09-28 00:01:10 [-] [core_ai.indexing.context_manager.__init__] [INFO] Context manager initialized
+2025-09-28 00:01:10 [-] [core_ai.server.lifespan] [INFO] ContextManager initialized
+2025-09-28 00:05:05 [-] [core_ai.server.lifespan] [INFO] Shutting down SCK Core AI server
+2025-09-28 00:06:23 [-] [core_ai.langflow.client.__init__] [INFO] Langflow client initialized
+2025-09-28 00:06:23 [-] [core_ai.server._init_langflow_once] [INFO] Langflow client initialized successfully
+2025-09-28 00:06:23 [-] [core_ai.server.lifespan] [INFO] Langflow auto-reconnect loop started
+2025-09-28 00:06:32 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: documentation
+2025-09-28 00:06:32 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: codebase
+2025-09-28 00:06:32 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: architecture
+2025-09-28 00:06:32 [-] [core_ai.indexing.vector_store.__init__] [INFO] Vector store initialized with persist directory: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\data\vectordb
+2025-09-28 00:06:32 [-] [core_ai.indexing.documentation_indexer.__init__] [INFO] Documentation indexer initialized for: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-docs\build
+2025-09-28 00:06:32 [-] [core_ai.indexing.codebase_indexer.__init__] [INFO] Codebase indexer initialized for workspace: D:\Development\simple-cloud-kit-oss\simple-cloud-kit
+2025-09-28 00:06:32 [-] [core_ai.indexing.context_manager.__init__] [INFO] Context manager initialized
+2025-09-28 00:06:32 [-] [core_ai.server.lifespan] [INFO] ContextManager initialized
+2025-09-28 00:06:44 [-] [core_ai.indexing.vector_store.search_documents] [DEBUG] Found 1 results for query in documentation
+2025-09-28 00:06:44 [-] [core_ai.indexing.vector_store.search_documents] [DEBUG] Found 1 results for query in codebase
+2025-09-28 00:06:44 [-] [core_ai.cache.run_idempotent] [DEBUG] AI local idempotent store
+2025-09-28 00:06:44 [-] [core_ai.langflow.client.process_sync] [INFO] Starting Langflow processing
+2025-09-28 00:06:44 [-] [core_ai.langflow.client.process_sync] [ERROR] Langflow processing failed
+2025-09-28 00:06:44 [-] [core_ai.server.chat_endpoint] [ERROR] Chat generation failed
+2025-09-28 00:08:10 [-] [core_ai.server.lifespan] [INFO] Shutting down SCK Core AI server
+2025-09-28 00:08:14 [-] [core_ai.langflow.client.__init__] [INFO] Langflow client initialized
+2025-09-28 00:08:14 [-] [core_ai.server._init_langflow_once] [INFO] Langflow client initialized successfully
+2025-09-28 00:08:14 [-] [core_ai.server.lifespan] [INFO] Langflow auto-reconnect loop started
+2025-09-28 00:08:21 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: documentation
+2025-09-28 00:08:21 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: codebase
+2025-09-28 00:08:21 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: architecture
+2025-09-28 00:08:21 [-] [core_ai.indexing.vector_store.__init__] [INFO] Vector store initialized with persist directory: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\data\vectordb
+2025-09-28 00:08:21 [-] [core_ai.indexing.documentation_indexer.__init__] [INFO] Documentation indexer initialized for: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-docs\build
+2025-09-28 00:08:21 [-] [core_ai.indexing.codebase_indexer.__init__] [INFO] Codebase indexer initialized for workspace: D:\Development\simple-cloud-kit-oss\simple-cloud-kit
+2025-09-28 00:08:21 [-] [core_ai.indexing.context_manager.__init__] [INFO] Context manager initialized
+2025-09-28 00:08:21 [-] [core_ai.server.lifespan] [INFO] ContextManager initialized
+2025-09-28 00:09:01 [-] [core_ai.server.lifespan] [INFO] Shutting down SCK Core AI server
+2025-09-28 00:09:05 [-] [core_ai.langflow.client.__init__] [INFO] Langflow client initialized
+2025-09-28 00:09:05 [-] [core_ai.server._init_langflow_once] [INFO] Langflow client initialized successfully
+2025-09-28 00:09:05 [-] [core_ai.server.lifespan] [INFO] Langflow auto-reconnect loop started
+2025-09-28 00:09:12 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: documentation
+2025-09-28 00:09:12 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: codebase
+2025-09-28 00:09:12 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: architecture
+2025-09-28 00:09:12 [-] [core_ai.indexing.vector_store.__init__] [INFO] Vector store initialized with persist directory: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\data\vectordb
+2025-09-28 00:09:12 [-] [core_ai.indexing.documentation_indexer.__init__] [INFO] Documentation indexer initialized for: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-docs\build
+2025-09-28 00:09:12 [-] [core_ai.indexing.codebase_indexer.__init__] [INFO] Codebase indexer initialized for workspace: D:\Development\simple-cloud-kit-oss\simple-cloud-kit
+2025-09-28 00:09:12 [-] [core_ai.indexing.context_manager.__init__] [INFO] Context manager initialized
+2025-09-28 00:09:12 [-] [core_ai.server.lifespan] [INFO] ContextManager initialized
+2025-09-28 00:09:21 [-] [core_ai.langflow.client.__init__] [INFO] Langflow client initialized
+2025-09-28 00:09:21 [-] [core_ai.server._init_langflow_once] [INFO] Langflow client initialized successfully
+2025-09-28 00:09:21 [-] [core_ai.server.lifespan] [INFO] Langflow auto-reconnect loop started
+2025-09-28 00:09:28 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: documentation
+2025-09-28 00:09:28 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: codebase
+2025-09-28 00:09:28 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: architecture
+2025-09-28 00:09:28 [-] [core_ai.indexing.vector_store.__init__] [INFO] Vector store initialized with persist directory: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\data\vectordb
+2025-09-28 00:09:28 [-] [core_ai.indexing.documentation_indexer.__init__] [INFO] Documentation indexer initialized for: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-docs\build
+2025-09-28 00:09:28 [-] [core_ai.indexing.codebase_indexer.__init__] [INFO] Codebase indexer initialized for workspace: D:\Development\simple-cloud-kit-oss\simple-cloud-kit
+2025-09-28 00:09:28 [-] [core_ai.indexing.context_manager.__init__] [INFO] Context manager initialized
+2025-09-28 00:09:28 [-] [core_ai.server.lifespan] [INFO] ContextManager initialized
+2025-09-28 00:09:45 [-] [core_ai.indexing.vector_store.search_documents] [DEBUG] Found 1 results for query in documentation
+2025-09-28 00:09:45 [-] [core_ai.indexing.vector_store.search_documents] [DEBUG] Found 1 results for query in codebase
+2025-09-28 00:09:45 [-] [core_ai.cache.run_idempotent] [DEBUG] AI local idempotent store
+2025-09-28 00:09:45 [-] [core_ai.langflow.client.process_sync] [INFO] Starting Langflow processing
+2025-09-28 00:09:46 [-] [core_ai.langflow.client.process_sync] [DEBUG] Attempting Langflow execution
+2025-09-28 00:09:46 [-] [core_ai.langflow.client.process_sync] [DEBUG] Attempting Langflow execution
+2025-09-28 00:09:46 [-] [core_ai.langflow.client.process_sync] [DEBUG] Attempting Langflow execution
+2025-09-28 00:09:46 [-] [core_ai.langflow.client.process_sync] [DEBUG] Attempting Langflow execution
+2025-09-28 00:09:50 [-] [core_ai.langflow.client.process_sync] [INFO] Langflow processing completed
+2025-09-28 00:09:50 [-] [core_ai.cache.run_idempotent] [DEBUG] AI local idempotent store
+2025-09-28 00:17:23 [-] [core_ai.indexing.vector_store.search_documents] [DEBUG] Found 1 results for query in documentation
+2025-09-28 00:17:23 [-] [core_ai.indexing.vector_store.search_documents] [DEBUG] Found 1 results for query in codebase
+2025-09-28 00:17:23 [-] [core_ai.cache.run_idempotent] [DEBUG] AI local idempotent store
+2025-09-28 00:17:23 [-] [core_ai.langflow.client.process_sync] [INFO] Starting Langflow processing
+2025-09-28 00:17:23 [-] [core_ai.langflow.client.process_sync] [DEBUG] Attempting Langflow execution
+2025-09-28 00:17:23 [-] [core_ai.langflow.client.process_sync] [DEBUG] Attempting Langflow execution
+2025-09-28 00:17:23 [-] [core_ai.langflow.client.process_sync] [DEBUG] Attempting Langflow execution
+2025-09-28 00:17:23 [-] [core_ai.langflow.client.process_sync] [DEBUG] Attempting Langflow execution
+2025-09-28 00:17:27 [-] [core_ai.langflow.client.process_sync] [INFO] Langflow processing completed
+2025-09-28 00:17:27 [-] [core_ai.cache.run_idempotent] [DEBUG] AI local idempotent store
+2025-09-28 00:18:17 [-] [core_ai.indexing.vector_store.search_documents] [DEBUG] Found 1 results for query in documentation
+2025-09-28 00:18:17 [-] [core_ai.indexing.vector_store.search_documents] [DEBUG] Found 1 results for query in codebase
+2025-09-28 00:18:17 [-] [core_ai.cache.run_idempotent] [DEBUG] AI local idempotent store
+2025-09-28 00:18:17 [-] [core_ai.langflow.client.process_sync] [INFO] Starting Langflow processing
+2025-09-28 00:18:17 [-] [core_ai.langflow.client.process_sync] [DEBUG] Attempting Langflow execution
+2025-09-28 00:18:17 [-] [core_ai.langflow.client.process_sync] [DEBUG] Attempting Langflow execution
+2025-09-28 00:18:17 [-] [core_ai.langflow.client.process_sync] [DEBUG] Attempting Langflow execution
+2025-09-28 00:18:17 [-] [core_ai.langflow.client.process_sync] [DEBUG] Attempting Langflow execution
+2025-09-28 00:18:23 [-] [core_ai.langflow.client.process_sync] [INFO] Langflow processing completed
+2025-09-28 00:18:23 [-] [core_ai.cache.run_idempotent] [DEBUG] AI local idempotent store
+2025-09-28 00:28:48 [-] [core_ai.server.lifespan] [INFO] Shutting down SCK Core AI server
+2025-09-28 00:28:53 [-] [core_ai.langflow.client.__init__] [INFO] Langflow client initialized
+2025-09-28 00:28:53 [-] [core_ai.server._init_langflow_once] [INFO] Langflow client initialized successfully
+2025-09-28 00:28:53 [-] [core_ai.server.lifespan] [INFO] Langflow auto-reconnect loop started
+2025-09-28 00:29:00 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: documentation
+2025-09-28 00:29:00 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: codebase
+2025-09-28 00:29:00 [-] [core_ai.indexing.vector_store._initialize_collections] [DEBUG] Initialized collection: architecture
+2025-09-28 00:29:00 [-] [core_ai.indexing.vector_store.__init__] [INFO] Vector store initialized with persist directory: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\data\vectordb
+2025-09-28 00:29:01 [-] [core_ai.indexing.documentation_indexer.__init__] [INFO] Documentation indexer initialized for: D:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-docs\build
+2025-09-28 00:29:01 [-] [core_ai.indexing.codebase_indexer.__init__] [INFO] Codebase indexer initialized for workspace: D:\Development\simple-cloud-kit-oss\simple-cloud-kit
+2025-09-28 00:29:01 [-] [core_ai.indexing.context_manager.__init__] [INFO] Context manager initialized
+2025-09-28 00:29:01 [-] [core_ai.server.lifespan] [INFO] ContextManager initialized

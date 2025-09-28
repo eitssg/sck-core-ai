@@ -5,5 +5,35 @@
             "envManager": "ms-python.python:venv",
             "packageManager": "ms-python.python:pip"
         }
-    ]
+    ],
+    // Explicit interpreter inside this submodule venv
+    "python.defaultInterpreterPath": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+    // Ensure the .env (auto-created by pytest script) is loaded in terminals & tests
+    "python.envFile": "${workspaceFolder}\\.env",
+    // Testing configuration
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    // Discover tests on save for quick feedback
+    "python.testing.autoTestDiscoverOnSaveEnabled": true,
+    // Activate venv automatically in the integrated terminal
+    "python.terminal.activateEnvironment": true,
+    // Type checking & analysis (respect lightweight invariant guarantees; avoid strict noise)
+    "python.analysis.typeCheckingMode": "basic",
+    "python.analysis.diagnosticMode": "workspace",
+    // Formatting (use Black consistent with flakeit.ps1)
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true
+    },
+    // Optional: keep line length default (88). Add args if project later standardizes.
+    // "black-formatter.args": ["--line-length", "88"],
+    // Suppress noisy Python extension experiment prompts in this workspace
+    "python.experiments.enabled": false
 }

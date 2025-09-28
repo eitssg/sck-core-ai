@@ -1,0 +1,42 @@
+# Langflow Workbench ONLY
+# This compose file is intentionally limited to the external Langflow UI so you can
+# experiment with flows independent of the SCK AI (MCP) container.
+
+services:
+  langflow:
+    image: langflowai/langflow:latest
+    container_name: sck-langflow
+    ports:
+      - "7860:7860"
+    environment:
+      - LANGFLOW_HOST=0.0.0.0
+      - LANGFLOW_PORT=7860
+      - LANGFLOW_LOG_LEVEL=INFO
+      # Persist DB under /data (mapped to host ./data/db)
+      - LANGFLOW_DATABASE_URL=sqlite:////data/langflow.db
+      - LANGFLOW_AUTO_LOGIN=true
+      - LANGFLOW_SUPERUSER_PASSWORD=admin123
+    volumes:
+      # Persistent database directory (stores users, flows, settings)
+      - ./data/db:/data
+
+      # Writable flows workspace (Langflow may export/import JSON here)
+      - ./data/flows:/app/flows
+
+      # Optional custom components (safe to leave absent until needed)
+      - ./data/components:/app/custom_components
+
+      # Cache directory (LLM/tool caches if supported by version)
+      - ./data/cache:/cache
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:7860/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+
+networks:
+  default:
+    name: sck-ai-network
+    external: true

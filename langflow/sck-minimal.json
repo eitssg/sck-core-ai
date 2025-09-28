@@ -1,0 +1,346 @@
+{
+    "name": "SCK Assistant",
+    "description": "Simple Cloud Kit documentation assistant",
+    "data": {
+        "nodes": [
+            {
+                "data": {
+                    "id": "ChatInput-1",
+                    "node": {
+                        "base_classes": [
+                            "Message"
+                        ],
+                        "beta": false,
+                        "category": "inputs",
+                        "conditional_paths": [],
+                        "custom_fields": {},
+                        "description": "Get chat inputs from the Playground.",
+                        "display_name": "Chat Input",
+                        "documentation": "",
+                        "edited": false,
+                        "field_order": [
+                            "input_value"
+                        ],
+                        "frozen": false,
+                        "icon": "MessagesSquare",
+                        "key": "ChatInput",
+                        "legacy": false,
+                        "metadata": {},
+                        "minimized": true,
+                        "output_types": [],
+                        "outputs": [
+                            {
+                                "allows_loop": false,
+                                "cache": true,
+                                "display_name": "Chat Message",
+                                "group_outputs": false,
+                                "method": "message_response",
+                                "name": "message",
+                                "selected": "Message",
+                                "tool_mode": true,
+                                "types": [
+                                    "Message"
+                                ],
+                                "value": "__UNDEFINED__"
+                            }
+                        ],
+                        "pinned": false,
+                        "template": {
+                            "_type": "Component",
+                            "input_value": {
+                                "_input_type": "MultilineInput",
+                                "display_name": "Input Text",
+                                "value": "",
+                                "info": "Message to be passed as input.",
+                                "required": false,
+                                "show": true,
+                                "type": "str"
+                            }
+                        },
+                        "tool_mode": false
+                    },
+                    "type": "ChatInput"
+                },
+                "id": "ChatInput-1",
+                "measured": {
+                    "height": 47,
+                    "width": 192
+                },
+                "position": {
+                    "x": 100,
+                    "y": 100
+                },
+                "selected": false,
+                "type": "genericNode"
+            },
+            {
+                "data": {
+                    "id": "OpenAI-1",
+                    "node": {
+                        "base_classes": [
+                            "BaseLanguageModel",
+                            "LanguageModel"
+                        ],
+                        "beta": false,
+                        "category": "models",
+                        "conditional_paths": [],
+                        "custom_fields": {},
+                        "description": "Generate text using OpenAI's models.",
+                        "display_name": "OpenAI",
+                        "documentation": "",
+                        "edited": false,
+                        "field_order": [
+                            "model_name",
+                            "api_key",
+                            "temperature",
+                            "max_tokens",
+                            "input_value"
+                        ],
+                        "frozen": false,
+                        "icon": "OpenAI",
+                        "key": "OpenAI",
+                        "legacy": false,
+                        "metadata": {},
+                        "minimized": false,
+                        "output_types": [],
+                        "outputs": [
+                            {
+                                "allows_loop": false,
+                                "cache": true,
+                                "display_name": "Text",
+                                "group_outputs": false,
+                                "method": "text_response",
+                                "name": "text_output",
+                                "selected": "Message",
+                                "tool_mode": false,
+                                "types": [
+                                    "Message"
+                                ],
+                                "value": "__UNDEFINED__"
+                            }
+                        ],
+                        "pinned": false,
+                        "template": {
+                            "_type": "Component",
+                            "api_key": {
+                                "_input_type": "SecretStrInput",
+                                "display_name": "OpenAI API Key",
+                                "info": "The OpenAI API Key to use for OpenAI models.",
+                                "password": true,
+                                "required": true,
+                                "show": true,
+                                "type": "str",
+                                "value": null
+                            },
+                            "model_name": {
+                                "_input_type": "DropdownInput",
+                                "display_name": "Model Name",
+                                "options": [
+                                    "gpt-4o",
+                                    "gpt-4o-mini",
+                                    "gpt-4-turbo",
+                                    "gpt-3.5-turbo"
+                                ],
+                                "value": "gpt-4o-mini",
+                                "info": "The name of the model to use.",
+                                "required": true,
+                                "show": true,
+                                "type": "str"
+                            },
+                            "temperature": {
+                                "_input_type": "FloatInput",
+                                "display_name": "Temperature",
+                                "value": 0.3,
+                                "info": "Controls randomness in the response.",
+                                "advanced": true,
+                                "show": true,
+                                "type": "float"
+                            },
+                            "max_tokens": {
+                                "_input_type": "IntInput",
+                                "display_name": "Max Tokens",
+                                "value": 2000,
+                                "info": "The maximum number of tokens to generate.",
+                                "advanced": true,
+                                "show": true,
+                                "type": "int"
+                            },
+                            "input_value": {
+                                "_input_type": "MessageTextInput",
+                                "display_name": "Input",
+                                "info": "The input to the model.",
+                                "input_types": [
+                                    "Message"
+                                ],
+                                "required": true,
+                                "show": true,
+                                "type": "str",
+                                "value": "You are an expert Simple Cloud Kit (SCK) developer assistant.\n\nYour expertise includes:\n- Multi-tenant architecture (client_id vs tenant client)\n- SCK Framework modules (core_framework, core_logging, core_db)\n- AWS Lambda patterns with ProxyEvent (synchronous only)\n- S3 operations with MagicS3Bucket\n- API envelope responses and OAuth compliance\n- Authentication flows and session management\n\nKey principles:\n1. All Python runs in AWS Lambda - synchronous handlers only (NO async/await)\n2. Use MagicS3Bucket for bucket operations, boto3 client for presigned URLs\n3. API responses use envelope format: {status, code, data, metadata, message}\n4. Multi-tenancy: client_id = OAuth SPA identifier, tenant = slug within client_id\n5. Use Google-style docstrings in all code examples\n\nProvide expert guidance on SCK development, architecture, and best practices.\n\n{input}"
+                            }
+                        },
+                        "tool_mode": false
+                    },
+                    "type": "OpenAI"
+                },
+                "id": "OpenAI-1",
+                "measured": {
+                    "height": 400,
+                    "width": 320
+                },
+                "position": {
+                    "x": 400,
+                    "y": 50
+                },
+                "selected": false,
+                "type": "genericNode"
+            },
+            {
+                "data": {
+                    "id": "ChatOutput-1",
+                    "node": {
+                        "base_classes": [
+                            "Message"
+                        ],
+                        "beta": false,
+                        "category": "outputs",
+                        "conditional_paths": [],
+                        "custom_fields": {},
+                        "description": "Display a chat message in the Playground.",
+                        "display_name": "Chat Output",
+                        "documentation": "",
+                        "edited": false,
+                        "field_order": [
+                            "input_value"
+                        ],
+                        "frozen": false,
+                        "icon": "MessagesSquare",
+                        "key": "ChatOutput",
+                        "legacy": false,
+                        "metadata": {},
+                        "minimized": true,
+                        "output_types": [],
+                        "outputs": [
+                            {
+                                "allows_loop": false,
+                                "cache": true,
+                                "display_name": "Output Message",
+                                "group_outputs": false,
+                                "method": "message_response",
+                                "name": "message",
+                                "selected": "Message",
+                                "tool_mode": false,
+                                "types": [
+                                    "Message"
+                                ],
+                                "value": "__UNDEFINED__"
+                            }
+                        ],
+                        "pinned": false,
+                        "template": {
+                            "_type": "Component",
+                            "input_value": {
+                                "_input_type": "HandleInput",
+                                "display_name": "Inputs",
+                                "info": "Message to be passed as output.",
+                                "input_types": [
+                                    "Message"
+                                ],
+                                "required": true,
+                                "show": true,
+                                "type": "Message"
+                            },
+                            "sender_name": {
+                                "_input_type": "MessageTextInput",
+                                "display_name": "Sender Name",
+                                "value": "SCK Assistant",
+                                "info": "Name of the sender.",
+                                "advanced": true,
+                                "show": true,
+                                "type": "str"
+                            }
+                        },
+                        "tool_mode": false
+                    },
+                    "type": "ChatOutput"
+                },
+                "id": "ChatOutput-1",
+                "measured": {
+                    "height": 47,
+                    "width": 192
+                },
+                "position": {
+                    "x": 800,
+                    "y": 100
+                },
+                "selected": false,
+                "type": "genericNode"
+            }
+        ],
+        "edges": [
+            {
+                "animated": false,
+                "className": "",
+                "data": {
+                    "sourceHandle": {
+                        "dataType": "ChatInput",
+                        "id": "ChatInput-1",
+                        "name": "message",
+                        "output_types": [
+                            "Message"
+                        ]
+                    },
+                    "targetHandle": {
+                        "fieldName": "input_value",
+                        "id": "OpenAI-1",
+                        "inputTypes": [
+                            "Message"
+                        ],
+                        "type": "str"
+                    }
+                },
+                "id": "reactflow__edge-ChatInput-1-OpenAI-1",
+                "selected": false,
+                "source": "ChatInput-1",
+                "sourceHandle": "message",
+                "target": "OpenAI-1",
+                "targetHandle": "input_value"
+            },
+            {
+                "animated": false,
+                "className": "",
+                "data": {
+                    "sourceHandle": {
+                        "dataType": "OpenAI",
+                        "id": "OpenAI-1",
+                        "name": "text_output",
+                        "output_types": [
+                            "Message"
+                        ]
+                    },
+                    "targetHandle": {
+                        "fieldName": "input_value",
+                        "id": "ChatOutput-1",
+                        "inputTypes": [
+                            "Message"
+                        ],
+                        "type": "Message"
+                    }
+                },
+                "id": "reactflow__edge-OpenAI-1-ChatOutput-1",
+                "selected": false,
+                "source": "OpenAI-1",
+                "sourceHandle": "text_output",
+                "target": "ChatOutput-1",
+                "targetHandle": "input_value"
+            }
+        ],
+        "viewport": {
+            "x": 0,
+            "y": 0,
+            "zoom": 1
+        }
+    },
+    "is_component": false,
+    "tags": ["sck", "assistant", "documentation"],
+    "locked": false
+}

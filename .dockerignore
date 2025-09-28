@@ -1,0 +1,15 @@
+# Ignore local/dev artefacts
+.venv
+__pycache__
+dist
+build
+htmlcov
+.mypy_cache
+.pytest_cache
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.sqlite
+langflow-cache
+data/

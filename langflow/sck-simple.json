@@ -1,0 +1,367 @@
+{
+    "data": {
+        "edges": [
+            {
+                "animated": false,
+                "data": {
+                    "sourceHandle": {
+                        "dataType": "ChatInput",
+                        "id": "ChatInput-sck",
+                        "name": "message",
+                        "output_types": ["Message"]
+                    },
+                    "targetHandle": {
+                        "fieldName": "user_input",
+                        "id": "PromptTemplate-sck",
+                        "inputTypes": ["Message"],
+                        "type": "str"
+                    }
+                },
+                "id": "reactflow__edge-ChatInput-sck-PromptTemplate-sck",
+                "selected": false,
+                "source": "ChatInput-sck",
+                "sourceHandle": "message",
+                "target": "PromptTemplate-sck",
+                "targetHandle": "user_input"
+            },
+            {
+                "animated": false,
+                "data": {
+                    "sourceHandle": {
+                        "dataType": "PromptTemplate",
+                        "id": "PromptTemplate-sck",
+                        "name": "prompt",
+                        "output_types": ["BasePromptTemplate"]
+                    },
+                    "targetHandle": {
+                        "fieldName": "prompt",
+                        "id": "OpenAI-sck",
+                        "inputTypes": ["BasePromptTemplate"],
+                        "type": "BasePromptTemplate"
+                    }
+                },
+                "id": "reactflow__edge-PromptTemplate-sck-OpenAI-sck",
+                "selected": false,
+                "source": "PromptTemplate-sck",
+                "sourceHandle": "prompt",
+                "target": "OpenAI-sck",
+                "targetHandle": "prompt"
+            },
+            {
+                "animated": false,
+                "data": {
+                    "sourceHandle": {
+                        "dataType": "OpenAI",
+                        "id": "OpenAI-sck",
+                        "name": "text_output",
+                        "output_types": ["Message"]
+                    },
+                    "targetHandle": {
+                        "fieldName": "input_value",
+                        "id": "ChatOutput-sck",
+                        "inputTypes": ["Message"],
+                        "type": "Message"
+                    }
+                },
+                "id": "reactflow__edge-OpenAI-sck-ChatOutput-sck",
+                "selected": false,
+                "source": "OpenAI-sck",
+                "sourceHandle": "text_output",
+                "target": "ChatOutput-sck",
+                "targetHandle": "input_value"
+            }
+        ],
+        "nodes": [
+            {
+                "data": {
+                    "id": "note-sck-readme",
+                    "node": {
+                        "description": "# 📚 SCK Documentation Assistant\n\nThis assistant specializes in Simple Cloud Kit development:\n\n## Features:\n- Expert SCK architecture knowledge\n- Multi-tenant authentication guidance\n- Lambda and S3 best practices\n- Code examples with proper patterns\n\n## Setup:\n1. Add your OpenAI API key to the OpenAI component\n2. Ask SCK-specific questions\n3. Get expert responses with code examples\n\n## Example Questions:\n- \"How do I handle multi-tenant auth in SCK?\"\n- \"Show me proper MagicS3Bucket usage\"\n- \"What's the ProxyEvent pattern for Lambda?\"",
+                        "display_name": "",
+                        "documentation": "",
+                        "template": {
+                            "backgroundColor": "blue"
+                        }
+                    },
+                    "type": "note"
+                },
+                "id": "note-sck-readme",
+                "measured": {
+                    "height": 400,
+                    "width": 350
+                },
+                "position": {
+                    "x": 50,
+                    "y": 50
+                },
+                "selected": false,
+                "type": "noteNode"
+            },
+            {
+                "data": {
+                    "id": "ChatInput-sck",
+                    "node": {
+                        "base_classes": ["Message"],
+                        "beta": false,
+                        "category": "inputs",
+                        "description": "Get chat inputs from the Playground.",
+                        "display_name": "Chat Input",
+                        "icon": "MessagesSquare",
+                        "key": "ChatInput",
+                        "minimized": true,
+                        "outputs": [
+                            {
+                                "types": ["Message"],
+                                "selected": "Message",
+                                "name": "message",
+                                "display_name": "Chat Message",
+                                "method": "message_response",
+                                "cache": true
+                            }
+                        ],
+                        "template": {
+                            "_type": "Component",
+                            "input_value": {
+                                "_input_type": "MultilineInput",
+                                "display_name": "Input Text",
+                                "value": "",
+                                "info": "Your SCK development question",
+                                "required": false,
+                                "show": true,
+                                "type": "str"
+                            }
+                        }
+                    },
+                    "type": "ChatInput"
+                },
+                "id": "ChatInput-sck",
+                "measured": {
+                    "height": 47,
+                    "width": 192
+                },
+                "position": {
+                    "x": 500,
+                    "y": 400
+                },
+                "selected": false,
+                "type": "genericNode"
+            },
+            {
+                "data": {
+                    "id": "PromptTemplate-sck",
+                    "node": {
+                        "base_classes": ["StringPromptTemplate", "BasePromptTemplate"],
+                        "beta": false,
+                        "category": "prompts",
+                        "description": "SCK-specialized prompt template",
+                        "display_name": "SCK Prompt",
+                        "icon": "prompts",
+                        "key": "PromptTemplate",
+                        "outputs": [
+                            {
+                                "types": ["BasePromptTemplate"],
+                                "selected": "BasePromptTemplate",
+                                "name": "prompt",
+                                "display_name": "Prompt",
+                                "method": "build_prompt",
+                                "cache": true
+                            }
+                        ],
+                        "template": {
+                            "_type": "Component",
+                            "template": {
+                                "_input_type": "PromptInput",
+                                "display_name": "Template",
+                                "multiline": true,
+                                "value": "You are an expert Simple Cloud Kit (SCK) developer assistant.\n\n## Your Expertise:\n- **Multi-tenant Architecture**: client_id (OAuth SPA) vs tenant client (namespace slug)\n- **SCK Framework**: core_framework, core_logging, core_db, core_helper modules\n- **AWS Lambda**: ProxyEvent patterns, synchronous handlers (NO async/await)\n- **S3 Operations**: MagicS3Bucket for operations, boto3 client for presigned URLs\n- **API Design**: Envelope responses {status, code, data}, OAuth compliance\n- **Auth Flow**: Session cookies → access tokens (memory) → refresh tokens (sessionStorage)\n\n## Key Principles:\n1. All Python runs in AWS Lambda - synchronous handlers only\n2. Use MagicS3Bucket for bucket ops, boto3 client only for presigned URLs\n3. API responses use envelope format for /api/v1/**, OAuth format for /auth/v1/**\n4. Multi-tenancy: client_id = SPA identifier, tenant = slug within client_id\n5. Google-style docstrings required for all code examples\n\n## User Question:\n{user_input}\n\n## Expert Response:",
+                                "required": true,
+                                "show": true,
+                                "type": "prompt"
+                            },
+                            "user_input": {
+                                "_input_type": "MessageTextInput",
+                                "display_name": "User Input",
+                                "info": "User's SCK question",
+                                "input_types": ["Message"],
+                                "required": true,
+                                "show": true,
+                                "type": "str",
+                                "value": ""
+                            }
+                        }
+                    },
+                    "type": "PromptTemplate"
+                },
+                "id": "PromptTemplate-sck",
+                "measured": {
+                    "height": 300,
+                    "width": 350
+                },
+                "position": {
+                    "x": 750,
+                    "y": 300
+                },
+                "selected": false,
+                "type": "genericNode"
+            },
+            {
+                "data": {
+                    "id": "OpenAI-sck",
+                    "node": {
+                        "base_classes": ["BaseLanguageModel", "LanguageModel"],
+                        "beta": false,
+                        "category": "models",
+                        "description": "Generate text using OpenAI models",
+                        "display_name": "OpenAI",
+                        "icon": "OpenAI",
+                        "key": "OpenAI",
+                        "outputs": [
+                            {
+                                "types": ["Message"],
+                                "selected": "Message",
+                                "name": "text_output",
+                                "display_name": "Text",
+                                "method": "text_response",
+                                "cache": true
+                            }
+                        ],
+                        "template": {
+                            "_type": "Component",
+                            "api_key": {
+                                "_input_type": "SecretStrInput",
+                                "display_name": "OpenAI API Key",
+                                "info": "Your OpenAI API key",
+                                "password": true,
+                                "required": true,
+                                "show": true,
+                                "type": "str",
+                                "value": null
+                            },
+                            "model_name": {
+                                "_input_type": "DropdownInput",
+                                "display_name": "Model Name",
+                                "options": ["gpt-4o", "gpt-4o-mini", "gpt-4-turbo", "gpt-3.5-turbo"],
+                                "value": "gpt-4o-mini",
+                                "required": true,
+                                "show": true,
+                                "type": "str"
+                            },
+                            "temperature": {
+                                "_input_type": "FloatInput",
+                                "display_name": "Temperature",
+                                "value": 0.3,
+                                "info": "Controls response creativity",
+                                "advanced": true,
+                                "show": true,
+                                "type": "float"
+                            },
+                            "max_tokens": {
+                                "_input_type": "IntInput",
+                                "display_name": "Max Tokens",
+                                "value": 2000,
+                                "info": "Maximum response length",
+                                "advanced": true,
+                                "show": true,
+                                "type": "int"
+                            },
+                            "prompt": {
+                                "_input_type": "HandleInput",
+                                "display_name": "Prompt",
+                                "input_types": ["BasePromptTemplate"],
+                                "required": true,
+                                "show": true,
+                                "type": "BasePromptTemplate"
+                            }
+                        }
+                    },
+                    "type": "OpenAI"
+                },
+                "id": "OpenAI-sck",
+                "measured": {
+                    "height": 300,
+                    "width": 300
+                },
+                "position": {
+                    "x": 1150,
+                    "y": 350
+                },
+                "selected": false,
+                "type": "genericNode"
+            },
+            {
+                "data": {
+                    "id": "ChatOutput-sck",
+                    "node": {
+                        "base_classes": ["Message"],
+                        "beta": false,
+                        "category": "outputs",
+                        "description": "Display chat message in Playground",
+                        "display_name": "Chat Output",
+                        "icon": "MessagesSquare",
+                        "key": "ChatOutput",
+                        "minimized": true,
+                        "outputs": [
+                            {
+                                "types": ["Message"],
+                                "selected": "Message",
+                                "name": "message",
+                                "display_name": "Output Message",
+                                "method": "message_response",
+                                "cache": true
+                            }
+                        ],
+                        "template": {
+                            "_type": "Component",
+                            "input_value": {
+                                "_input_type": "HandleInput",
+                                "display_name": "Inputs",
+                                "info": "Message to display",
+                                "input_types": ["Message"],
+                                "required": true,
+                                "show": true,
+                                "type": "Message"
+                            },
+                            "sender_name": {
+                                "_input_type": "MessageTextInput",
+                                "display_name": "Sender Name",
+                                "value": "SCK Assistant",
+                                "advanced": true,
+                                "show": true,
+                                "type": "str"
+                            },
+                            "chat_icon": {
+                                "_input_type": "MessageTextInput",
+                                "display_name": "Icon",
+                                "value": "📚",
+                                "advanced": true,
+                                "show": true,
+                                "type": "str"
+                            }
+                        }
+                    },
+                    "type": "ChatOutput"
+                },
+                "id": "ChatOutput-sck",
+                "measured": {
+                    "height": 47,
+                    "width": 192
+                },
+                "position": {
+                    "x": 1500,
+                    "y": 400
+                },
+                "selected": false,
+                "type": "genericNode"
+            }
+        ],
+        "viewport": {
+            "x": 0,
+            "y": 0,
+            "zoom": 0.8
+        }
+    },
+    "description": "Simple Cloud Kit documentation assistant with expert SCK knowledge",
+    "name": "SCK Documentation Assistant",
+    "tags": ["sck", "documentation", "assistant"],
+    "is_component": false
+}

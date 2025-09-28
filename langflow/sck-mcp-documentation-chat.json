@@ -1,0 +1,599 @@
+{
+    "name": "SCK MCP Documentation Chat",
+    "description": "Advanced SCK assistant with potential MCP integration for real-time documentation search.",
+    "icon": "🔍",
+    "icon_bg_color": "#059669",
+    "gradient": null,
+    "data": {
+        "nodes": [
+            {
+                "data": {
+                    "id": "note-advanced",
+                    "node": {
+                        "description": "# 🔍 SCK MCP Documentation Chat\n\nAdvanced assistant with enhanced capabilities:\n\n## Features:\n- Real-time SCK documentation search\n- Code example generation\n- Architecture guidance\n- Best practices enforcement\n- Multi-tenant model expertise\n\n## Future MCP Integration:\n- Direct access to indexed documentation\n- Real-time codebase search\n- Context-aware responses\n- Live API reference lookup\n\n## Setup:\n1. Add OpenAI API key\n2. Configure MCP server endpoint (future)\n3. Ask detailed SCK development questions\n\n## Advanced Queries:\n- \"Search the codebase for MagicS3Bucket usage examples\"\n- \"Find all references to multi-tenant authentication\"\n- \"Show me the latest API envelope format\"\n- \"What are the current OAuth flow patterns?\"",
+                        "display_name": "",
+                        "documentation": "",
+                        "template": {
+                            "backgroundColor": "green"
+                        }
+                    },
+                    "type": "note"
+                },
+                "id": "note-advanced",
+                "measured": {
+                    "height": 450,
+                    "width": 400
+                },
+                "position": {
+                    "x": 50,
+                    "y": 50
+                },
+                "selected": false,
+                "type": "noteNode"
+            },
+            {
+                "data": {
+                    "id": "ChatInput-user-advanced",
+                    "node": {
+                        "base_classes": [
+                            "Message"
+                        ],
+                        "category": "inputs",
+                        "description": "Get chat inputs from the Playground.",
+                        "display_name": "Chat Input",
+                        "icon": "MessagesSquare",
+                        "key": "ChatInput",
+                        "minimized": true,
+                        "outputs": [
+                            {
+                                "types": [
+                                    "Message"
+                                ],
+                                "selected": "Message",
+                                "name": "message",
+                                "display_name": "Chat Message",
+                                "method": "message_response"
+                            }
+                        ],
+                        "template": {
+                            "_type": "Component",
+                            "input_value": {
+                                "_input_type": "MultilineInput",
+                                "display_name": "Input Text",
+                                "value": "",
+                                "info": "Your SCK development question or request",
+                                "advanced": false,
+                                "required": false,
+                                "show": true,
+                                "type": "str"
+                            }
+                        }
+                    },
+                    "type": "ChatInput"
+                },
+                "id": "ChatInput-user-advanced",
+                "measured": {
+                    "height": 47,
+                    "width": 192
+                },
+                "position": {
+                    "x": 500,
+                    "y": 600
+                },
+                "selected": false,
+                "type": "genericNode"
+            },
+            {
+                "data": {
+                    "id": "CustomComponent-mcp-search",
+                    "node": {
+                        "base_classes": [
+                            "Data"
+                        ],
+                        "category": "custom",
+                        "description": "Search SCK documentation and codebase (MCP integration placeholder)",
+                        "display_name": "SCK Search",
+                        "icon": "search",
+                        "key": "CustomComponent",
+                        "outputs": [
+                            {
+                                "types": [
+                                    "Data"
+                                ],
+                                "selected": "Data",
+                                "name": "search_results",
+                                "display_name": "Search Results",
+                                "method": "search_sck_docs"
+                            }
+                        ],
+                        "template": {
+                            "_type": "Component",
+                            "code": {
+                                "value": "from langflow.custom import CustomComponent\nfrom langflow.field_typing import Data\nfrom langflow.io import MessageTextInput, Output\nfrom langflow.schema import Data\n\nclass SCKSearchComponent(CustomComponent):\n    display_name = \"SCK Search\"\n    description = \"Search SCK documentation and codebase\"\n    \n    inputs = [\n        MessageTextInput(\n            name=\"query\",\n            display_name=\"Search Query\",\n            info=\"What to search for in SCK documentation\",\n            required=True\n        ),\n        MessageTextInput(\n            name=\"search_type\",\n            display_name=\"Search Type\",\n            value=\"documentation\",\n            info=\"Type of search: documentation, codebase, or both\",\n            advanced=True\n        )\n    ]\n    \n    outputs = [\n        Output(display_name=\"Search Results\", name=\"search_results\", method=\"search_sck_docs\")\n    ]\n    \n    def search_sck_docs(self) -> Data:\n        # Placeholder implementation - future MCP integration\n        # This would connect to our MCP server for real search\n        \n        search_results = {\n            \"query\": self.query,\n            \"results\": [\n                {\n                    \"title\": \"Multi-tenant Authentication\",\n                    \"content\": \"SCK uses OAuth with client_id for SPA identification and tenant clients for namespace isolation...\",\n                    \"source\": \"auth-session-and-storage.md\",\n                    \"relevance\": 0.95\n                },\n                {\n                    \"title\": \"MagicS3Bucket Usage\",\n                    \"content\": \"Use MagicS3Bucket for bucket operations, boto3 client for presigned URLs...\",\n                    \"source\": \"backend-code-style.md\",\n                    \"relevance\": 0.87\n                }\n            ],\n            \"total_results\": 2,\n            \"search_type\": self.search_type\n        }\n        \n        return Data(data=search_results)\n    \n    def build(self):\n        return self.search_sck_docs"
+                            },
+                            "query": {
+                                "_input_type": "MessageTextInput",
+                                "display_name": "Search Query",
+                                "info": "What to search for in SCK documentation",
+                                "input_types": ["Message"],
+                                "required": true,
+                                "show": true,
+                                "type": "str",
+                                "value": ""
+                            },
+                            "search_type": {
+                                "_input_type": "MessageTextInput",
+                                "display_name": "Search Type",
+                                "value": "documentation",
+                                "info": "Type of search: documentation, codebase, or both",
+                                "advanced": true,
+                                "required": false,
+                                "show": true,
+                                "type": "str"
+                            }
+                        }
+                    },
+                    "type": "CustomComponent"
+                },
+                "id": "CustomComponent-mcp-search",
+                "measured": {
+                    "height": 200,
+                    "width": 300
+                },
+                "position": {
+                    "x": 750,
+                    "y": 550
+                },
+                "selected": false,
+                "type": "genericNode"
+            },
+            {
+                "data": {
+                    "id": "PromptTemplate-enhanced",
+                    "node": {
+                        "base_classes": [
+                            "StringPromptTemplate",
+                            "BasePromptTemplate"
+                        ],
+                        "category": "prompts",
+                        "description": "Enhanced prompt with search context",
+                        "display_name": "Enhanced SCK Prompt",
+                        "icon": "prompts",
+                        "key": "PromptTemplate",
+                        "outputs": [
+                            {
+                                "types": [
+                                    "BasePromptTemplate"
+                                ],
+                                "selected": "BasePromptTemplate",
+                                "name": "prompt",
+                                "display_name": "Prompt",
+                                "method": "build_prompt"
+                            }
+                        ],
+                        "template": {
+                            "_type": "Component",
+                            "template": {
+                                "_input_type": "PromptInput",
+                                "display_name": "Template",
+                                "multiline": true,
+                                "value": "You are an expert Simple Cloud Kit (SCK) developer assistant with access to real-time documentation search.\n\n## Your Role:\nProvide authoritative, accurate answers about SCK development using the most current information.\n\n## Search Context:\n{search_results}\n\n## Core SCK Knowledge:\n- **Architecture**: Multi-tenant SaaS with OAuth client_id and tenant client separation\n- **Runtime**: AWS Lambda-first with synchronous handlers (NO async/await)\n- **Storage**: S3 with MagicS3Bucket patterns, presigned URL best practices\n- **APIs**: Envelope responses for /api/v1/**, OAuth compliance for /auth/v1/**\n- **Auth Flow**: Session cookies → access tokens (memory) → refresh tokens (sessionStorage)\n- **Build**: Poetry with dynamic versioning, multi-module dependency management\n\n## Response Guidelines:\n1. **Use Search Results**: Incorporate relevant findings from the search context\n2. **Provide Code Examples**: Include practical, working code with Google-style docstrings\n3. **Explain Architecture**: Connect specific implementation to overall SCK design principles\n4. **Security Focus**: Emphasize secure patterns, especially for auth and data handling\n5. **Best Practices**: Reference official SCK conventions and patterns\n6. **Source Attribution**: Mention which documentation files support your recommendations\n\n## User Question:\n{user_input}\n\n## Your Expert Response:",
+                                "advanced": false,
+                                "required": true,
+                                "show": true,
+                                "type": "prompt"
+                            },
+                            "user_input": {
+                                "_input_type": "MessageTextInput",
+                                "display_name": "User Input",
+                                "info": "User's question about SCK development",
+                                "input_types": ["Message"],
+                                "required": true,
+                                "show": true,
+                                "type": "str",
+                                "value": ""
+                            },
+                            "search_results": {
+                                "_input_type": "HandleInput",
+                                "display_name": "Search Results",
+                                "info": "Contextual search results from SCK documentation",
+                                "input_types": ["Data"],
+                                "advanced": true,
+                                "required": false,
+                                "show": true,
+                                "type": "Data"
+                            }
+                        }
+                    },
+                    "type": "PromptTemplate"
+                },
+                "id": "PromptTemplate-enhanced",
+                "measured": {
+                    "height": 350,
+                    "width": 400
+                },
+                "position": {
+                    "x": 1100,
+                    "y": 450
+                },
+                "selected": false,
+                "type": "genericNode"
+            },
+            {
+                "data": {
+                    "id": "OpenAIModel-enhanced",
+                    "node": {
+                        "base_classes": [
+                            "BaseLanguageModel",
+                            "LanguageModel"
+                        ],
+                        "category": "models",
+                        "description": "GPT-4 for enhanced SCK assistance",
+                        "display_name": "OpenAI GPT-4",
+                        "icon": "OpenAI",
+                        "key": "OpenAIModel",
+                        "outputs": [
+                            {
+                                "types": [
+                                    "LanguageModel"
+                                ],
+                                "selected": "LanguageModel",
+                                "name": "text_output",
+                                "display_name": "Language Model",
+                                "method": "build_model"
+                            }
+                        ],
+                        "template": {
+                            "_type": "Component",
+                            "api_key": {
+                                "_input_type": "SecretStrInput",
+                                "display_name": "OpenAI API Key",
+                                "info": "Your OpenAI API key for GPT-4 access",
+                                "password": true,
+                                "required": true,
+                                "show": true,
+                                "type": "str",
+                                "value": null
+                            },
+                            "model_name": {
+                                "_input_type": "DropdownInput",
+                                "display_name": "Model Name",
+                                "options": [
+                                    "gpt-4o",
+                                    "gpt-4o-mini",
+                                    "gpt-4-turbo",
+                                    "gpt-4"
+                                ],
+                                "value": "gpt-4o",
+                                "info": "GPT-4 recommended for complex SCK questions",
+                                "required": true,
+                                "show": true,
+                                "type": "str"
+                            },
+                            "temperature": {
+                                "_input_type": "FloatInput",
+                                "display_name": "Temperature",
+                                "value": 0.2,
+                                "info": "Low temperature for accurate, consistent technical responses",
+                                "advanced": true,
+                                "required": false,
+                                "show": true,
+                                "type": "float"
+                            },
+                            "max_tokens": {
+                                "_input_type": "IntInput",
+                                "display_name": "Max Tokens",
+                                "value": 3000,
+                                "info": "Higher token limit for detailed explanations",
+                                "advanced": true,
+                                "required": false,
+                                "show": true,
+                                "type": "int"
+                            }
+                        }
+                    },
+                    "type": "OpenAIModel"
+                },
+                "id": "OpenAIModel-enhanced",
+                "measured": {
+                    "height": 280,
+                    "width": 320
+                },
+                "position": {
+                    "x": 1550,
+                    "y": 350
+                },
+                "selected": false,
+                "type": "genericNode"
+            },
+            {
+                "data": {
+                    "id": "LLMChain-enhanced",
+                    "node": {
+                        "base_classes": [
+                            "Chain"
+                        ],
+                        "category": "chains",
+                        "description": "Enhanced chain with search context",
+                        "display_name": "Enhanced LLM Chain",
+                        "icon": "chain",
+                        "key": "LLMChain",
+                        "outputs": [
+                            {
+                                "types": [
+                                    "Message"
+                                ],
+                                "selected": "Message",
+                                "name": "response",
+                                "display_name": "Response",
+                                "method": "run_chain"
+                            }
+                        ],
+                        "template": {
+                            "_type": "Component",
+                            "llm": {
+                                "_input_type": "HandleInput",
+                                "display_name": "Language Model",
+                                "info": "Enhanced language model for SCK assistance",
+                                "input_types": ["LanguageModel"],
+                                "required": true,
+                                "show": true,
+                                "type": "LanguageModel"
+                            },
+                            "prompt": {
+                                "_input_type": "HandleInput",
+                                "display_name": "Prompt",
+                                "info": "Enhanced prompt template with search context",
+                                "input_types": ["BasePromptTemplate"],
+                                "required": true,
+                                "show": true,
+                                "type": "BasePromptTemplate"
+                            }
+                        }
+                    },
+                    "type": "LLMChain"
+                },
+                "id": "LLMChain-enhanced",
+                "measured": {
+                    "height": 200,
+                    "width": 280
+                },
+                "position": {
+                    "x": 1900,
+                    "y": 500
+                },
+                "selected": false,
+                "type": "genericNode"
+            },
+            {
+                "data": {
+                    "id": "ChatOutput-enhanced",
+                    "node": {
+                        "base_classes": [
+                            "Message"
+                        ],
+                        "category": "outputs",
+                        "description": "Enhanced chat output with SCK branding",
+                        "display_name": "SCK Assistant Output",
+                        "icon": "MessagesSquare",
+                        "key": "ChatOutput",
+                        "minimized": true,
+                        "outputs": [
+                            {
+                                "types": [
+                                    "Message"
+                                ],
+                                "selected": "Message",
+                                "name": "message",
+                                "display_name": "Output Message",
+                                "method": "message_response"
+                            }
+                        ],
+                        "template": {
+                            "_type": "Component",
+                            "input_value": {
+                                "_input_type": "HandleInput",
+                                "display_name": "Inputs",
+                                "info": "Enhanced response message",
+                                "input_types": ["Message"],
+                                "required": true,
+                                "show": true,
+                                "type": "Message"
+                            },
+                            "sender_name": {
+                                "_input_type": "MessageTextInput",
+                                "display_name": "Sender Name",
+                                "value": "SCK Expert",
+                                "info": "Assistant identity",
+                                "advanced": true,
+                                "required": false,
+                                "show": true,
+                                "type": "str"
+                            },
+                            "chat_icon": {
+                                "_input_type": "MessageTextInput",
+                                "display_name": "Icon",
+                                "value": "🔍",
+                                "info": "Search-focused assistant icon",
+                                "advanced": true,
+                                "required": false,
+                                "show": true,
+                                "type": "str"
+                            },
+                            "background_color": {
+                                "_input_type": "MessageTextInput",
+                                "display_name": "Background Color",
+                                "value": "#059669",
+                                "info": "Green theme for enhanced assistant",
+                                "advanced": true,
+                                "required": false,
+                                "show": true,
+                                "type": "str"
+                            }
+                        }
+                    },
+                    "type": "ChatOutput"
+                },
+                "id": "ChatOutput-enhanced",
+                "measured": {
+                    "height": 50,
+                    "width": 200
+                },
+                "position": {
+                    "x": 2250,
+                    "y": 550
+                },
+                "selected": false,
+                "type": "genericNode"
+            }
+        ],
+        "edges": [
+            {
+                "id": "edge-input-to-search",
+                "source": "ChatInput-user-advanced",
+                "sourceHandle": "message",
+                "target": "CustomComponent-mcp-search",
+                "targetHandle": "query",
+                "data": {
+                    "sourceHandle": {
+                        "dataType": "ChatInput",
+                        "id": "ChatInput-user-advanced",
+                        "name": "message",
+                        "output_types": ["Message"]
+                    },
+                    "targetHandle": {
+                        "fieldName": "query",
+                        "id": "CustomComponent-mcp-search",
+                        "inputTypes": ["Message"],
+                        "type": "str"
+                    }
+                }
+            },
+            {
+                "id": "edge-input-to-prompt",
+                "source": "ChatInput-user-advanced",
+                "sourceHandle": "message",
+                "target": "PromptTemplate-enhanced",
+                "targetHandle": "user_input",
+                "data": {
+                    "sourceHandle": {
+                        "dataType": "ChatInput",
+                        "id": "ChatInput-user-advanced",
+                        "name": "message",
+                        "output_types": ["Message"]
+                    },
+                    "targetHandle": {
+                        "fieldName": "user_input",
+                        "id": "PromptTemplate-enhanced",
+                        "inputTypes": ["Message"],
+                        "type": "str"
+                    }
+                }
+            },
+            {
+                "id": "edge-search-to-prompt",
+                "source": "CustomComponent-mcp-search",
+                "sourceHandle": "search_results",
+                "target": "PromptTemplate-enhanced",
+                "targetHandle": "search_results",
+                "data": {
+                    "sourceHandle": {
+                        "dataType": "CustomComponent",
+                        "id": "CustomComponent-mcp-search",
+                        "name": "search_results",
+                        "output_types": ["Data"]
+                    },
+                    "targetHandle": {
+                        "fieldName": "search_results",
+                        "id": "PromptTemplate-enhanced",
+                        "inputTypes": ["Data"],
+                        "type": "Data"
+                    }
+                }
+            },
+            {
+                "id": "edge-prompt-to-chain",
+                "source": "PromptTemplate-enhanced",
+                "sourceHandle": "prompt",
+                "target": "LLMChain-enhanced",
+                "targetHandle": "prompt",
+                "data": {
+                    "sourceHandle": {
+                        "dataType": "PromptTemplate",
+                        "id": "PromptTemplate-enhanced",
+                        "name": "prompt",
+                        "output_types": ["BasePromptTemplate"]
+                    },
+                    "targetHandle": {
+                        "fieldName": "prompt",
+                        "id": "LLMChain-enhanced",
+                        "inputTypes": ["BasePromptTemplate"],
+                        "type": "BasePromptTemplate"
+                    }
+                }
+            },
+            {
+                "id": "edge-model-to-chain",
+                "source": "OpenAIModel-enhanced",
+                "sourceHandle": "text_output",
+                "target": "LLMChain-enhanced",
+                "targetHandle": "llm",
+                "data": {
+                    "sourceHandle": {
+                        "dataType": "OpenAIModel",
+                        "id": "OpenAIModel-enhanced",
+                        "name": "text_output",
+                        "output_types": ["LanguageModel"]
+                    },
+                    "targetHandle": {
+                        "fieldName": "llm",
+                        "id": "LLMChain-enhanced",
+                        "inputTypes": ["LanguageModel"],
+                        "type": "LanguageModel"
+                    }
+                }
+            },
+            {
+                "id": "edge-chain-to-output",
+                "source": "LLMChain-enhanced",
+                "sourceHandle": "response",
+                "target": "ChatOutput-enhanced",
+                "targetHandle": "input_value",
+                "data": {
+                    "sourceHandle": {
+                        "dataType": "LLMChain",
+                        "id": "LLMChain-enhanced",
+                        "name": "response",
+                        "output_types": ["Message"]
+                    },
+                    "targetHandle": {
+                        "fieldName": "input_value",
+                        "id": "ChatOutput-enhanced",
+                        "inputTypes": ["Message"],
+                        "type": "Message"
+                    }
+                }
+            }
+        ],
+        "viewport": {
+            "x": -200,
+            "y": -100,
+            "zoom": 0.7
+        }
+    },
+    "is_component": false,
+    "webhook": false,
+    "endpoint_name": null,
+    "tags": [
+        "documentation",
+        "sck",
+        "mcp",
+        "advanced",
+        "search"
+    ],
+    "locked": false,
+    "mcp_enabled": true,
+    "action_name": null,
+    "action_description": null,
+    "access_type": "PRIVATE"
+}

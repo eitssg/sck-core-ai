@@ -1,0 +1,53 @@
+###############################################
+# Minimal MCP HTTP Bridge Image (Dev/Test)
+# Purpose: Expose SCK MCP (via HTTP bridge) for Langflow + React prototype.
+# This intentionally copies ONLY what is required:
+#   - sck-core-framework (dependency providing core_logging, etc.)
+#   - sck-core-ai (the MCP server + bridge)
+# No Langflow flows are baked into this image.
+###############################################
+
+FROM python:3.12-slim AS base
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    APP_HOME=/app/sck-core-ai \
+    SCK_AI_HOST=0.0.0.0 \
+    SCK_AI_PORT=8001
+
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git curl build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy framework dependency first for better layer caching
+COPY sck-core-framework ./sck-core-framework
+# Bypass dynamic versioning VCS lookup (no .git in container build context layers)
+ENV POETRY_DYNAMIC_VERSIONING_BYPASS=1
+RUN pip install ./sck-core-framework || (echo "Failed to install sck-core-framework" && exit 1)
+
+# Copy AI project (only needed files)
+COPY sck-core-ai/pyproject.toml sck-core-ai/README.md ./sck-core-ai/
+COPY sck-core-ai/core_ai ./sck-core-ai/core_ai
+COPY sck-core-ai/mcp_http_bridge.py sck-core-ai/run_mcp_server.py ./sck-core-ai/
+
+# Install AI project WITH extras (ai) for embeddings / langchain features
+RUN pip install "./sck-core-ai[ai]" || (echo "Failed to install sck-core-ai with extras" && exit 1)
+
+WORKDIR $APP_HOME
+
+EXPOSE 8001
+
+# Healthcheck hits root bridge endpoint
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD curl -fsS http://localhost:8001/ || exit 1
+
+# Default env values (override as needed)
+ENV LANGFLOW_BASE_URL=http://host.docker.internal:7860 \
+    LOCAL_MODE=True \
+    CLIENT=test-client \
+    LOG_LEVEL=INFO
+
+CMD ["python", "mcp_http_bridge.py"]

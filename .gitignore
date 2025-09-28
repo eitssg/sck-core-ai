@@ -1,0 +1,14 @@
+.venv/
+dist/
+build/
+**/data/
+**/__pypackages__
+*.egg-info
+.pytest_cache/
+.ipynb_checkpoints/
+# Byte-compiled / optimized / DLL files
+**/__pycache__/
+*.py[cod]
+*$py.class
+.env.*
+.env

@@ -1,0 +1,534 @@
+{
+    "name": "SCK Documentation Assistant",
+    "description": "AI assistant specialized in Simple Cloud Kit documentation and development questions.",
+    "icon": "📚",
+    "icon_bg_color": "#2563eb",
+    "gradient": null,
+    "data": {
+        "nodes": [
+            {
+                "data": {
+                    "id": "note-README",
+                    "node": {
+                        "description": "# 📚 SCK Documentation Assistant\n\nThis assistant is specialized in helping with Simple Cloud Kit development:\n\n## Features:\n- Expert knowledge of SCK architecture\n- Code examples and best practices\n- Deployment guidance\n- Multi-tenant model explanations\n- API documentation assistance\n\n## Quick Start:\n1. Add your OpenAI API key to the OpenAI component\n2. Ask questions about SCK development, deployment, or usage\n3. Get contextually relevant answers with code examples\n\n## Example Questions:\n- \"How do I set up multi-tenant authentication?\"\n- \"What's the difference between client_id and tenant client?\"\n- \"Show me how to use MagicS3Bucket for file operations\"\n- \"How do I implement ProxyEvent in a Lambda handler?\"",
+                        "display_name": "",
+                        "documentation": "",
+                        "template": {
+                            "backgroundColor": "blue"
+                        }
+                    },
+                    "type": "note"
+                },
+                "id": "note-README",
+                "measured": {
+                    "height": 500,
+                    "width": 400
+                },
+                "position": {
+                    "x": 50,
+                    "y": 50
+                },
+                "selected": false,
+                "type": "noteNode"
+            },
+            {
+                "data": {
+                    "id": "note-api-key",
+                    "node": {
+                        "description": "### 🔑 Add your OpenAI API key here 👇\nRequired for the assistant to function",
+                        "display_name": "",
+                        "documentation": "",
+                        "template": {
+                            "backgroundColor": "yellow"
+                        }
+                    },
+                    "type": "note"
+                },
+                "id": "note-api-key",
+                "measured": {
+                    "height": 150,
+                    "width": 300
+                },
+                "position": {
+                    "x": 1100,
+                    "y": 100
+                },
+                "selected": false,
+                "type": "noteNode"
+            },
+            {
+                "data": {
+                    "id": "ChatInput-user",
+                    "node": {
+                        "base_classes": [
+                            "Message"
+                        ],
+                        "category": "inputs",
+                        "description": "Get chat inputs from the Playground.",
+                        "display_name": "Chat Input",
+                        "icon": "MessagesSquare",
+                        "key": "ChatInput",
+                        "minimized": true,
+                        "outputs": [
+                            {
+                                "types": [
+                                    "Message"
+                                ],
+                                "selected": "Message",
+                                "name": "message",
+                                "display_name": "Chat Message",
+                                "method": "message_response"
+                            }
+                        ],
+                        "template": {
+                            "_type": "Component",
+                            "input_value": {
+                                "_input_type": "MultilineInput",
+                                "display_name": "Input Text",
+                                "value": "",
+                                "info": "Message to be passed as input.",
+                                "advanced": false,
+                                "required": false,
+                                "show": true,
+                                "type": "str"
+                            },
+                            "sender": {
+                                "_input_type": "DropdownInput",
+                                "display_name": "Sender Type",
+                                "options": ["AI", "User"],
+                                "value": "User",
+                                "info": "Type of sender.",
+                                "advanced": true,
+                                "required": false,
+                                "show": true,
+                                "type": "str"
+                            },
+                            "sender_name": {
+                                "_input_type": "MessageTextInput",
+                                "display_name": "Sender Name",
+                                "value": "User",
+                                "info": "Name of the sender.",
+                                "advanced": true,
+                                "required": false,
+                                "show": true,
+                                "type": "str"
+                            }
+                        }
+                    },
+                    "type": "ChatInput"
+                },
+                "id": "ChatInput-user",
+                "measured": {
+                    "height": 50,
+                    "width": 200
+                },
+                "position": {
+                    "x": 500,
+                    "y": 400
+                },
+                "selected": false,
+                "type": "genericNode"
+            },
+            {
+                "data": {
+                    "id": "PromptTemplate-sck",
+                    "node": {
+                        "base_classes": [
+                            "StringPromptTemplate",
+                            "BasePromptTemplate"
+                        ],
+                        "category": "prompts",
+                        "description": "Create a prompt template with multiple variables.",
+                        "display_name": "Prompt",
+                        "icon": "prompts",
+                        "key": "PromptTemplate",
+                        "outputs": [
+                            {
+                                "types": [
+                                    "BasePromptTemplate"
+                                ],
+                                "selected": "BasePromptTemplate",
+                                "name": "prompt",
+                                "display_name": "Prompt",
+                                "method": "build_prompt"
+                            }
+                        ],
+                        "template": {
+                            "_type": "Component",
+                            "template": {
+                                "_input_type": "PromptInput",
+                                "display_name": "Template",
+                                "info": "Prompt template with variables like {variable_name}",
+                                "multiline": true,
+                                "value": "You are an expert AI assistant specializing in Simple Cloud Kit (SCK) development and architecture.\n\n## Your Expertise:\n- **Multi-tenant Architecture**: Deep understanding of client_id vs tenant client concepts, OAuth flows, and session management\n- **SCK Framework**: Proficient with core_framework, core_logging, core_db, core_helper modules\n- **AWS Lambda Integration**: Expert in ProxyEvent patterns, synchronous handlers, and Lambda best practices\n- **S3 Operations**: Skilled with MagicS3Bucket patterns, presigned URLs, and S3 lifecycle management\n- **API Design**: Knowledgeable about SCK envelope responses, OAuth compliance, and FastAPI integration\n- **Build Systems**: Familiar with Poetry, multi-module builds, and dependency management\n- **Documentation**: Expert in Google-style docstrings, Sphinx documentation generation\n\n## Key SCK Principles to Remember:\n1. **Auth & Tokens**: Session cookies for /auth/v1/**, access tokens in Redux memory for /api/v1/**, refresh tokens in sessionStorage only\n2. **Lambda Runtime**: All Python runs in AWS Lambda - NO async def/await in handlers, use threads for concurrency\n3. **S3 Architecture**: Use MagicS3Bucket for bucket operations, boto3 client only for presigned URLs\n4. **API Responses**: Non-OAuth endpoints use envelope {{ status, code, data, metadata, message }}, OAuth follows RFC 6749\n5. **Multi-tenancy**: client_id = OAuth SPA identifier, tenant client = slug within client_id namespace\n\n## Response Guidelines:\n- Provide practical, actionable answers with code examples\n- Reference specific SCK modules and patterns\n- Explain the \"why\" behind architectural decisions\n- Include relevant security and best practice considerations\n- Use Google-style docstrings in code examples\n- Cite specific documentation files when relevant\n\n**User Question:** {user_input}\n\nProvide a comprehensive, expert-level response:",
+                                "advanced": false,
+                                "required": true,
+                                "show": true,
+                                "type": "prompt"
+                            },
+                            "user_input": {
+                                "_input_type": "MessageTextInput",
+                                "display_name": "User Input",
+                                "info": "User's question or request",
+                                "input_types": ["Message"],
+                                "advanced": false,
+                                "required": true,
+                                "show": true,
+                                "type": "str",
+                                "value": ""
+                            }
+                        }
+                    },
+                    "type": "PromptTemplate"
+                },
+                "id": "PromptTemplate-sck",
+                "measured": {
+                    "height": 300,
+                    "width": 350
+                },
+                "position": {
+                    "x": 750,
+                    "y": 350
+                },
+                "selected": false,
+                "type": "genericNode"
+            },
+            {
+                "data": {
+                    "id": "OpenAIModel-assistant",
+                    "node": {
+                        "base_classes": [
+                            "BaseLanguageModel",
+                            "LanguageModel"
+                        ],
+                        "category": "models",
+                        "description": "Generate text using OpenAI's models.",
+                        "display_name": "OpenAI",
+                        "icon": "OpenAI",
+                        "key": "OpenAIModel",
+                        "outputs": [
+                            {
+                                "types": [
+                                    "LanguageModel"
+                                ],
+                                "selected": "LanguageModel",
+                                "name": "text_output",
+                                "display_name": "Language Model",
+                                "method": "build_model"
+                            }
+                        ],
+                        "template": {
+                            "_type": "Component",
+                            "api_key": {
+                                "_input_type": "SecretStrInput",
+                                "display_name": "OpenAI API Key",
+                                "info": "The OpenAI API Key to use for OpenAI models.",
+                                "password": true,
+                                "required": true,
+                                "show": true,
+                                "type": "str",
+                                "value": null
+                            },
+                            "model_name": {
+                                "_input_type": "DropdownInput",
+                                "display_name": "Model Name",
+                                "options": [
+                                    "gpt-4o",
+                                    "gpt-4o-mini",
+                                    "gpt-4-turbo",
+                                    "gpt-4",
+                                    "gpt-3.5-turbo",
+                                    "gpt-3.5-turbo-16k"
+                                ],
+                                "value": "gpt-4o-mini",
+                                "info": "The name of the model to use.",
+                                "advanced": false,
+                                "required": true,
+                                "show": true,
+                                "type": "str"
+                            },
+                            "temperature": {
+                                "_input_type": "FloatInput",
+                                "display_name": "Temperature",
+                                "value": 0.3,
+                                "info": "Controls randomness in the response. Lower values make output more focused and deterministic.",
+                                "advanced": true,
+                                "required": false,
+                                "show": true,
+                                "type": "float"
+                            },
+                            "max_tokens": {
+                                "_input_type": "IntInput",
+                                "display_name": "Max Tokens",
+                                "value": 2000,
+                                "info": "The maximum number of tokens to generate in the completion.",
+                                "advanced": true,
+                                "required": false,
+                                "show": true,
+                                "type": "int"
+                            }
+                        }
+                    },
+                    "type": "OpenAIModel"
+                },
+                "id": "OpenAIModel-assistant",
+                "measured": {
+                    "height": 250,
+                    "width": 300
+                },
+                "position": {
+                    "x": 1150,
+                    "y": 300
+                },
+                "selected": false,
+                "type": "genericNode"
+            },
+            {
+                "data": {
+                    "id": "LLMChain-processor",
+                    "node": {
+                        "base_classes": [
+                            "Chain"
+                        ],
+                        "category": "chains",
+                        "description": "Chain to run queries against a language model",
+                        "display_name": "LLM Chain",
+                        "icon": "chain",
+                        "key": "LLMChain",
+                        "outputs": [
+                            {
+                                "types": [
+                                    "Message"
+                                ],
+                                "selected": "Message",
+                                "name": "response",
+                                "display_name": "Response",
+                                "method": "run_chain"
+                            }
+                        ],
+                        "template": {
+                            "_type": "Component",
+                            "llm": {
+                                "_input_type": "HandleInput",
+                                "display_name": "Language Model",
+                                "info": "Language Model to use in the chain.",
+                                "input_types": ["LanguageModel"],
+                                "required": true,
+                                "show": true,
+                                "type": "LanguageModel"
+                            },
+                            "prompt": {
+                                "_input_type": "HandleInput",
+                                "display_name": "Prompt",
+                                "info": "Prompt template to use in the chain.",
+                                "input_types": ["BasePromptTemplate"],
+                                "required": true,
+                                "show": true,
+                                "type": "BasePromptTemplate"
+                            }
+                        }
+                    },
+                    "type": "LLMChain"
+                },
+                "id": "LLMChain-processor",
+                "measured": {
+                    "height": 200,
+                    "width": 250
+                },
+                "position": {
+                    "x": 1500,
+                    "y": 400
+                },
+                "selected": false,
+                "type": "genericNode"
+            },
+            {
+                "data": {
+                    "id": "ChatOutput-assistant",
+                    "node": {
+                        "base_classes": [
+                            "Message"
+                        ],
+                        "category": "outputs",
+                        "description": "Display a chat message in the Playground.",
+                        "display_name": "Chat Output",
+                        "icon": "MessagesSquare",
+                        "key": "ChatOutput",
+                        "minimized": true,
+                        "outputs": [
+                            {
+                                "types": [
+                                    "Message"
+                                ],
+                                "selected": "Message",
+                                "name": "message",
+                                "display_name": "Output Message",
+                                "method": "message_response"
+                            }
+                        ],
+                        "template": {
+                            "_type": "Component",
+                            "input_value": {
+                                "_input_type": "HandleInput",
+                                "display_name": "Inputs",
+                                "info": "Message to be passed as output.",
+                                "input_types": ["Data", "DataFrame", "Message"],
+                                "required": true,
+                                "show": true,
+                                "type": "Message"
+                            },
+                            "sender": {
+                                "_input_type": "DropdownInput",
+                                "display_name": "Sender Type",
+                                "options": ["AI", "User"],
+                                "value": "AI",
+                                "info": "Type of sender.",
+                                "advanced": true,
+                                "required": false,
+                                "show": true,
+                                "type": "str"
+                            },
+                            "sender_name": {
+                                "_input_type": "MessageTextInput",
+                                "display_name": "Sender Name",
+                                "value": "SCK Assistant",
+                                "info": "Name of the sender.",
+                                "advanced": true,
+                                "required": false,
+                                "show": true,
+                                "type": "str"
+                            },
+                            "chat_icon": {
+                                "_input_type": "MessageTextInput",
+                                "display_name": "Icon",
+                                "value": "📚",
+                                "info": "The icon of the message.",
+                                "advanced": true,
+                                "required": false,
+                                "show": true,
+                                "type": "str"
+                            }
+                        }
+                    },
+                    "type": "ChatOutput"
+                },
+                "id": "ChatOutput-assistant",
+                "measured": {
+                    "height": 50,
+                    "width": 200
+                },
+                "position": {
+                    "x": 1800,
+                    "y": 450
+                },
+                "selected": false,
+                "type": "genericNode"
+            }
+        ],
+        "edges": [
+            {
+                "id": "edge-input-to-prompt",
+                "source": "ChatInput-user",
+                "sourceHandle": "message",
+                "target": "PromptTemplate-sck",
+                "targetHandle": "user_input",
+                "data": {
+                    "sourceHandle": {
+                        "dataType": "ChatInput",
+                        "id": "ChatInput-user",
+                        "name": "message",
+                        "output_types": ["Message"]
+                    },
+                    "targetHandle": {
+                        "fieldName": "user_input",
+                        "id": "PromptTemplate-sck",
+                        "inputTypes": ["Message"],
+                        "type": "str"
+                    }
+                }
+            },
+            {
+                "id": "edge-prompt-to-chain",
+                "source": "PromptTemplate-sck",
+                "sourceHandle": "prompt",
+                "target": "LLMChain-processor",
+                "targetHandle": "prompt",
+                "data": {
+                    "sourceHandle": {
+                        "dataType": "PromptTemplate",
+                        "id": "PromptTemplate-sck",
+                        "name": "prompt",
+                        "output_types": ["BasePromptTemplate"]
+                    },
+                    "targetHandle": {
+                        "fieldName": "prompt",
+                        "id": "LLMChain-processor",
+                        "inputTypes": ["BasePromptTemplate"],
+                        "type": "BasePromptTemplate"
+                    }
+                }
+            },
+            {
+                "id": "edge-model-to-chain",
+                "source": "OpenAIModel-assistant",
+                "sourceHandle": "text_output",
+                "target": "LLMChain-processor",
+                "targetHandle": "llm",
+                "data": {
+                    "sourceHandle": {
+                        "dataType": "OpenAIModel",
+                        "id": "OpenAIModel-assistant",
+                        "name": "text_output",
+                        "output_types": ["LanguageModel"]
+                    },
+                    "targetHandle": {
+                        "fieldName": "llm",
+                        "id": "LLMChain-processor",
+                        "inputTypes": ["LanguageModel"],
+                        "type": "LanguageModel"
+                    }
+                }
+            },
+            {
+                "id": "edge-chain-to-output",
+                "source": "LLMChain-processor",
+                "sourceHandle": "response",
+                "target": "ChatOutput-assistant",
+                "targetHandle": "input_value",
+                "data": {
+                    "sourceHandle": {
+                        "dataType": "LLMChain",
+                        "id": "LLMChain-processor",
+                        "name": "response",
+                        "output_types": ["Message"]
+                    },
+                    "targetHandle": {
+                        "fieldName": "input_value",
+                        "id": "ChatOutput-assistant",
+                        "inputTypes": ["Data", "DataFrame", "Message"],
+                        "type": "Message"
+                    }
+                }
+            }
+        ],
+        "viewport": {
+            "x": 0,
+            "y": 0,
+            "zoom": 0.8
+        }
+    },
+    "is_component": false,
+    "webhook": false,
+    "endpoint_name": null,
+    "tags": [
+        "documentation",
+        "sck",
+        "assistant",
+        "development"
+    ],
+    "locked": false,
+    "mcp_enabled": false,
+    "action_name": null,
+    "action_description": null,
+    "access_type": "PRIVATE"
+}

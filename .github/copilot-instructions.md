@@ -2,27 +2,87 @@
 
 - **Tech**: Python package (AI agent for YAML/CloudFormation processing)
 - **Precedence**: Local first; fallback to root `../../.github/copilot-instructions.md`
-- **Conventions**: Follow `../sck-core-ui/docs/backend-code-style.md` for AWS/Lambda patterns
+- **Conventions**: Follow `../sck-core-ui/docs/backend-code-style.md` for AWS + container service patterns (this module is NOT deployed as Lambda)
+
+## 🤖 LLM TERMINAL EXECUTION PROTOCOL 🤖
+
+**ABSOLUTE RULES - NO EXCEPTIONS:**
+
+**RULE_001_USE_ACTIVE_TERMINAL**: ALWAYS use the currently active terminal - it already has the correct environment
+
+**RULE_002_VERIFY_WITH_LAST_COMMAND**: Use `terminal_last_command` to confirm terminal is in correct project directory
+
+**RULE_003_NO_ENVIRONMENT_MANAGEMENT**: NEVER try to activate virtual environments - user has already configured each terminal
+
+**RULE_004_TRUST_EXISTING_SETUP**: If terminal shows correct directory, trust that environment is correct
+
+**RULE_005_MODULE_NOT_FOUND_MEANS_WRONG_TERMINAL**: If "ModuleNotFoundError", ask user to switch to correct terminal instead of trying to fix environment
+
+**ENFORCEMENT**: Use existing configured terminals. Stop trying to manage environments.
+
+## 🔧 CORE_LOGGING USAGE PROTOCOL 🔧
+
+**RULE_101_LOGGING_IMPORT**: Always import as `import core_logging as log`
+
+**RULE_102_LOGGER_ASSIGNMENT**: Set `logger = log` (NOT `log.get_logger()`)
+
+**RULE_103_LOGGING_CALLS**: Use `logger.info()`, `logger.error()`, `logger.debug()` directly
+
+**RULE_104_NO_GET_LOGGER**: NEVER call `log.get_logger(__name__)` - core_logging is pre-configured
+
+**RULE_105_IMPORTS_AT_TOP**: ALL imports must be at top of file, not in functions
+
+## 🚨 PYTHON APPLICATION STRUCTURE PROTOCOL 🚨
+
+**CRITICAL WARNING**: Claude Sonnet 3.5 does NOT understand proper Python application architecture and module structure.
+
+**RULE_201_NO_PYTHON_STRUCTURE_CHANGES**: NEVER create new modules, packages, or application files without explicit developer approval
+
+**RULE_202_NO_CONDITIONAL_IMPORTS**: NEVER use try/except ImportError patterns - imports are not optional and failures must be fixed, not masked
+
+**RULE_203_NO_SYS_PATH_HACKS**: NEVER manipulate sys.path or use hacky import workarounds
+
+**RULE_204_ASK_FOR_STRUCTURE**: When needing new Python files or modules, ASK the developer how they want the structure organized
+
+**RULE_205_INDIVIDUAL_FUNCTIONS_ONLY**: Claude can generate good individual Python functions and classes, but cannot architect proper module structure
+
+**EXAMPLES OF FORBIDDEN PATTERNS**:
+```python
+# ❌ WRONG - Conditional imports
+try:
+    from some_module import SomeClass
+except ImportError:
+    class SomeClass: pass  # Fallback
+
+# ❌ WRONG - sys.path manipulation  
+sys.path.insert(0, "some/directory")
+from local_module import something
+
+# ❌ WRONG - Creating new application files without asking
+```
+
+**CORRECT APPROACH**: "How should I structure the imports for these tools? Should they be in a separate package, or how do you want the module organized?"
 
 ## AI Agent Architecture & Patterns
 
 ### Core Design Principles
 - **Langflow Integration**: All AI agent logic implemented as Langflow workflows for visual debugging and non-technical modification
-- **Multi-Interface Support**: Same core logic exposed via AWS Lambda, FastAPI server, and MCP server interfaces
+- **Multi-Interface Support**: Core logic exposed via containerized FastAPI app & MCP server (legacy Lambda example deprecated)
 - **SCK Framework Compliance**: Use `core_framework`, `core_logging`, `core_helper.aws` for consistency with other modules
-- **Async-Compatible**: Design for both synchronous Lambda handlers and async MCP server operations
+- **Async/Sync Strategy**: Prefer synchronous core execution for determinism; async allowed for I/O parallelism (MCP, external API calls)
 
-### Lambda Handler Requirements
+### Container Service Entry Point (FastAPI)
 ```python
-# CORRECT: Synchronous Lambda handler with ProxyEvent
-from core_framework import ProxyEvent
+from fastapi import FastAPI
 import core_logging as log
 
-def lambda_handler(event, context):
-    request = ProxyEvent(**event)
-    # Process with Langflow agent
-    result = langflow_client.process_sync(request.json)
-    return {"statusCode": 200, "body": json.dumps(result)}
+app = FastAPI()
+
+@app.post("/ai/generate")
+def generate(payload: dict):
+    """Generate AI content using Langflow flow execution (sync core path)."""
+    result = langflow_client.process_sync(payload)
+    return {"status": "success", "data": result}
 ```
 
 ### MCP Server Patterns
@@ -40,7 +100,7 @@ async def handle_lint_yaml(arguments: dict) -> types.TextContent:
 
 ### Langflow Integration Standards
 - **Flow Management**: Store flows in `langflow/` directory as JSON exports
-- **Client Pattern**: Use synchronous Langflow client for Lambda compatibility
+- **Client Pattern**: Use synchronous Langflow client in main execution path; wrap heavy or multi-call chains in thread pool if latency spikes.
 - **Error Handling**: Wrap Langflow calls with structured logging and error conversion
 - **Configuration**: Flow IDs and endpoints via environment variables
 
@@ -89,13 +149,49 @@ async def handle_lint_yaml(arguments: dict) -> types.TextContent:
 
 ## Development Workflow Standards
 
-### Local Development Setup
+{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVersion": "2024-11-05", "capabilities": {"tools": {}}, "clientInfo": {"name": "test-client", "version": "1.0.0"}}}### Local Development Setup (Hybrid Approach)
+
+**CRITICAL**: uv has limitations with local wheel installations. Use this proven hybrid approach:
+
 ```bash
-# CORRECT: Development environment setup
-uv sync --dev                    # Install with dev dependencies
-cp .env.example .env            # Configure environment
-pre-commit install              # Set up code quality hooks
-uv run pytest                   # Verify installation
+# Step 1: Build sck-core-framework wheel first
+cd ../sck-core-framework
+poetry build                    # Creates wheel in dist/
+
+# Step 2: Create and activate virtual environment manually
+cd ../sck-core-ai
+python -m venv .venv           # Create clean venv
+.\.venv\Scripts\Activate.ps1   # Windows PowerShell
+# OR
+source .venv/bin/activate      # Linux/Mac
+
+# Step 3: Install local wheel with pip (RELIABLE)
+pip install ../sck-core-framework/dist/sck_core_framework-*.whl
+
+# Step 4: Install remaining dependencies with uv (FAST)
+uv pip install -e .            # Install current project in editable mode
+uv pip install pytest black flake8 mypy  # Dev dependencies
+
+# Step 5: Verify installation
+python -c "import core_logging; print('Success!')"
+pytest                         # Run tests
+```
+
+### Why This Hybrid Approach?
+
+- **Manual venv**: Full control, no hidden uv magic
+- **pip for local wheels**: Mature, reliable installation
+- **uv for PyPI packages**: Fast, modern dependency resolution
+- **Predictable**: Works every time, no surprises
+
+### Alternative: Pure Traditional Approach
+```bash
+# If uv continues to cause issues, use pure pip:
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install ../sck-core-framework/dist/sck_core_framework-*.whl
+pip install -e .
+pip install -r requirements-dev.txt  # If you create this file
 ```
 
 ### Testing Requirements
@@ -141,7 +237,7 @@ Example of RST-compatible docstring::
 ## Contradiction Detection & Resolution
 
 ### Common Anti-Patterns to Flag
-- **Async in Lambda**: Using `async def` for Lambda handlers conflicts with SCK synchronous pattern
+- **Container Anti-Pattern**: Re-introducing Lambda-specific lifecycle hacks (e.g., assuming cold start) or per-request reinitialization of heavy models.
 - **Direct boto3**: Bypassing `core_helper.aws` conflicts with framework standards
 - **Inline Langflow**: Embedding workflow logic in Python instead of using Langflow JSON files
 - **Non-Envelope Responses**: Returning raw data instead of SCK API envelope format
