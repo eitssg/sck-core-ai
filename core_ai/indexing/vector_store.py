@@ -5,15 +5,15 @@ Handles ChromaDB collections, embedding generation, and semantic search
 for documentation and codebase context retrieval.
 """
 
-import os
-import logging
 from pathlib import Path
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Optional, Any
 import hashlib
-import json
 
 import chromadb
 from chromadb.config import Settings
+import chromadb.utils
+import chromadb.utils.embedding_functions
+import chromadb.utils.embedding_functions.sentence_transformer_embedding_function
 from sentence_transformers import SentenceTransformer
 
 import core_logging as logger
@@ -62,19 +62,19 @@ class VectorStore:
         collection_configs = {
             "documentation": {
                 "metadata": {"description": "Built documentation from Sphinx manuals"},
-                "embedding_function": chromadb.utils.embedding_functions.SentenceTransformerEmbeddingFunction(
+                "embedding_function": chromadb.utils.embedding_functions.sentence_transformer_embedding_function.SentenceTransformerEmbeddingFunction(
                     model_name=self.embedding_model_name
                 ),
             },
             "codebase": {
                 "metadata": {"description": "Source code from Python projects"},
-                "embedding_function": chromadb.utils.embedding_functions.SentenceTransformerEmbeddingFunction(
+                "embedding_function": chromadb.utils.embedding_functions.sentence_transformer_embedding_function.SentenceTransformerEmbeddingFunction(
                     model_name=self.embedding_model_name
                 ),
             },
             "architecture": {
                 "metadata": {"description": "Architecture and design documents"},
-                "embedding_function": chromadb.utils.embedding_functions.SentenceTransformerEmbeddingFunction(
+                "embedding_function": chromadb.utils.embedding_functions.sentence_transformer_embedding_function.SentenceTransformerEmbeddingFunction(
                     model_name=self.embedding_model_name
                 ),
             },

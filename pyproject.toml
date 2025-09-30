@@ -3,7 +3,7 @@ name = "sck-core-ai"
 version = "0.1.0"
 description = "AI agent for YAML/CloudFormation linting and code completion using Langflow"
 readme = "README.md"
-authors = [{ name = "James Barwick", email = "jbarwick@me.com" }]
+authors = [{ name = "James Barwick", email = "jbarwick@eits.com.sg" }]
 requires-python = ">=3.11,<3.13.0"
 dependencies = [
     # SCK Core Framework (install manually with pip first)
@@ -37,6 +37,11 @@ dependencies = [
     "chromadb==0.5.23",
     # Environment configuration
     "python-dotenv>=1.0.0",
+    "sck-core-framework",
+    "sck-core-execute",
+    "sck-core-component",
+    "sck-core-db",
+    "sck-core-runner",
 ]
 
 [build-system]
@@ -63,26 +68,28 @@ dev = [
     # Documentation
     "mkdocs>=1.5.0",
     "mkdocs-material>=9.4.0",
+    "black>=25.9.0",
+    "flake8>=7.3.0",
 ]
 
 # AI/ML dependencies (optional, install with: uv pip install --extra ai)
 # Note: These may have build issues on Python 3.13, use Python 3.11/3.12 if needed
 ai = [
     # Langflow orchestrates UI + flow execution.
-    "langflow>=1.5.0,<1.6.0",
+    "langflow>=1.5.0",
     # LangChain stack: allow both late 0.2.x (needed by Langflow 1.5.x) and 0.3.x when supported
     # Using >=0.2.30 as compromise floor (post tool consolidation) while retaining <0.4.0 ceiling
-    "langchain-core>=0.2.30,<0.4.0",
-    "langchain-community>=0.2.30,<0.4.0",
-    "langchain>=0.2.30,<0.4.0",
+    "langchain-core>=0.2.30",
+    "langchain-community>=0.2.30",
+    "langchain>=0.2.30",
     # Langflow 1.5.x via langchain-pinecone>=0.2.8 requires langchain-openai>=0.3.11
-    "langchain-openai>=0.3.11,<0.4.0",
+    "langchain-openai>=0.3.11",
     # AWS integration layer (Bedrock, etc.) – pin alongside 0.2.x LangChain
     # Upgrade to 0.2.x line to align with langchain-core 0.3.x (pre-0.2 requires core <0.3)
-    "langchain-aws>=0.2.0,<0.3.0",
+    "langchain-aws>=0.2.0",
     # Model provider SDKs
-    "openai>=1.37.0,<2.0.0",
-    "anthropic>=0.29.0,<1.0.0",
+    "openai>=1.37.0",
+    "anthropic>=0.29.0",
 ]
 
 # Vector database dependencies (optional, install with: uv pip install --extra vectordb)
@@ -125,3 +132,7 @@ addopts = "-q"
 
 [tool.uv.sources]
 sck-core-framework = { path = "../sck-core-framework", editable = true }
+sck-core-execute = { path = "../sck-core-execute", editable = true }
+sck-core-component = { path = "../sck-core-component", editable = true }
+sck-core-db = { path = "../sck-core-db", editable = true }
+sck-core-runner = { path = "../sck-core-runner", editable = true }

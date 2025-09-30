@@ -10,9 +10,7 @@ patch introduces an explicit import sentinel and surfaces a clear error with
 actionable guidance when optional dependencies are missing.
 """
 
-import os
 import pickle
-import logging
 from pathlib import Path
 from typing import Dict, List, Optional, Any
 import hashlib

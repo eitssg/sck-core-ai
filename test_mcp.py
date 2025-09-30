@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 
-async def test_mcp_server():
+async def test_mcp_server():  # noqa: C901
     """Test the MCP server by running it and sending commands."""
 
     print("🔧 Testing SCK MCP Server...")
@@ -51,9 +51,7 @@ async def test_mcp_server():
             try:
                 response = json.loads(response_line.strip())
                 print("✅ Initialization successful!")
-                print(
-                    f"📋 Server capabilities: {response.get('result', {}).get('capabilities', {})}"
-                )
+                print(f"📋 Server capabilities: {response.get('result', {}).get('capabilities', {})}")
             except json.JSONDecodeError as e:
                 print(f"❌ Failed to parse initialization response: {response_line}")
                 print(f"Error: {e}")
@@ -78,9 +76,7 @@ async def test_mcp_server():
                 tools = tools_response.get("result", {}).get("tools", [])
                 print(f"🛠️  Available tools ({len(tools)}):")
                 for tool in tools:
-                    print(
-                        f"   - {tool.get('name', 'Unknown')}: {tool.get('description', 'No description')}"
-                    )
+                    print(f"   - {tool.get('name', 'Unknown')}: {tool.get('description', 'No description')}")
             except json.JSONDecodeError as e:
                 print(f"❌ Failed to parse tools response: {tools_response_line}")
                 print(f"Error: {e}")

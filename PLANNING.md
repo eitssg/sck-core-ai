@@ -11392,7 +11392,7 @@ build-backend = "poetry_dynamic_versioning.backend"
 name = "sck-core-ai"
 version = "0.1.0"
 description = "AI agent for YAML/CloudFormation linting and completion"
-authors = ["James Barwick <jbarwick@me.com>"]
+authors = ["James Barwick <jbarwick@eits.com.sg>"]
 readme = "README.md"
 packages = [{ include = "core_ai" }]
 
@@ -23076,7 +23076,7 @@ build-backend = "poetry_dynamic_versioning.backend"
 name = "sck-core-ai"
 version = "0.1.0"
 description = "AI agent for YAML/CloudFormation linting and completion"
-authors = ["James Barwick <jbarwick@me.com>"]
+authors = ["James Barwick <jbarwick@eits.com.sg>"]
 readme = "README.md"
 packages = [{ include = "core_ai" }]
 
@@ -34845,7 +34845,7 @@ build-backend = "poetry_dynamic_versioning.backend"
 name = "sck-core-ai"
 version = "0.1.0"
 description = "AI agent for YAML/CloudFormation linting and completion"
-authors = ["James Barwick <jbarwick@me.com>"]
+authors = ["James Barwick <jbarwick@eits.com.sg>"]
 readme = "README.md"
 packages = [{ include = "core_ai" }]
 
@@ -46920,7 +46920,7 @@ build-backend = "poetry_dynamic_versioning.backend"
 name = "sck-core-ai"
 version = "0.1.0"
 description = "AI agent for YAML/CloudFormation linting and completion"
-authors = ["James Barwick <jbarwick@me.com>"]
+authors = ["James Barwick <jbarwick@eits.com.sg>"]
 readme = "README.md"
 packages = [{ include = "core_ai" }]
 
@@ -59711,7 +59711,7 @@ build-backend = "poetry_dynamic_versioning.backend"
 name = "sck-core-ai"
 version = "0.1.0"
 description = "AI agent for YAML/CloudFormation linting and completion"
-authors = ["James Barwick <jbarwick@me.com>"]
+authors = ["James Barwick <jbarwick@eits.com.sg>"]
 readme = "README.md"
 packages = [{ include = "core_ai" }]
 

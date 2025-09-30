@@ -7,7 +7,6 @@ Provides synchronous interface to Langflow workflows for Lambda compatibility.
 import json
 import time
 from typing import Any, Dict, Optional
-from urllib.parse import urljoin
 import httpx
 import core_logging as logger
 

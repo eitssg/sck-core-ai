@@ -11,7 +11,7 @@ explicitly approved before introducing new modules/packages.
 import json
 from contextlib import asynccontextmanager
 from typing import Any, Dict, List, Optional, AsyncGenerator, Callable
-
+import asyncio
 from fastapi import FastAPI, HTTPException, status, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
@@ -19,7 +19,9 @@ from mangum import Mangum
 from pydantic import BaseModel, Field
 
 import core_framework as util
+
 import core_logging as log
+
 from core_framework.ai.contracts import (
     TemplateGenerateRequest,
     TemplateGenerateResponse,
@@ -48,6 +50,7 @@ from .tools.registry import list_all_tool_specs
 from .indexing import ContextManager, ConsumablesIndexer
 from . import cache as ai_cache
 
+import os
 
 # API Models
 class YamlLintRequest(BaseModel):
@@ -192,8 +195,6 @@ def _truthy_env(name: str, default: bool = False) -> bool:
         Boolean representation treating ``1,true,yes,on`` (case‑insensitive) as
         True.
     """
-    import os
-
     val = os.getenv(name)
     if val is None:
         return default
@@ -232,9 +233,7 @@ async def lifespan(app: FastAPI):
         /ready returns 503 while Langflow is unavailable; we never provide
         degraded / fallback answers.
     """
-    global langflow_client, context_manager, _langflow_reconnect_task
-
-    import asyncio, os
+    global context_manager, _langflow_reconnect_task
 
     auto_reconnect = _truthy_env("CORE_AI_LANGFLOW_AUTO_RECONNECT", True)
     reconnect_interval = float(
@@ -276,7 +275,7 @@ async def lifespan(app: FastAPI):
     _init_langflow_once()
 
     async def _reconnect_loop():  # pragma: no cover (timing dependent)
-        global langflow_client
+        
         while True:
             try:
                 if not langflow_client:

@@ -5,12 +5,10 @@ This component provides SCK-specific search and architecture tools
 
 from langflow.base.langchain_utilities.model import LCToolComponent
 from langflow.inputs import StrInput
-from langflow.schema import Data
 from langchain.tools import StructuredTool
 from pydantic import BaseModel, Field
-from typing import Optional, List
+from typing import List
 import sys
-import os
 from pathlib import Path
 
 # Add the current directory to Python path so we can import our tools

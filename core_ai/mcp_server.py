@@ -52,9 +52,6 @@ class SCKCoreAIMCPServer:
             workspace_root: Path to workspace root (auto-detected if None)
             build_directory: Path to documentation build directory (auto-detected if None)
         """
-        if not MCP_AVAILABLE:
-            raise ImportError("MCP not available - install with: uv add mcp")
-
         # Log startup and environment info
         logger.info("Initializing SCK Core AI MCP Server")
         logger.info(f"LOCAL_MODE: {os.getenv('LOCAL_MODE', 'Not set')}")
@@ -950,9 +947,6 @@ Analyze the provided CloudFormation template and provide detailed findings with:
 
     async def run(self):
         """Run the MCP server."""
-        if not MCP_AVAILABLE:
-            raise RuntimeError("MCP not available")
-
         logger.info("Starting SCK Core AI MCP server")
 
         async with stdio_server() as (read_stream, write_stream):

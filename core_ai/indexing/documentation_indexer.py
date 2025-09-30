@@ -7,8 +7,7 @@ embeddings for technical reference, user guide, and developer guide content.
 
 import re
 from pathlib import Path
-from typing import Dict, List, Optional, Any, Iterator, Tuple
-from urllib.parse import urljoin, urlparse
+from typing import Dict, List, Optional, Any, Iterator
 
 from bs4 import BeautifulSoup
 

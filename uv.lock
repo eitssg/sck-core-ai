@@ -485,6 +485,31 @@ wheels = [
 ]
 
 [[package]]
+name = "black"
+version = "25.9.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "click" },
+    { name = "mypy-extensions" },
+    { name = "packaging" },
+    { name = "pathspec" },
+    { name = "platformdirs" },
+    { name = "pytokens" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4b/43/20b5c90612d7bdb2bdbcceeb53d588acca3bb8f0e4c5d5c751a2c8fdd55a/black-25.9.0.tar.gz", hash = "sha256:0474bca9a0dd1b51791fcc507a4e02078a1c63f6d4e4ae5544b9848c7adfb619", size = 648393, upload-time = "2025-09-19T00:27:37.758Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b7/f4/7531d4a336d2d4ac6cc101662184c8e7d068b548d35d874415ed9f4116ef/black-25.9.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:456386fe87bad41b806d53c062e2974615825c7a52159cde7ccaeb0695fa28fa", size = 1698727, upload-time = "2025-09-19T00:31:14.264Z" },
+    { url = "https://files.pythonhosted.org/packages/28/f9/66f26bfbbf84b949cc77a41a43e138d83b109502cd9c52dfc94070ca51f2/black-25.9.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:a16b14a44c1af60a210d8da28e108e13e75a284bf21a9afa6b4571f96ab8bb9d", size = 1555679, upload-time = "2025-09-19T00:31:29.265Z" },
+    { url = "https://files.pythonhosted.org/packages/bf/59/61475115906052f415f518a648a9ac679d7afbc8da1c16f8fdf68a8cebed/black-25.9.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:aaf319612536d502fdd0e88ce52d8f1352b2c0a955cc2798f79eeca9d3af0608", size = 1617453, upload-time = "2025-09-19T00:30:42.24Z" },
+    { url = "https://files.pythonhosted.org/packages/7f/5b/20fd5c884d14550c911e4fb1b0dae00d4abb60a4f3876b449c4d3a9141d5/black-25.9.0-cp311-cp311-win_amd64.whl", hash = "sha256:c0372a93e16b3954208417bfe448e09b0de5cc721d521866cd9e0acac3c04a1f", size = 1333655, upload-time = "2025-09-19T00:30:56.715Z" },
+    { url = "https://files.pythonhosted.org/packages/fb/8e/319cfe6c82f7e2d5bfb4d3353c6cc85b523d677ff59edc61fdb9ee275234/black-25.9.0-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:1b9dc70c21ef8b43248f1d86aedd2aaf75ae110b958a7909ad8463c4aa0880b0", size = 1742012, upload-time = "2025-09-19T00:33:08.678Z" },
+    { url = "https://files.pythonhosted.org/packages/94/cc/f562fe5d0a40cd2a4e6ae3f685e4c36e365b1f7e494af99c26ff7f28117f/black-25.9.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:8e46eecf65a095fa62e53245ae2795c90bdecabd53b50c448d0a8bcd0d2e74c4", size = 1581421, upload-time = "2025-09-19T00:35:25.937Z" },
+    { url = "https://files.pythonhosted.org/packages/84/67/6db6dff1ebc8965fd7661498aea0da5d7301074b85bba8606a28f47ede4d/black-25.9.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:9101ee58ddc2442199a25cb648d46ba22cd580b00ca4b44234a324e3ec7a0f7e", size = 1655619, upload-time = "2025-09-19T00:30:49.241Z" },
+    { url = "https://files.pythonhosted.org/packages/10/10/3faef9aa2a730306cf469d76f7f155a8cc1f66e74781298df0ba31f8b4c8/black-25.9.0-cp312-cp312-win_amd64.whl", hash = "sha256:77e7060a00c5ec4b3367c55f39cf9b06e68965a4f2e61cecacd6d0d9b7ec945a", size = 1342481, upload-time = "2025-09-19T00:31:29.625Z" },
+    { url = "https://files.pythonhosted.org/packages/1b/46/863c90dcd3f9d41b109b7f19032ae0db021f0b2a81482ba0a1e28c84de86/black-25.9.0-py3-none-any.whl", hash = "sha256:474b34c1342cdc157d307b56c4c65bce916480c4a8f6551fdc6bf9b486a7c4ae", size = 203363, upload-time = "2025-09-19T00:27:35.724Z" },
+]
+
+[[package]]
 name = "blinker"
 version = "1.9.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1416,6 +1441,19 @@ wheels = [
 ]
 
 [[package]]
+name = "email-validator"
+version = "2.3.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "dnspython" },
+    { name = "idna" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/f5/22/900cb125c76b7aaa450ce02fd727f452243f2e91a61af068b40adba60ea9/email_validator-2.3.0.tar.gz", hash = "sha256:9fc05c37f2f6cf439ff414f8fc46d917929974a82244c20eb10231ba60c54426", size = 51238, upload-time = "2025-08-26T13:09:06.831Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/de/15/545e2b6cf2e3be84bc1ed85613edd75b8aea69807a71c26f4ca6a9258e82/email_validator-2.3.0-py3-none-any.whl", hash = "sha256:80f13f623413e6b197ae73bb10bf4eb0908faf509ad8362c5edeb0be7fd450b4", size = 35604, upload-time = "2025-08-26T13:09:05.858Z" },
+]
+
+[[package]]
 name = "emoji"
 version = "2.15.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1567,6 +1605,20 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/4d/08/61df5c8357742d8bee504db166b633ef7972b40c831e8c2f2a26feb9021c/firecrawl_py-1.17.0.tar.gz", hash = "sha256:5e2f50ec1f0e67514cdf6f0afc7df6be36eb8277fbec9e1f5a283fc01fae7875", size = 22191, upload-time = "2025-04-17T18:13:01.068Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/53/a6/9431b62571b4ff4cd0d09f70c7df1253abf611e829f68d194e1ea69ea57e/firecrawl_py-1.17.0-py3-none-any.whl", hash = "sha256:0392822fbd906731f4c0876f91a9c3cce7624279c81948e4e3f8bc60b4e1c855", size = 21295, upload-time = "2025-04-17T18:12:59.463Z" },
+]
+
+[[package]]
+name = "flake8"
+version = "7.3.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "mccabe" },
+    { name = "pycodestyle" },
+    { name = "pyflakes" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/9b/af/fbfe3c4b5a657d79e5c47a2827a362f9e1b763336a52f926126aa6dc7123/flake8-7.3.0.tar.gz", hash = "sha256:fe044858146b9fc69b551a4b490d69cf960fcb78ad1edcb84e7fbb1b4a8e3872", size = 48326, upload-time = "2025-06-20T19:31:35.838Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/9f/56/13ab06b4f93ca7cac71078fbe37fcea175d3216f31f85c3168a6bbd0bb9a/flake8-7.3.0-py2.py3-none-any.whl", hash = "sha256:b9696257b9ce8beb888cdbe31cf885c90d31928fe202be0889a7cdafad32f01e", size = 57922, upload-time = "2025-06-20T19:31:34.425Z" },
 ]
 
 [[package]]
@@ -2548,6 +2600,19 @@ wheels = [
 ]
 
 [[package]]
+name = "inflect"
+version = "7.5.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "more-itertools" },
+    { name = "typeguard" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/78/c6/943357d44a21fd995723d07ccaddd78023eace03c1846049a2645d4324a3/inflect-7.5.0.tar.gz", hash = "sha256:faf19801c3742ed5a05a8ce388e0d8fe1a07f8d095c82201eb904f5d27ad571f", size = 73751, upload-time = "2024-12-28T17:11:18.897Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8a/eb/427ed2b20a38a4ee29f24dbe4ae2dafab198674fe9a85e3d6adf9e5f5f41/inflect-7.5.0-py3-none-any.whl", hash = "sha256:2aea70e5e70c35d8350b8097396ec155ffd68def678c7ff97f51aa69c1d92344", size = 35197, upload-time = "2024-12-28T17:11:15.931Z" },
+]
+
+[[package]]
 name = "inflection"
 version = "0.5.1"
 source = { registry = "https://pypi.org/simple" }
@@ -2727,6 +2792,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/42/78/18813351fe5d63acad16aec57f94ec2b70a09e53ca98145589e185423873/jsonpatch-1.33.tar.gz", hash = "sha256:9fcd4009c41e6d12348b4a0ff2563ba56a2923a7dfee731d004e212e1ee5030c", size = 21699, upload-time = "2023-06-26T12:07:29.144Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/73/07/02e16ed01e04a374e644b575638ec7987ae846d25ad97bcc9945a3ee4b0e/jsonpatch-1.33-py2.py3-none-any.whl", hash = "sha256:0ae28c0cd062bbd8b8ecc26d7d164fbbea9652a1a3693f3b956c1eae5145dade", size = 12898, upload-time = "2023-06-16T21:01:28.466Z" },
+]
+
+[[package]]
+name = "jsonpath-ng"
+version = "1.7.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "ply" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/6d/86/08646239a313f895186ff0a4573452038eed8c86f54380b3ebac34d32fb2/jsonpath-ng-1.7.0.tar.gz", hash = "sha256:f6f5f7fd4e5ff79c785f1573b394043b39849fb2bb47bcead935d12b00beab3c", size = 37838, upload-time = "2024-10-11T15:41:42.404Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/35/5a/73ecb3d82f8615f32ccdadeb9356726d6cae3a4bbc840b437ceb95708063/jsonpath_ng-1.7.0-py3-none-any.whl", hash = "sha256:f3d7f9e848cba1b6da28c55b1c26ff915dc9e0b1ba7e752a53d6da8d5cbd00b6", size = 30105, upload-time = "2024-11-20T17:58:30.418Z" },
 ]
 
 [[package]]
@@ -5102,6 +5179,15 @@ wheels = [
 ]
 
 [[package]]
+name = "ply"
+version = "3.11"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/e5/69/882ee5c9d017149285cab114ebeab373308ef0f874fcdac9beb90e0ac4da/ply-3.11.tar.gz", hash = "sha256:00c7c1aaa88358b9c765b6d3000c6eec0ba42abca5351b095321aef446081da3", size = 159130, upload-time = "2018-02-15T19:01:31.097Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a3/58/35da89ee790598a0700ea49b2a66594140f44dec458c07e8e3d4979137fc/ply-3.11-py2.py3-none-any.whl", hash = "sha256:096f9b8350b65ebd2fd1346b12452efe5b9607f7482813ffca50c22722a807ce", size = 49567, upload-time = "2018-02-15T19:01:27.172Z" },
+]
+
+[[package]]
 name = "portalocker"
 version = "2.10.1"
 source = { registry = "https://pypi.org/simple" }
@@ -5327,6 +5413,15 @@ wheels = [
 ]
 
 [[package]]
+name = "pycodestyle"
+version = "2.14.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/11/e0/abfd2a0d2efe47670df87f3e3a0e2edda42f055053c85361f19c0e2c1ca8/pycodestyle-2.14.0.tar.gz", hash = "sha256:c4b5b517d278089ff9d0abdec919cd97262a3367449ea1c8b49b91529167b783", size = 39472, upload-time = "2025-06-20T18:49:48.75Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d7/27/a58ddaf8c588a3ef080db9d0b7e0b97215cee3a45df74f3a94dbbf5c893a/pycodestyle-2.14.0-py2.py3-none-any.whl", hash = "sha256:dd6bf7cb4ee77f8e016f9c8e74a35ddd9f67e1d5fd4184d86c3b98e07099f42d", size = 31594, upload-time = "2025-06-20T18:49:47.491Z" },
+]
+
+[[package]]
 name = "pycparser"
 version = "2.23"
 source = { registry = "https://pypi.org/simple" }
@@ -5519,6 +5614,15 @@ wheels = [
 ]
 
 [[package]]
+name = "pyflakes"
+version = "3.4.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/45/dc/fd034dc20b4b264b3d015808458391acbf9df40b1e54750ef175d39180b1/pyflakes-3.4.0.tar.gz", hash = "sha256:b24f96fafb7d2ab0ec5075b7350b3d2d2218eab42003821c06344973d3ea2f58", size = 64669, upload-time = "2025-06-20T18:45:27.834Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c2/2f/81d580a0fb83baeb066698975cb14a618bdbed7720678566f1b046a95fe8/pyflakes-3.4.0-py2.py3-none-any.whl", hash = "sha256:f742a7dbd0d9cb9ea41e9a24a918996e8170c799fa528688d40dd582c8265f4f", size = 63551, upload-time = "2025-06-20T18:45:26.937Z" },
+]
+
+[[package]]
 name = "pygments"
 version = "2.19.2"
 source = { registry = "https://pypi.org/simple" }
@@ -5637,6 +5741,18 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/35/2c/ee0b373a1861f66a7ca8bdb999331525615061320dd628527a50ba8e8a60/pynacl-1.6.0-cp38-abi3-win32.whl", hash = "sha256:dcdeb41c22ff3c66eef5e63049abf7639e0db4edee57ba70531fc1b6b133185d", size = 226461, upload-time = "2025-09-10T23:39:11.894Z" },
     { url = "https://files.pythonhosted.org/packages/75/f7/41b6c0b9dd9970173b6acc026bab7b4c187e4e5beef2756d419ad65482da/pynacl-1.6.0-cp38-abi3-win_amd64.whl", hash = "sha256:cf831615cc16ba324240de79d925eacae8265b7691412ac6b24221db157f6bd1", size = 238802, upload-time = "2025-09-10T23:39:08.966Z" },
     { url = "https://files.pythonhosted.org/packages/8e/0f/462326910c6172fa2c6ed07922b22ffc8e77432b3affffd9e18f444dbfbb/pynacl-1.6.0-cp38-abi3-win_arm64.whl", hash = "sha256:84709cea8f888e618c21ed9a0efdb1a59cc63141c403db8bf56c469b71ad56f2", size = 183846, upload-time = "2025-09-10T23:39:10.552Z" },
+]
+
+[[package]]
+name = "pynamodb"
+version = "6.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "botocore" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/af/0b/35d24cdfe532fd9c774c184fbd09118b0a8c94eb51ca9598c0c5ef21174d/pynamodb-6.1.0.tar.gz", hash = "sha256:c7d09700ace9f428e67ecf73fa867633c632de3acf402b2c7c136be695afda79", size = 96283, upload-time = "2025-06-02T17:32:59.367Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d4/86/71e355d232f28adb50c89b806b018548c095a6cf3d631b645918f415212a/pynamodb-6.1.0-py3-none-any.whl", hash = "sha256:9c0f1a0f177208640b2336ed56c557c5187b0012d356e9c7399c3923c5f93c7f", size = 61685, upload-time = "2025-06-02T17:32:57.488Z" },
 ]
 
 [[package]]
@@ -5889,6 +6005,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/87/c7/5e1547c44e31da50a460df93af11a535ace568ef89d7a811069ead340c4a/python-slugify-8.0.4.tar.gz", hash = "sha256:59202371d1d05b54a9e7720c5e038f928f45daaffe41dd10822f3907b937c856", size = 10921, upload-time = "2024-02-08T18:32:45.488Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a4/62/02da182e544a51a5c3ccf4b03ab79df279f9c60c5e82d5e8bec7ca26ac11/python_slugify-8.0.4-py2.py3-none-any.whl", hash = "sha256:276540b79961052b66b7d116620b36518847f52d5fd9e3a70164fc8c50faa6b8", size = 10051, upload-time = "2024-02-08T18:32:43.911Z" },
+]
+
+[[package]]
+name = "pytokens"
+version = "0.1.10"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/30/5f/e959a442435e24f6fb5a01aec6c657079ceaca1b3baf18561c3728d681da/pytokens-0.1.10.tar.gz", hash = "sha256:c9a4bfa0be1d26aebce03e6884ba454e842f186a59ea43a6d3b25af58223c044", size = 12171, upload-time = "2025-02-19T14:51:22.001Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/60/e5/63bed382f6a7a5ba70e7e132b8b7b8abbcf4888ffa6be4877698dcfbed7d/pytokens-0.1.10-py3-none-any.whl", hash = "sha256:db7b72284e480e69fb085d9f251f66b3d2df8b7166059261258ff35f50fb711b", size = 12046, upload-time = "2025-02-19T14:51:18.694Z" },
 ]
 
 [[package]]
@@ -6427,7 +6552,11 @@ dependencies = [
     { name = "python-dotenv" },
     { name = "pyyaml" },
     { name = "scikit-learn" },
+    { name = "sck-core-component" },
+    { name = "sck-core-db" },
+    { name = "sck-core-execute" },
     { name = "sck-core-framework" },
+    { name = "sck-core-runner" },
     { name = "sentence-transformers" },
     { name = "structlog" },
     { name = "tiktoken" },
@@ -6446,6 +6575,8 @@ ai = [
     { name = "openai" },
 ]
 dev = [
+    { name = "black" },
+    { name = "flake8" },
     { name = "isort" },
     { name = "mkdocs" },
     { name = "mkdocs-material" },
@@ -6464,22 +6595,24 @@ vectordb = [
 
 [package.metadata]
 requires-dist = [
-    { name = "anthropic", marker = "extra == 'ai'", specifier = ">=0.29.0,<1.0.0" },
+    { name = "anthropic", marker = "extra == 'ai'", specifier = ">=0.29.0" },
     { name = "beautifulsoup4", specifier = ">=4.12.0" },
+    { name = "black", marker = "extra == 'dev'", specifier = ">=25.9.0" },
     { name = "boto3", specifier = ">=1.34.0,<1.35.0" },
     { name = "cfn-lint", specifier = ">=0.83.0" },
     { name = "chromadb", specifier = "==0.5.23" },
     { name = "chromadb", marker = "extra == 'vectordb'", specifier = "==0.5.23" },
     { name = "fastapi", specifier = ">=0.104.0" },
+    { name = "flake8", marker = "extra == 'dev'", specifier = ">=7.3.0" },
     { name = "httpx", specifier = ">=0.25.0" },
     { name = "isort", marker = "extra == 'dev'", specifier = ">=5.12.0" },
     { name = "jinja2", specifier = ">=3.1.2" },
-    { name = "langchain", marker = "extra == 'ai'", specifier = ">=0.2.30,<0.4.0" },
-    { name = "langchain-aws", marker = "extra == 'ai'", specifier = ">=0.2.0,<0.3.0" },
-    { name = "langchain-community", marker = "extra == 'ai'", specifier = ">=0.2.30,<0.4.0" },
-    { name = "langchain-core", marker = "extra == 'ai'", specifier = ">=0.2.30,<0.4.0" },
-    { name = "langchain-openai", marker = "extra == 'ai'", specifier = ">=0.3.11,<0.4.0" },
-    { name = "langflow", marker = "extra == 'ai'", specifier = ">=1.5.0,<1.6.0" },
+    { name = "langchain", marker = "extra == 'ai'", specifier = ">=0.2.30" },
+    { name = "langchain-aws", marker = "extra == 'ai'", specifier = ">=0.2.0" },
+    { name = "langchain-community", marker = "extra == 'ai'", specifier = ">=0.2.30" },
+    { name = "langchain-core", marker = "extra == 'ai'", specifier = ">=0.2.30" },
+    { name = "langchain-openai", marker = "extra == 'ai'", specifier = ">=0.3.11" },
+    { name = "langflow", marker = "extra == 'ai'", specifier = ">=1.5.0" },
     { name = "mangum", specifier = ">=0.17.0" },
     { name = "markdownify", specifier = ">=0.11.6" },
     { name = "mcp", specifier = ">=0.9.0" },
@@ -6487,7 +6620,7 @@ requires-dist = [
     { name = "mkdocs-material", marker = "extra == 'dev'", specifier = ">=9.4.0" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.7.0" },
     { name = "numpy", specifier = ">=1.24.0" },
-    { name = "openai", marker = "extra == 'ai'", specifier = ">=1.37.0,<2.0.0" },
+    { name = "openai", marker = "extra == 'ai'", specifier = ">=1.37.0" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=3.6.0" },
     { name = "pydantic", specifier = ">=2.5.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=7.4.0" },
@@ -6499,7 +6632,11 @@ requires-dist = [
     { name = "pyyaml", specifier = ">=6.0.1" },
     { name = "qdrant-client", marker = "extra == 'vectordb'", specifier = ">=1.7.0,<2.0.0" },
     { name = "scikit-learn", specifier = ">=1.3.0" },
+    { name = "sck-core-component", editable = "../sck-core-component" },
+    { name = "sck-core-db", editable = "../sck-core-db" },
+    { name = "sck-core-execute", editable = "../sck-core-execute" },
     { name = "sck-core-framework", editable = "../sck-core-framework" },
+    { name = "sck-core-runner", editable = "../sck-core-runner" },
     { name = "sentence-transformers", specifier = ">=2.2.2" },
     { name = "structlog", specifier = ">=23.2.0" },
     { name = "tiktoken", specifier = ">=0.5.0" },
@@ -6508,8 +6645,113 @@ requires-dist = [
 provides-extras = ["dev", "ai", "vectordb"]
 
 [[package]]
+name = "sck-core-component"
+version = "1.3.0"
+source = { editable = "../sck-core-component" }
+dependencies = [
+    { name = "boto3" },
+    { name = "botocore" },
+    { name = "deepdiff" },
+    { name = "filters" },
+    { name = "jinja2" },
+    { name = "jmespath" },
+    { name = "jsonpath-ng" },
+    { name = "netaddr" },
+    { name = "sck-core-db" },
+    { name = "sck-core-execute" },
+    { name = "sck-core-framework" },
+    { name = "sck-core-runner" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "black", marker = "extra == 'dev'", specifier = ">=24.10.0" },
+    { name = "boto3", specifier = ">=1.34.51,<1.35.0" },
+    { name = "boto3-stubs", marker = "extra == 'dev'", specifier = ">=1.34.51" },
+    { name = "botocore", specifier = ">=1.34.51,<1.35.0" },
+    { name = "cfn-lint", marker = "extra == 'dev'", specifier = ">=1.22" },
+    { name = "deepdiff", specifier = ">=7.0.1,<8.0.0" },
+    { name = "filters", specifier = ">=1.3.2,<1.4.0" },
+    { name = "flake8", marker = "extra == 'dev'", specifier = ">=7.1.1" },
+    { name = "jinja2", specifier = ">=3.1.4,<4.0.0" },
+    { name = "jmespath", specifier = ">=1.0.1,<2.0.0" },
+    { name = "jsonpath-ng", specifier = ">=1.7.0,<1.8.0" },
+    { name = "netaddr", specifier = ">=1.3.0,<1.4.0" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3.3" },
+    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.25.0" },
+    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=6.0.0" },
+    { name = "pytest-dotenv", marker = "extra == 'dev'", specifier = ">=0.5.2" },
+    { name = "sck-core-db", editable = "../sck-core-db" },
+    { name = "sck-core-execute", editable = "../sck-core-execute" },
+    { name = "sck-core-framework", editable = "../sck-core-framework" },
+    { name = "sck-core-runner", editable = "../sck-core-runner" },
+]
+provides-extras = ["dev"]
+
+[[package]]
+name = "sck-core-db"
+version = "1.3.0"
+source = { editable = "../sck-core-db" }
+dependencies = [
+    { name = "boto3" },
+    { name = "botocore" },
+    { name = "email-validator" },
+    { name = "pydantic" },
+    { name = "pynamodb" },
+    { name = "sck-core-framework" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "black", marker = "extra == 'dev'" },
+    { name = "boto3", specifier = ">=1.34,<1.35" },
+    { name = "boto3-stubs", marker = "extra == 'dev'", specifier = ">=1.34.51,<1.35.0" },
+    { name = "botocore", specifier = ">=1.34,<1.35" },
+    { name = "email-validator", specifier = ">=2.2,<3.0" },
+    { name = "flake8", marker = "extra == 'dev'" },
+    { name = "pydantic", specifier = ">=2.10,<2.11" },
+    { name = "pynamodb", specifier = ">=6.1,<7.0" },
+    { name = "pytest", marker = "extra == 'dev'" },
+    { name = "pytest-cov", marker = "extra == 'dev'" },
+    { name = "pytest-dotenv", marker = "extra == 'dev'" },
+    { name = "sck-core-framework", editable = "../sck-core-framework" },
+    { name = "types-python-dateutil", marker = "extra == 'dev'" },
+]
+provides-extras = ["dev"]
+
+[[package]]
+name = "sck-core-execute"
+version = "1.3.0"
+source = { editable = "../sck-core-execute" }
+dependencies = [
+    { name = "boto3" },
+    { name = "botocore" },
+    { name = "inflect" },
+    { name = "sck-core-db" },
+    { name = "sck-core-framework" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "black", marker = "extra == 'dev'", specifier = ">=24.10.0,<25.0.0" },
+    { name = "boto3", specifier = ">=1.34,<1.35" },
+    { name = "boto3-stubs", marker = "extra == 'dev'", specifier = ">=1.34.51,<1.35.0" },
+    { name = "botocore", specifier = ">=1.34,<1.35" },
+    { name = "cfn-lint", marker = "extra == 'dev'", specifier = ">1.22" },
+    { name = "flake8", marker = "extra == 'dev'", specifier = ">=7.1.1,<8.0.0" },
+    { name = "inflect", specifier = ">=7.5.0,<8.0" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3.3,<9.0.0" },
+    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.25.0,<0.26.0" },
+    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=6.0.0,<7.0.0" },
+    { name = "pytest-dotenv", marker = "extra == 'dev'", specifier = ">=0.5.2,<0.6.0" },
+    { name = "sck-core-db", editable = "../sck-core-db" },
+    { name = "sck-core-framework", editable = "../sck-core-framework" },
+]
+provides-extras = ["dev"]
+
+[[package]]
 name = "sck-core-framework"
-version = "0.1.2rc13+a768d88"
+version = "1.3.0"
 source = { editable = "../sck-core-framework" }
 dependencies = [
     { name = "boto3" },
@@ -6519,22 +6761,69 @@ dependencies = [
     { name = "jinja2" },
     { name = "jmespath" },
     { name = "netaddr" },
+    { name = "pydantic" },
     { name = "python-slugify" },
     { name = "ruamel-yaml" },
 ]
 
 [package.metadata]
 requires-dist = [
+    { name = "black", marker = "extra == 'dev'", specifier = ">=25.9.0" },
     { name = "boto3", specifier = ">=1.34.51,<1.35.0" },
+    { name = "boto3-stubs", marker = "extra == 'dev'", specifier = ">=1.34.51,<1.35.0" },
     { name = "botocore", specifier = ">=1.34.51,<1.35.0" },
+    { name = "cfn-lint", marker = "extra == 'dev'", specifier = ">=1.39.1" },
     { name = "deepdiff", specifier = ">=7.0.1,<8.0.0" },
-    { name = "filters", specifier = ">=1.3.2,<2.0.0" },
-    { name = "jinja2", specifier = ">=3.1.4,<4.0.0" },
-    { name = "jmespath", specifier = ">=1.0.1,<2.0.0" },
+    { name = "filters", specifier = ">=1.3.2,<1.4.0" },
+    { name = "flake8", marker = "extra == 'dev'" },
+    { name = "jinja2", specifier = ">=3.1.4,<3.2.0" },
+    { name = "jmespath", specifier = ">=1.0.1,<1.1.0" },
     { name = "netaddr", specifier = ">=1.3.0,<2.0.0" },
+    { name = "pydantic", specifier = ">=2.10,<2.11" },
+    { name = "pylance", marker = "extra == 'dev'", specifier = ">=0.37.0" },
+    { name = "pytest", marker = "extra == 'dev'" },
+    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=1.2.0" },
+    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=7.0.0" },
+    { name = "pytest-dotenv", marker = "extra == 'dev'" },
     { name = "python-slugify", specifier = ">=8.0.4,<9.0.0" },
+    { name = "rstcheck", marker = "extra == 'dev'" },
     { name = "ruamel-yaml", specifier = ">=0.18.10,<0.19.0" },
+    { name = "types-netaddr", marker = "extra == 'dev'" },
+    { name = "types-tabulate", marker = "extra == 'dev'" },
 ]
+provides-extras = ["dev"]
+
+[[package]]
+name = "sck-core-runner"
+version = "1.3.0"
+source = { editable = "../sck-core-runner" }
+dependencies = [
+    { name = "boto3" },
+    { name = "botocore" },
+    { name = "jsonpath-ng" },
+    { name = "sck-core-db" },
+    { name = "sck-core-execute" },
+    { name = "sck-core-framework" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "black", marker = "extra == 'dev'", specifier = ">=24.10.0" },
+    { name = "boto3", specifier = ">=1.34.51,<1.35.0" },
+    { name = "boto3-stubs", marker = "extra == 'dev'", specifier = ">=1.34.51" },
+    { name = "botocore", specifier = ">=1.34.51,<1.35.0" },
+    { name = "cfn-lint", marker = "extra == 'dev'", specifier = ">=1.22" },
+    { name = "flake8", marker = "extra == 'dev'", specifier = ">=7.1.1" },
+    { name = "jsonpath-ng", specifier = ">=1.7.0,<1.8.0" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3.3" },
+    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.25.0" },
+    { name = "pytest-cov", marker = "extra == 'dev'", specifier = ">=6.0.0" },
+    { name = "pytest-dotenv", marker = "extra == 'dev'", specifier = ">=0.5.2" },
+    { name = "sck-core-db", editable = "../sck-core-db" },
+    { name = "sck-core-execute", editable = "../sck-core-execute" },
+    { name = "sck-core-framework", editable = "../sck-core-framework" },
+]
+provides-extras = ["dev"]
 
 [[package]]
 name = "scrapegraph-py"
@@ -7207,6 +7496,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/f3/a9/c461bb8ee5e6fb921d62899c3eb168dc60b05853d5bfc847841bccb2fc18/twelvelabs-1.0.2.tar.gz", hash = "sha256:108d583db15148fdab976f7d91d92b2befa338e4562d301aafb6da5efaf085d9", size = 90824, upload-time = "2025-09-17T18:18:28.76Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/43/f1/ab42e54c6c380f54fee9cfefcf77506ed871e5c4c30a07a8a47c0f40c4ea/twelvelabs-1.0.2-py3-none-any.whl", hash = "sha256:f6e22265224c2d70a415f25869bec14020e20dc50276bd03a6cc1db5155ef6bd", size = 172798, upload-time = "2025-09-17T18:18:27.35Z" },
+]
+
+[[package]]
+name = "typeguard"
+version = "4.4.4"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/c7/68/71c1a15b5f65f40e91b65da23b8224dad41349894535a97f63a52e462196/typeguard-4.4.4.tar.gz", hash = "sha256:3a7fd2dffb705d4d0efaed4306a704c89b9dee850b688f060a8b1615a79e5f74", size = 75203, upload-time = "2025-06-18T09:56:07.624Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1b/a9/e3aee762739c1d7528da1c3e06d518503f8b6c439c35549b53735ba52ead/typeguard-4.4.4-py3-none-any.whl", hash = "sha256:b5f562281b6bfa1f5492470464730ef001646128b180769880468bd84b68b09e", size = 34874, upload-time = "2025-06-18T09:56:05.999Z" },
 ]
 
 [[package]]

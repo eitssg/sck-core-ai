@@ -5,7 +5,7 @@ Processes Python files across all sck-core-* projects to create searchable
 embeddings for functions, classes, modules, and architectural patterns.
 """
 
-from typing import Dict, List, Optional, Any, Iterator, Tuple, Set, Union
+from typing import Dict, List, Optional, Any, Iterator, Union
 
 import ast
 from pathlib import Path

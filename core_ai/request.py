@@ -2,8 +2,9 @@ from typing import Any, Dict, List, Optional, Union
 import json
 import urllib.parse
 from datetime import datetime, timezone
-
 from pydantic import BaseModel, Field, ConfigDict, field_validator, ValidationInfo
+
+import core_framework as util
 
 DOMAIN_PREFIX = (
     "your-api-gateway-domain-prefix"  # Replace with your actual domain prefix
@@ -105,7 +106,7 @@ class RequestContext(BaseModel):
         description="Full domain name of the API Gateway endpoint",
         default=f"{DOMAIN_PREFIX}.execute-api.us-east-1.amazonaws.com",
     )
-    identity: CognitoIdentity = Field(
+    identity: dict = Field(
         description="Authentication and identity information for the request"
     )
     apiId: str = Field(description="API Gateway API identifier", default=API_ID)

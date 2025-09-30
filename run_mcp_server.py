@@ -9,7 +9,6 @@ Usage:
 import argparse
 import asyncio
 import logging
-import os
 import sys
 from pathlib import Path
 
@@ -63,9 +62,7 @@ def main():
         # Create and start the MCP server
         logger.info("Starting SCK Core AI MCP Server...")
 
-        server = SCKCoreAIMCPServer(
-            workspace_root=args.workspace_root, build_directory=args.build_directory
-        )
+        server = SCKCoreAIMCPServer(workspace_root=args.workspace_root, build_directory=args.build_directory)
 
         # Initialize indexes if requested
         if args.initialize_indexes and server.context_manager:

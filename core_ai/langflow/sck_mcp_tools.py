@@ -3,9 +3,8 @@ SCK MCP Tools for Langflow Integration
 Connects Langflow Agent to the SCK MCP Server for documentation and code search
 """
 
-from typing import Any, Dict, List, Optional
+from typing import List
 import httpx
-import json
 from langchain.tools import BaseTool
 from pydantic import BaseModel, Field
 
