@@ -1,5 +1,4 @@
 import os
-import json
 
 
 def test_list_tools_endpoint_basic(client):
@@ -9,9 +8,7 @@ def test_list_tools_endpoint_basic(client):
     assert "tools" in data
     names = {t["name"] for t in data["tools"]}
     # Core tools always present
-    assert {"lint_yaml", "validate_cloudformation", "suggest_completion"}.issubset(
-        names
-    )
+    assert {"lint_yaml", "validate_cloudformation", "suggest_completion"}.issubset(names)
 
 
 def test_invoke_lint_yaml_tool(client):

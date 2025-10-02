@@ -9,23 +9,18 @@ Read-only: does not mutate core_execute. Falls back gracefully if
 core_execute not installed.
 """
 
-from __future__ import annotations
+from typing import Any, Dict, List, Optional, get_type_hints
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional, get_type_hints
 import inspect
 import pkgutil
 import importlib
 
 import core_logging as log
 
-try:  # pragma: no cover
-    from core_execute.actionlib.action import BaseAction
-    from core_framework.models import ActionSpec
-except Exception as e:  # pragma: no cover
-    BaseAction = None  # type: ignore
-    ActionSpec = None  # type: ignore
-    log.warning("ActionIndexer unavailable - core_execute not importable", error=str(e))
+from core_execute.actionlib.action import BaseAction
+
+from core_framework.models import ActionResource, ActionMetadata, ActionSpec
 
 
 @dataclass
@@ -89,9 +84,7 @@ class ActionIndexer:
                     continue
                 if obj is BaseAction:  # skip base
                     continue
-                spec_model = getattr(obj, "spec_model", None) or getattr(
-                    obj, "SpecModel", None
-                )
+                spec_model = getattr(obj, "spec_model", None) or getattr(obj, "SpecModel", None)
                 params: List[ActionParam] = []
                 if spec_model and ActionSpec and issubclass(spec_model, ActionSpec):
                     params = self._extract_spec_params(spec_model)
@@ -114,9 +107,7 @@ class ActionIndexer:
         mods: List[str] = []
         if not hasattr(pkg, "__path__"):
             return mods
-        for module_finder, name, ispkg in pkgutil.walk_packages(
-            pkg.__path__, pkg.__name__ + "."
-        ):
+        for module_finder, name, ispkg in pkgutil.walk_packages(pkg.__path__, pkg.__name__ + "."):
             if name.endswith(".__init__"):
                 continue
             mods.append(name)

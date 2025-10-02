@@ -1,6 +1,5 @@
 """Tests for core_ai.cache idempotent run helper."""
 
-import os
 import time
 
 from core_ai import cache

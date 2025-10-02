@@ -3,7 +3,6 @@ HTTP bridge for MCP server to work with Langflow
 This creates an HTTP endpoint that Langflow can call, which then communicates with the MCP server via stdio
 """
 
-import asyncio
 import json
 import subprocess
 import sys
@@ -137,9 +136,7 @@ async def list_tools():
     if "result" in response:
         return response["result"]["tools"]
     else:
-        raise HTTPException(
-            status_code=500, detail=response.get("error", "Unknown error")
-        )
+        raise HTTPException(status_code=500, detail=response.get("error", "Unknown error"))
 
 
 @app.post("/search-documentation")
@@ -160,9 +157,7 @@ async def search_documentation(query: str):
         else:
             return {"result": "No documentation found"}
     else:
-        raise HTTPException(
-            status_code=500, detail=response.get("error", "Search failed")
-        )
+        raise HTTPException(status_code=500, detail=response.get("error", "Search failed"))
 
 
 @app.post("/search-codebase")
@@ -183,9 +178,7 @@ async def search_codebase(query: str):
         else:
             return {"result": "No code found"}
     else:
-        raise HTTPException(
-            status_code=500, detail=response.get("error", "Search failed")
-        )
+        raise HTTPException(status_code=500, detail=response.get("error", "Search failed"))
 
 
 @app.post("/validate-cloudformation")
@@ -209,9 +202,7 @@ async def validate_cloudformation(template: str):
         else:
             return {"result": "Validation completed with no output"}
     else:
-        raise HTTPException(
-            status_code=500, detail=response.get("error", "Validation failed")
-        )
+        raise HTTPException(status_code=500, detail=response.get("error", "Validation failed"))
 
 
 if __name__ == "__main__":

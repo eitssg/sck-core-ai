@@ -18,13 +18,13 @@ if ($NoCache) { $buildArgs += "--no-cache" }
 # Ensure buildx is available
 docker buildx ls | Out-Null
 if ($LASTEXITCODE -ne 0) {
-  Write-Error "docker buildx not available. Install or enable BuildKit."; exit 1
+    Write-Error "docker buildx not available. Install or enable BuildKit."; exit 1
 }
 
 $cmd = @(
-  "docker","buildx","build",
-  "--platform", $Platforms,
-  "-t", $Tag
+    "docker", "buildx", "build",
+    "--platform", $Platforms,
+    "-t", $Tag
 )
 
 if ($Push -eq "true") { $cmd += "--push" } else { $cmd += "--load" }
@@ -78,73 +78,28 @@ try {
         $uvAvailable = $true
         Write-Host "Using uv: $uvVersion" -ForegroundColor Cyan
     }
-} catch {
-    Write-Host "uv not found, falling back to pip/poetry" -ForegroundColor Yellow
+}
+catch {
+    Write-Host "uv not found, falling back to pip/uv" -ForegroundColor Yellow
 }
 
 # Install dependencies and build
-try {
-    if ($uvAvailable) {
-        Write-Host "Installing dependencies with uv..." -ForegroundColor Blue
-        uv sync --dev
-        if ($LASTEXITCODE -ne 0) { throw "uv sync failed" }
+uv sync --all-extras
         
-        Write-Host "Building package with uv..." -ForegroundColor Blue  
-        uv build
-        if ($LASTEXITCODE -ne 0) { throw "uv build failed" }
-    } else {
-        # Fallback to poetry if available
-        $poetryAvailable = $false
-        try {
-            $poetryVersion = poetry --version 2>$null
-            if ($LASTEXITCODE -eq 0) {
-                $poetryAvailable = $true
-                Write-Host "Using poetry: $poetryVersion" -ForegroundColor Cyan
-            }
-        } catch {
-            Write-Host "Poetry not found either" -ForegroundColor Red
-        }
+Write-Host "Building package with uv..." -ForegroundColor Blue  
+uv build
+
+Write-Host "Running tests..." -ForegroundColor Blue
         
-        if ($poetryAvailable) {
-            Write-Host "Installing dependencies with poetry..." -ForegroundColor Blue
-            poetry install --with dev
-            if ($LASTEXITCODE -ne 0) { throw "poetry install failed" }
-            
-            Write-Host "Building package with poetry..." -ForegroundColor Blue
-            poetry build
-            if ($LASTEXITCODE -ne 0) { throw "poetry build failed" }
-        } else {
-            throw "Neither uv nor poetry available for building"
-        }
+uv run pytest
+
+Write-Host "Build completed successfully!" -ForegroundColor Green
+    
+# Show build artifacts
+if (Test-Path "dist") {
+    Write-Host "`nBuild artifacts:" -ForegroundColor Cyan
+    Get-ChildItem "dist" | ForEach-Object {
+        Write-Host "  $($_.Name)" -ForegroundColor Gray
     }
-    
-    # Run tests if requested
-    if ($Test) {
-        Write-Host "Running tests..." -ForegroundColor Blue
-        
-        if ($uvAvailable) {
-            uv run pytest
-            if ($LASTEXITCODE -ne 0) { throw "Tests failed" }
-        } elseif ($poetryAvailable) {
-            poetry run pytest
-            if ($LASTEXITCODE -ne 0) { throw "Tests failed" }
-        } else {
-            pytest
-            if ($LASTEXITCODE -ne 0) { throw "Tests failed" }
-        }
-    }
-    
-    Write-Host "Build completed successfully!" -ForegroundColor Green
-    
-    # Show build artifacts
-    if (Test-Path "dist") {
-        Write-Host "`nBuild artifacts:" -ForegroundColor Cyan
-        Get-ChildItem "dist" | ForEach-Object {
-            Write-Host "  $($_.Name)" -ForegroundColor Gray
-        }
-    }
-    
-} catch {
-    Write-Host "Build failed: $($_.Exception.Message)" -ForegroundColor Red
-    exit 1
 }
+    

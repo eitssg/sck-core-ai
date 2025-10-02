@@ -156,7 +156,7 @@ async def handle_lint_yaml(arguments: dict) -> types.TextContent:
 ```bash
 # Step 1: Build sck-core-framework wheel first
 cd ../sck-core-framework
-poetry build                    # Creates wheel in dist/
+uv build                    # Creates wheel in dist/
 
 # Step 2: Create and activate virtual environment manually
 cd ../sck-core-ai

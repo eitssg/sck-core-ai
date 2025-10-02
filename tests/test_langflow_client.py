@@ -1,10 +1,9 @@
 """Test cases for Langflow client integration."""
 
-import pytest
 import json
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
 
-from core_ai.langflow.client import LangflowClient, LangflowError
+from core_ai.langflow.client import LangflowClient
 
 
 class TestLangflowClient:
@@ -72,19 +71,7 @@ class TestLangflowClient:
         # Mock httpx response
         mock_response = Mock()
         mock_response.json.return_value = {
-            "outputs": [
-                {
-                    "outputs": [
-                        {
-                            "results": {
-                                "message": {
-                                    "text": json.dumps({"valid": True, "errors": []})
-                                }
-                            }
-                        }
-                    ]
-                }
-            ]
+            "outputs": [{"outputs": [{"results": {"message": {"text": json.dumps({"valid": True, "errors": []})}}}]}]
         }
         mock_response.raise_for_status.return_value = None
 
@@ -179,19 +166,7 @@ class TestLangflowClient:
         """Test response formatting with valid JSON text."""
         client = LangflowClient()
 
-        raw_result = {
-            "outputs": [
-                {
-                    "outputs": [
-                        {
-                            "results": {
-                                "message": {"text": '{"valid": true, "errors": []}'}
-                            }
-                        }
-                    ]
-                }
-            ]
-        }
+        raw_result = {"outputs": [{"outputs": [{"results": {"message": {"text": '{"valid": true, "errors": []}'}}}]}]}
 
         result = client._format_response(raw_result, 0.5)
 
@@ -202,19 +177,7 @@ class TestLangflowClient:
         """Test response formatting with invalid JSON text."""
         client = LangflowClient()
 
-        raw_result = {
-            "outputs": [
-                {
-                    "outputs": [
-                        {
-                            "results": {
-                                "message": {"text": "This is plain text, not JSON"}
-                            }
-                        }
-                    ]
-                }
-            ]
-        }
+        raw_result = {"outputs": [{"outputs": [{"results": {"message": {"text": "This is plain text, not JSON"}}}]}]}
 
         result = client._format_response(raw_result, 0.5)
 

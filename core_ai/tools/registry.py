@@ -10,10 +10,44 @@ so they can be imported by both the FastAPI layer and the stdio MCP server
 without creating circular dependencies.
 """
 
-from __future__ import annotations
-
-from typing import Dict, Any, List, Callable, Awaitable, Optional
+from enum import Enum
+from typing import Dict, Any, List
 from dataclasses import dataclass
+
+
+class LintModes(str, Enum):
+    syntax = "syntax"
+    schema = "schema"
+    best_practices = "best_practices"
+    security = "security"
+
+
+class AnalysisTypes(str, Enum):
+    security = "security"
+    cost = "cost"
+    best_practices = "best_practices"
+    comprehensive = "comprehensive"
+
+
+class DocNames(str, Enum):
+    technical_reference = "technical_reference"
+    developer_guide = "developer_guide"
+    user_guide = "user_guide"
+
+
+class CodeElementType(str, Enum):
+    klass = "class"
+    function = "function"
+    method = "method"
+    module = "module"
+
+
+class ContextStrategy(str, Enum):
+    balanced = "balanced"
+    documentation_focused = "documentation_focused"
+    code_focused = "code_focused"
+    documentation_only = "documentation_only"
+    code_only = "code_only"
 
 
 @dataclass

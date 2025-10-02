@@ -10,6 +10,8 @@ import os
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+DOCS_PATH = "D:/Development/simple-cloud-kit-oss/simple-cloud-kit/sck-core-docs/build"
+
 
 class SCKDocumentationTool:
     """Simple tool to search SCK documentation directly."""
@@ -19,18 +21,7 @@ class SCKDocumentationTool:
         """Search SCK documentation using simple file search."""
         try:
             # Search in the SCK docs build directory (try multiple locations)
-            possible_docs_paths = [
-                Path("D:/Development/simple-cloud-kit-oss/sck-core-docs/build"),
-                Path(
-                    "D:/Development/simple-cloud-kit-oss/simple-cloud-kit/sck-core-docs/build"
-                ),
-                Path(
-                    "D:/Development/simple-cloud-kit-oss/simple-cloud-kit/sck-core-docs/docs"
-                ),
-                Path(
-                    "D:/Development/simple-cloud-kit-oss/simple-cloud-kit/sck-core-ui/docs"
-                ),
-            ]
+            possible_docs_paths = [Path(DOCS_PATH)]
 
             docs_path = None
             for path in possible_docs_paths:
@@ -54,9 +45,7 @@ class SCKDocumentationTool:
                                 start = max(0, i - 2)
                                 end = min(len(lines), i + 3)
                                 snippet = "\n".join(lines[start:end])
-                                results.append(
-                                    f"Found in {html_file.name}:\n{snippet}\n"
-                                )
+                                results.append(f"Found in {html_file.name}:\n{snippet}\n")
                                 break
                         if len(results) >= 3:  # Limit results
                             break
@@ -64,12 +53,11 @@ class SCKDocumentationTool:
                     continue
 
             if results:
-                return (
-                    f"SCK Documentation Search Results for '{query}':\n\n"
-                    + "\n---\n".join(results)
-                )
+                return f"SCK Documentation Search Results for '{query}':\n\n" + "\n---\n".join(results)
             else:
-                return f"No documentation found for '{query}'. Try broader terms like 'architecture', 'lambda', 'S3', or 'framework'."
+                return (
+                    f"No documentation found for '{query}'. Try broader terms like 'architecture', 'lambda', 'S3', or 'framework'."
+                )
 
         except Exception as e:
             return f"Error searching documentation: {str(e)}"
@@ -83,9 +71,7 @@ class SCKCodeSearchTool:
         """Search SCK codebase for patterns."""
         try:
             # Search in the SCK workspace
-            workspace_path = Path(
-                "D:/Development/simple-cloud-kit-oss/simple-cloud-kit"
-            )
+            workspace_path = Path("D:/Development/simple-cloud-kit-oss/simple-cloud-kit")
 
             if not workspace_path.exists():
                 return f"Workspace not found at {workspace_path}"
@@ -102,10 +88,7 @@ class SCKCodeSearchTool:
             for pattern in search_patterns:
                 for py_file in workspace_path.rglob(pattern):
                     # Skip certain directories
-                    if any(
-                        skip in str(py_file)
-                        for skip in [".venv", "node_modules", "__pycache__", ".git"]
-                    ):
+                    if any(skip in str(py_file) for skip in [".venv", "node_modules", "__pycache__", ".git"]):
                         continue
 
                     try:
@@ -117,15 +100,8 @@ class SCKCodeSearchTool:
                                 if query.lower() in line.lower():
                                     start = max(0, i - 1)
                                     end = min(len(lines), i + 2)
-                                    snippet = "\n".join(
-                                        [
-                                            f"{start+j+1}: {lines[start+j]}"
-                                            for j in range(end - start)
-                                        ]
-                                    )
-                                    results.append(
-                                        f"Found in {py_file.relative_to(workspace_path)}:\n{snippet}\n"
-                                    )
+                                    snippet = "\n".join([f"{start+j+1}: {lines[start+j]}" for j in range(end - start)])
+                                    results.append(f"Found in {py_file.relative_to(workspace_path)}:\n{snippet}\n")
                                     break
                             if len(results) >= 5:  # Limit results
                                 break
@@ -136,10 +112,7 @@ class SCKCodeSearchTool:
                     break
 
             if results:
-                return (
-                    f"SCK Codebase Search Results for '{query}':\n\n"
-                    + "\n---\n".join(results)
-                )
+                return f"SCK Codebase Search Results for '{query}':\n\n" + "\n---\n".join(results)
             else:
                 return f"No code found for '{query}'. Try terms like 'ProxyEvent', 'core_logging', 'MagicS3Bucket', or 'lambda_handler'."
 
@@ -271,7 +244,7 @@ presigned_url = s3_client.generate_presigned_url(
 
 
 # Export tools for easy access
-def get_sck_tools():
+def get_sck_tools() -> dict[str, Any]:
     """Get all SCK tools."""
     return {
         "search_documentation": SCKDocumentationTool.search_documentation,
@@ -284,14 +257,14 @@ def get_sck_tools():
 if __name__ == "__main__":
     tools = get_sck_tools()
 
-    print("🔍 Testing SCK Documentation Search...")
+    print("\nTesting SCK Documentation Search...")
     result = tools["search_documentation"]("architecture")
     print(result[:200] + "..." if len(result) > 200 else result)
 
-    print("\n🔍 Testing SCK Codebase Search...")
+    print("\nTesting SCK Codebase Search...")
     result = tools["search_codebase"]("ProxyEvent")
     print(result[:200] + "..." if len(result) > 200 else result)
 
-    print("\n🏗️ Testing SCK Architecture Info...")
+    print("\nTesting SCK Architecture Info...")
     result = tools["get_architecture"]("lambda")
     print(result)

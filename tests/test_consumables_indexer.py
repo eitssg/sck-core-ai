@@ -1,5 +1,3 @@
-import pytest
-
 from core_ai.indexing.consumables_indexer import ConsumablesIndexer
 
 
@@ -7,9 +5,7 @@ def test_consumables_indexer_build_index_basic():
     indexer = ConsumablesIndexer()
     index = indexer.build_index()
     # We expect at least one AWS resource style id containing '::'
-    assert any(
-        "::" in entry["id"] for entry in index
-    ), "No resource ids discovered in consumables index"
+    assert any("::" in entry["id"] for entry in index), "No resource ids discovered in consumables index"
     # Spot check shape
     sample = index[0]
     assert {

@@ -8,8 +8,9 @@ backends (direct LLM, rule engine) can slot in without route changes.
 from __future__ import annotations
 
 import time
-from typing import Tuple
+
 import core_logging as log
+
 from core_framework.ai.contracts import (
     TemplateGenerateRequest,
     TemplateGenerateResponse,
@@ -51,17 +52,13 @@ def _vs() -> _SVS | None:
     return _VECTOR_STORE
 
 
-def generate(
-    req: TemplateGenerateRequest, langflow: LangflowClient | None
-) -> TemplateGenerateResponse:
+def generate(req: TemplateGenerateRequest, langflow: LangflowClient | None) -> TemplateGenerateResponse:
     start = time.time()
 
     def _produce() -> dict:
         # For now delegate fully to Langflow mockable response. Placeholder logic.
         if langflow:
-            _ = langflow.process_sync(
-                {"input_value": req.prompt}
-            )  # ignoring raw envelope
+            _ = langflow.process_sync({"input_value": req.prompt})  # ignoring raw envelope
         artefact = {
             "dsl": req.previous_dsl or f"generated_dsl_for:{req.prompt}",
             "rationale": "heuristic draft",
@@ -234,15 +231,10 @@ def optimize_cloudformation(
     recs: list[str] = []
     if len(lines) > 200:
         recs.append("Consider modularizing large template (>200 lines).")
-    if (
-        "AWS::S3::Bucket" in req.cloudformation
-        and "BucketEncryption" not in req.cloudformation
-    ):
+    if "AWS::S3::Bucket" in req.cloudformation and "BucketEncryption" not in req.cloudformation:
         recs.append("Add BucketEncryption for S3 buckets (security).")
     if not recs:
-        recs.append(
-            "Template appears minimal; no major optimization opportunities detected."
-        )
+        recs.append("Template appears minimal; no major optimization opportunities detected.")
     diff_preview = "# diff preview not yet implemented"
     return OptimizeCloudFormationResponse(
         recommendations=recs,

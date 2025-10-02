@@ -11,32 +11,7 @@ from typing import List
 import sys
 from pathlib import Path
 
-# Add the current directory to Python path so we can import our tools
-current_dir = Path(__file__).parent
-sys.path.insert(0, str(current_dir))
-
-try:
-    from simple_sck_tools import (
-        SCKDocumentationTool,
-        SCKCodeSearchTool,
-        SCKArchitectureTool,
-    )
-except ImportError:
-    # Fallback if import fails
-    class SCKDocumentationTool:
-        @staticmethod
-        def search_documentation(query: str) -> str:
-            return f"Documentation search not available. Searched for: {query}"
-
-    class SCKCodeSearchTool:
-        @staticmethod
-        def search_codebase(query: str) -> str:
-            return f"Codebase search not available. Searched for: {query}"
-
-    class SCKArchitectureTool:
-        @staticmethod
-        def get_architecture_info(component: str = "") -> str:
-            return f"Architecture info not available. Requested: {component}"
+from simple_sck_tools import SCKDocumentationTool, SCKCodeSearchTool, SCKArchitectureTool
 
 
 class DocumentationSearchInput(BaseModel):

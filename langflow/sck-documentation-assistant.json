@@ -95,7 +95,10 @@
                             "sender": {
                                 "_input_type": "DropdownInput",
                                 "display_name": "Sender Type",
-                                "options": ["AI", "User"],
+                                "options": [
+                                    "AI",
+                                    "User"
+                                ],
                                 "value": "User",
                                 "info": "Type of sender.",
                                 "advanced": true,
@@ -160,7 +163,7 @@
                                 "display_name": "Template",
                                 "info": "Prompt template with variables like {variable_name}",
                                 "multiline": true,
-                                "value": "You are an expert AI assistant specializing in Simple Cloud Kit (SCK) development and architecture.\n\n## Your Expertise:\n- **Multi-tenant Architecture**: Deep understanding of client_id vs tenant client concepts, OAuth flows, and session management\n- **SCK Framework**: Proficient with core_framework, core_logging, core_db, core_helper modules\n- **AWS Lambda Integration**: Expert in ProxyEvent patterns, synchronous handlers, and Lambda best practices\n- **S3 Operations**: Skilled with MagicS3Bucket patterns, presigned URLs, and S3 lifecycle management\n- **API Design**: Knowledgeable about SCK envelope responses, OAuth compliance, and FastAPI integration\n- **Build Systems**: Familiar with Poetry, multi-module builds, and dependency management\n- **Documentation**: Expert in Google-style docstrings, Sphinx documentation generation\n\n## Key SCK Principles to Remember:\n1. **Auth & Tokens**: Session cookies for /auth/v1/**, access tokens in Redux memory for /api/v1/**, refresh tokens in sessionStorage only\n2. **Lambda Runtime**: All Python runs in AWS Lambda - NO async def/await in handlers, use threads for concurrency\n3. **S3 Architecture**: Use MagicS3Bucket for bucket operations, boto3 client only for presigned URLs\n4. **API Responses**: Non-OAuth endpoints use envelope {{ status, code, data, metadata, message }}, OAuth follows RFC 6749\n5. **Multi-tenancy**: client_id = OAuth SPA identifier, tenant client = slug within client_id namespace\n\n## Response Guidelines:\n- Provide practical, actionable answers with code examples\n- Reference specific SCK modules and patterns\n- Explain the \"why\" behind architectural decisions\n- Include relevant security and best practice considerations\n- Use Google-style docstrings in code examples\n- Cite specific documentation files when relevant\n\n**User Question:** {user_input}\n\nProvide a comprehensive, expert-level response:",
+                                "value": "You are an expert AI assistant specializing in Simple Cloud Kit (SCK) development and architecture.\n\n## Your Expertise:\n- **Multi-tenant Architecture**: Deep understanding of client_id vs tenant client concepts, OAuth flows, and session management\n- **SCK Framework**: Proficient with core_framework, core_logging, core_db, core_helper modules\n- **AWS Lambda Integration**: Expert in ProxyEvent patterns, synchronous handlers, and Lambda best practices\n- **S3 Operations**: Skilled with MagicS3Bucket patterns, presigned URLs, and S3 lifecycle management\n- **API Design**: Knowledgeable about SCK envelope responses, OAuth compliance, and FastAPI integration\n- **Build Systems**: Familiar with UV, multi-module builds, and dependency management\n- **Documentation**: Expert in Google-style docstrings, Sphinx documentation generation\n\n## Key SCK Principles to Remember:\n1. **Auth & Tokens**: Session cookies for /auth/v1/**, access tokens in Redux memory for /api/v1/**, refresh tokens in sessionStorage only\n2. **Lambda Runtime**: All Python runs in AWS Lambda - NO async def/await in handlers, use threads for concurrency\n3. **S3 Architecture**: Use MagicS3Bucket for bucket operations, boto3 client only for presigned URLs\n4. **API Responses**: Non-OAuth endpoints use envelope {{ status, code, data, metadata, message }}, OAuth follows RFC 6749\n5. **Multi-tenancy**: client_id = OAuth SPA identifier, tenant client = slug within client_id namespace\n\n## Response Guidelines:\n- Provide practical, actionable answers with code examples\n- Reference specific SCK modules and patterns\n- Explain the \"why\" behind architectural decisions\n- Include relevant security and best practice considerations\n- Use Google-style docstrings in code examples\n- Cite specific documentation files when relevant\n\n**User Question:** {user_input}\n\nProvide a comprehensive, expert-level response:",
                                 "advanced": false,
                                 "required": true,
                                 "show": true,
@@ -170,7 +173,9 @@
                                 "_input_type": "MessageTextInput",
                                 "display_name": "User Input",
                                 "info": "User's question or request",
-                                "input_types": ["Message"],
+                                "input_types": [
+                                    "Message"
+                                ],
                                 "advanced": false,
                                 "required": true,
                                 "show": true,
@@ -312,7 +317,9 @@
                                 "_input_type": "HandleInput",
                                 "display_name": "Language Model",
                                 "info": "Language Model to use in the chain.",
-                                "input_types": ["LanguageModel"],
+                                "input_types": [
+                                    "LanguageModel"
+                                ],
                                 "required": true,
                                 "show": true,
                                 "type": "LanguageModel"
@@ -321,7 +328,9 @@
                                 "_input_type": "HandleInput",
                                 "display_name": "Prompt",
                                 "info": "Prompt template to use in the chain.",
-                                "input_types": ["BasePromptTemplate"],
+                                "input_types": [
+                                    "BasePromptTemplate"
+                                ],
                                 "required": true,
                                 "show": true,
                                 "type": "BasePromptTemplate"
@@ -372,7 +381,11 @@
                                 "_input_type": "HandleInput",
                                 "display_name": "Inputs",
                                 "info": "Message to be passed as output.",
-                                "input_types": ["Data", "DataFrame", "Message"],
+                                "input_types": [
+                                    "Data",
+                                    "DataFrame",
+                                    "Message"
+                                ],
                                 "required": true,
                                 "show": true,
                                 "type": "Message"
@@ -380,7 +393,10 @@
                             "sender": {
                                 "_input_type": "DropdownInput",
                                 "display_name": "Sender Type",
-                                "options": ["AI", "User"],
+                                "options": [
+                                    "AI",
+                                    "User"
+                                ],
                                 "value": "AI",
                                 "info": "Type of sender.",
                                 "advanced": true,
@@ -437,12 +453,16 @@
                         "dataType": "ChatInput",
                         "id": "ChatInput-user",
                         "name": "message",
-                        "output_types": ["Message"]
+                        "output_types": [
+                            "Message"
+                        ]
                     },
                     "targetHandle": {
                         "fieldName": "user_input",
                         "id": "PromptTemplate-sck",
-                        "inputTypes": ["Message"],
+                        "inputTypes": [
+                            "Message"
+                        ],
                         "type": "str"
                     }
                 }
@@ -458,12 +478,16 @@
                         "dataType": "PromptTemplate",
                         "id": "PromptTemplate-sck",
                         "name": "prompt",
-                        "output_types": ["BasePromptTemplate"]
+                        "output_types": [
+                            "BasePromptTemplate"
+                        ]
                     },
                     "targetHandle": {
                         "fieldName": "prompt",
                         "id": "LLMChain-processor",
-                        "inputTypes": ["BasePromptTemplate"],
+                        "inputTypes": [
+                            "BasePromptTemplate"
+                        ],
                         "type": "BasePromptTemplate"
                     }
                 }
@@ -479,12 +503,16 @@
                         "dataType": "OpenAIModel",
                         "id": "OpenAIModel-assistant",
                         "name": "text_output",
-                        "output_types": ["LanguageModel"]
+                        "output_types": [
+                            "LanguageModel"
+                        ]
                     },
                     "targetHandle": {
                         "fieldName": "llm",
                         "id": "LLMChain-processor",
-                        "inputTypes": ["LanguageModel"],
+                        "inputTypes": [
+                            "LanguageModel"
+                        ],
                         "type": "LanguageModel"
                     }
                 }
@@ -500,12 +528,18 @@
                         "dataType": "LLMChain",
                         "id": "LLMChain-processor",
                         "name": "response",
-                        "output_types": ["Message"]
+                        "output_types": [
+                            "Message"
+                        ]
                     },
                     "targetHandle": {
                         "fieldName": "input_value",
                         "id": "ChatOutput-assistant",
-                        "inputTypes": ["Data", "DataFrame", "Message"],
+                        "inputTypes": [
+                            "Data",
+                            "DataFrame",
+                            "Message"
+                        ],
                         "type": "Message"
                     }
                 }

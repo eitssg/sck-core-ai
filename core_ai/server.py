@@ -10,15 +10,13 @@ explicitly approved before introducing new modules/packages.
 
 import json
 from contextlib import asynccontextmanager
-from typing import Any, Dict, List, Optional, AsyncGenerator, Callable
+from typing import Any, Dict, List, Optional, AsyncGenerator
 import asyncio
 from fastapi import FastAPI, HTTPException, status, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import StreamingResponse
 from mangum import Mangum
 from pydantic import BaseModel, Field
-
-import core_framework as util
 
 import core_logging as log
 
@@ -52,6 +50,7 @@ from . import cache as ai_cache
 
 import os
 
+
 # API Models
 class YamlLintRequest(BaseModel):
     """Request model for YAML linting.
@@ -62,9 +61,7 @@ class YamlLintRequest(BaseModel):
     """
 
     content: str = Field(..., description="YAML content to lint")
-    options: Optional[Dict[str, Any]] = Field(
-        default_factory=dict, description="Linting options (strict, schema, etc.)"
-    )
+    options: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Linting options (strict, schema, etc.)")
 
 
 class CloudFormationValidateRequest(BaseModel):
@@ -93,9 +90,7 @@ class CodeCompletionRequest(BaseModel):
 
     content: str = Field(..., description="Partial YAML/CloudFormation content")
     cursor_position: Dict[str, int] = Field(..., description="Cursor line/column")
-    context: Optional[Dict[str, Any]] = Field(
-        default_factory=dict, description="Additional context for completion"
-    )
+    context: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Additional context for completion")
 
 
 class ApiResponse(BaseModel):
@@ -111,9 +106,7 @@ class ApiResponse(BaseModel):
     data: Optional[Dict[str, Any]] = Field(default=None, description="Response data")
     metadata: Optional[Dict[str, Any]] = Field(default=None, description="Metadata")
     message: Optional[str] = Field(default=None, description="Human-readable message")
-    errors: Optional[List[Dict[str, Any]]] = Field(
-        default=None, description="Error details"
-    )
+    errors: Optional[List[Dict[str, Any]]] = Field(default=None, description="Error details")
 
 
 class ChatMessage(BaseModel):
@@ -143,12 +136,8 @@ class ChatRequest(BaseModel):
         default="balanced",
         description="Context retrieval strategy (balanced, documentation_focused, code_focused, documentation_only, code_only)",
     )
-    max_context: int = Field(
-        default=12, description="Max total context chunks (doc+code) to include"
-    )
-    temperature: float = Field(
-        default=0.1, ge=0.0, le=1.0, description="LLM temperature override"
-    )
+    max_context: int = Field(default=12, description="Max total context chunks (doc+code) to include")
+    temperature: float = Field(default=0.1, ge=0.0, le=1.0, description="LLM temperature override")
 
 
 class ChatResponse(BaseModel):
@@ -174,9 +163,7 @@ context_manager: Optional[ContextManager] = None
 _langflow_reconnect_task = None  # type: ignore
 
 # Standard user-facing reply when AI engine is unavailable (strict mode)
-AI_ENGINE_UNAVAILABLE_REPLY = (
-    "I'm sorry, I am unable to process your request at this time."
-)
+AI_ENGINE_UNAVAILABLE_REPLY = "I'm sorry, I am unable to process your request at this time."
 
 
 # ---------------------------------------------------------------------------
@@ -199,6 +186,26 @@ def _truthy_env(name: str, default: bool = False) -> bool:
     if val is None:
         return default
     return val.lower() in {"1", "true", "yes", "on"}
+
+
+def _floaty_env(name: str, default: float = 0.0) -> float:
+    """Return float interpretation of an environment variable.
+
+    Args:
+        name: Environment variable name.
+        default: Default value if unset or invalid.
+
+    Returns:
+        Float representation of the environment variable, or the default if
+        unset or conversion fails.
+    """
+    val = os.getenv(name)
+    if val is None:
+        return default
+    try:
+        return float(val)
+    except ValueError:
+        return default
 
 
 ENDPOINT_LIST: List[str] = [
@@ -236,9 +243,7 @@ async def lifespan(app: FastAPI):
     global context_manager, _langflow_reconnect_task
 
     auto_reconnect = _truthy_env("CORE_AI_LANGFLOW_AUTO_RECONNECT", True)
-    reconnect_interval = float(
-        os.getenv("CORE_AI_LANGFLOW_RECONNECT_INTERVAL_SECONDS", "30")
-    )
+    reconnect_interval = _floaty_env("CORE_AI_LANGFLOW_RECONNECT_INTERVAL_SECONDS", 30.0)
     health_recreate = _truthy_env("CORE_AI_LANGFLOW_RECREATE_ON_UNHEALTHY", True)
     auto_index_init = _truthy_env("CORE_AI_AUTO_INDEX_INIT", True)
 
@@ -246,12 +251,7 @@ async def lifespan(app: FastAPI):
         global langflow_client
         try:
             base_url = os.getenv("LANGFLOW_BASE_URL", "http://localhost:7860")
-            flow_id = (
-                os.getenv("LANGFLOW_FLOW_ID", "yaml-cf-ai-agent-v1")
-                .strip()
-                .strip('"')
-                .strip("'")
-            )
+            flow_id = os.getenv("LANGFLOW_FLOW_ID", "yaml-cf-ai-agent-v1").strip().strip('"').strip("'")
             api_key = os.getenv("LANGFLOW_API_KEY") or None
             langflow_client_local = LangflowClient(
                 base_url=base_url,
@@ -275,7 +275,7 @@ async def lifespan(app: FastAPI):
     _init_langflow_once()
 
     async def _reconnect_loop():  # pragma: no cover (timing dependent)
-        
+
         while True:
             try:
                 if not langflow_client:
@@ -326,9 +326,7 @@ async def lifespan(app: FastAPI):
                 build_dir=build_dir,
             )
         context_manager = ContextManager(build_directory=build_dir, workspace_root=root)
-        log.info(
-            "ContextManager initialized", workspace_root=root, build_directory=build_dir
-        )
+        log.info("ContextManager initialized", workspace_root=root, build_directory=build_dir)
     except Exception as e:  # pragma: no cover
         context_manager = None
         log.warning("Indexing subsystem unavailable", error=str(e))
@@ -529,9 +527,7 @@ async def lint_yaml(request: YamlLintRequest):
             {
                 "input_value": request.content,
                 "tweaks": {
-                    "yaml-parser": {
-                        "validation_mode": (request.options or {}).get("mode", "syntax")
-                    },
+                    "yaml-parser": {"validation_mode": (request.options or {}).get("mode", "syntax")},
                     "response-formatter": {"format_type": "sck_envelope"},
                 },
             }
@@ -546,9 +542,7 @@ async def lint_yaml(request: YamlLintRequest):
         raise HTTPException(status_code=500, detail="lint_failed")
 
 
-@app.post(
-    "/api/v1/validate/cloudformation", tags=["validation"], response_model=ApiResponse
-)
+@app.post("/api/v1/validate/cloudformation", tags=["validation"], response_model=ApiResponse)
 async def validate_cloudformation_endpoint(request: CloudFormationValidateRequest):
     """Validate a CloudFormation template via Langflow (strict engine check)."""
     try:
@@ -625,7 +619,7 @@ async def code_completion(request: CodeCompletionRequest):
                 "tweaks": {
                     "ai-analyzer": {
                         "system_message": f"""Provide code completion suggestions for the given YAML/CloudFormation content.
-                    
+
 Cursor position: Line {request.cursor_position.get('line', 0)}, Column {request.cursor_position.get('column', 0)}
 
 Focus on:
@@ -657,9 +651,7 @@ Return suggestions as a JSON array with: text, description, insertText, kind."""
                 "context": request.context,
             }
 
-        return create_envelope_response(
-            data=response_data, message="Code completion suggestions generated"
-        )
+        return create_envelope_response(data=response_data, message="Code completion suggestions generated")
 
     except Exception as e:
         log.error("Code completion failed", error=str(e))
@@ -698,9 +690,7 @@ async def compile_contract(req: CompileRequest):
     return create_envelope_response(data=resp.model_dump())
 
 
-@app.post(
-    "/v1/cloudformation/validate", response_model=ApiResponse, tags=["ai-contracts"]
-)
+@app.post("/v1/cloudformation/validate", response_model=ApiResponse, tags=["ai-contracts"])
 async def cfn_validate_contract(req: CFNContractRequest):
     resp = ai_service.validate_cloudformation(req)
     return create_envelope_response(data=resp.model_dump())
@@ -736,9 +726,7 @@ async def index_status_contract():
     tags=["ai-contracts"],
 )
 async def optimize_cfn_contract(req: OptimizeCloudFormationRequest):
-    resp: OptimizeCloudFormationResponse = ai_service.optimize_cloudformation(
-        req, langflow_client
-    )
+    resp: OptimizeCloudFormationResponse = ai_service.optimize_cloudformation(req, langflow_client)
     return create_envelope_response(data=resp.model_dump())
 
 
@@ -761,10 +749,7 @@ def lambda_handler(event, context):  # pragma: no cover
 @app.get("/v1/tools", tags=["tools"], response_model=ApiResponse)
 async def list_tools_endpoint():
     include_indexing = context_manager is not None
-    specs = [
-        {"name": t.name, "description": t.description, "schema": t.schema}
-        for t in list_all_tool_specs(include_indexing)
-    ]
+    specs = [{"name": t.name, "description": t.description, "schema": t.schema} for t in list_all_tool_specs(include_indexing)]
     return create_envelope_response(data={"tools": specs})
 
 
@@ -825,9 +810,7 @@ async def _invoke_base_tool(name: str, arguments: Dict[str, Any]) -> Dict[str, A
             "best_practices": "Evaluate adherence to AWS Well-Architected Framework principles.",
             "comprehensive": "Perform complete analysis covering security, cost, performance, and best practices.",
         }
-        system_message = analysis_prompts.get(
-            analysis_type, analysis_prompts["comprehensive"]
-        )
+        system_message = analysis_prompts.get(analysis_type, analysis_prompts["comprehensive"])
         req = {
             "input_value": arguments.get("template", ""),
             "tweaks": {
@@ -981,10 +964,10 @@ def _build_chat_prompt(context: Dict[str, Any], messages: List[ChatMessage]) -> 
     code_snips = []
     for item in context.get("documentation", [])[:5]:
         snippet = item.get("content", "")[:600]
-        doc_snips.append(f"[DOC:{item.get('source','?')}]\n{snippet}")
+        doc_snips.append(f"[DOC:{item.get('source', '?')}]\n{snippet}")
     for item in context.get("codebase", [])[:5]:
         snippet = item.get("content", "")[:600]
-        code_snips.append(f"[CODE:{item.get('location','?')}]\n{snippet}")
+        code_snips.append(f"[CODE:{item.get('location', '?')}]\n{snippet}")
     convo_lines = [f"{m.role.upper()}: {m.content}" for m in messages[-10:]]
     prompt = (
         "You are the SCK Core AI assistant. Use provided context when helpful.\n"
@@ -1044,13 +1027,9 @@ def _lookup_catalog_entry(intent: Dict[str, Any]) -> Optional[str]:
                     props = item.get("properties", [])
                     prop_lines = []
                     for p in props[:30]:  # cap
-                        prop_lines.append(
-                            f" - {p.get('path')}: type={p.get('type')} required={p.get('required')}"
-                        )
+                        prop_lines.append(f" - {p.get('path')}: type={p.get('type')} required={p.get('required')}")
                     return (
-                        f"[CATALOG:CONSUMABLE {rid}]\nCategory: {item.get('category')}\n"
-                        + "Properties:\n"
-                        + "\n".join(prop_lines)
+                        f"[CATALOG:CONSUMABLE {rid}]\nCategory: {item.get('category')}\n" + "Properties:\n" + "\n".join(prop_lines)
                     )
         elif kind == "action":
             items = getattr(app.state, "actions_index", [])  # type: ignore[attr-defined]
@@ -1061,16 +1040,11 @@ def _lookup_catalog_entry(intent: Dict[str, Any]) -> Optional[str]:
                     param_lines = []
                     for p in params[:40]:
                         default = p.get("default")
-                        default_repr = (
-                            "" if default is None else f" default={default!r}"
-                        )
-                        param_lines.append(
-                            f" - {p.get('name')}: {p.get('type')} required={p.get('required')}{default_repr}"
-                        )
+                        default_repr = "" if default is None else f" default={default!r}"
+                        param_lines.append(f" - {p.get('name')}: {p.get('type')} required={p.get('required')}{default_repr}")
                     return (
                         f"[CATALOG:ACTION {aid}]\nModule: {item.get('module')} Class: {item.get('class_name')}\n"
-                        f"Summary: {item.get('summary')}\nParams:\n"
-                        + "\n".join(param_lines)
+                        f"Summary: {item.get('summary')}\nParams:\n" + "\n".join(param_lines)
                     )
     except Exception as e:  # pragma: no cover
         log.debug("Catalog lookup failed", error=str(e))
@@ -1147,17 +1121,13 @@ async def chat_endpoint(req: ChatRequest):
             if snippet:
                 # Inject into documentation context section for prompt assembly
                 docs = ctx.setdefault("documentation", [])
-                docs.insert(
-                    0, {"source": f"catalog:{intent['kind']}", "content": snippet}
-                )
+                docs.insert(0, {"source": f"catalog:{intent['kind']}", "content": snippet})
         prompt = _build_chat_prompt(ctx, req.messages)
         # Synchronous wait via event loop blocking call not ideal; we separate reply outside
         return {"ctx": ctx, "prompt": prompt}
 
     # First stage: context + prompt generation idempotent
-    prompt_packet, meta = ai_cache.run_idempotent(
-        operation="chat.context", payload=idem_payload, producer=_producer
-    )
+    prompt_packet, meta = ai_cache.run_idempotent(operation="chat.context", payload=idem_payload, producer=_producer)
 
     # Second stage: model reply idempotent on prompt packet hash
     async def _reply_stage():
@@ -1193,9 +1163,7 @@ async def chat_endpoint(req: ChatRequest):
         "documentation": ctx.get("documentation", [])[:3],
         "codebase": ctx.get("codebase", [])[:3],
     }
-    response = ChatResponse(
-        reply=reply_result["reply"], context_used=trimmed_ctx, usage={}
-    )
+    response = ChatResponse(reply=reply_result["reply"], context_used=trimmed_ctx, usage={})
     envelope = response.model_dump()
     envelope["idempotency"] = {"context": meta, "reply": reply_meta}
     return create_envelope_response(data=envelope)
@@ -1259,9 +1227,7 @@ def main():
     import os
 
     port = int(os.getenv("SCK_AI_PORT", "8200"))
-    uvicorn.run(
-        "core_ai.server:app", host="0.0.0.0", port=port, reload=True, log_level="info"
-    )
+    uvicorn.run("core_ai.server:app", host="0.0.0.0", port=port, reload=True, log_level="info")
 
 
 if __name__ == "__main__":
@@ -1288,19 +1254,12 @@ def catalog_actions():
 
 
 @app.get("/v1/catalog/consumables/search", tags=["catalog"], response_model=ApiResponse)
-def catalog_consumables_search(
-    q: Optional[str] = None, limit: int = 50, offset: int = 0
-):
+def catalog_consumables_search(q: Optional[str] = None, limit: int = 50, offset: int = 0):
     """Search consumables catalog (simple substring match)."""
     items = list(getattr(app.state, "consumables_index", []))  # type: ignore[attr-defined]
     if q:
         ql = q.lower()
-        items = [
-            i
-            for i in items
-            if ql in str(i.get("id", "")).lower()
-            or ql in str(i.get("category", "")).lower()
-        ]
+        items = [i for i in items if ql in str(i.get("id", "")).lower() or ql in str(i.get("category", "")).lower()]
     total = len(items)
     sliced = items[offset : offset + limit]
     return create_envelope_response(
@@ -1321,12 +1280,7 @@ def catalog_actions_search(q: Optional[str] = None, limit: int = 50, offset: int
     items = list(getattr(app.state, "actions_index", []))  # type: ignore[attr-defined]
     if q:
         ql = q.lower()
-        items = [
-            i
-            for i in items
-            if ql in str(i.get("id", "")).lower()
-            or ql in str(i.get("summary", "")).lower()
-        ]
+        items = [i for i in items if ql in str(i.get("id", "")).lower() or ql in str(i.get("summary", "")).lower()]
     total = len(items)
     sliced = items[offset : offset + limit]
     return create_envelope_response(

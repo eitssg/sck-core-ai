@@ -9,10 +9,7 @@ handle that gracefully.
 
 from fastapi.testclient import TestClient
 
-from core_ai.server import (
-    app,
-    create_envelope_response,
-)  # noqa: F401 (import side effects)
+from core_ai.server import app, create_envelope_response  # noqa: F401 (import side effects)
 
 
 client = TestClient(app)

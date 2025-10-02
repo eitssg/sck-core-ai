@@ -46,8 +46,6 @@ Future Extensions:
     * Provide optional NDJSON streamer for large catalog diffs
 """
 
-from __future__ import annotations
-
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -58,9 +56,7 @@ try:
     # Importing validator library (read-only usage)
     from core_component.validator.spec_library import SpecLibrary  # type: ignore
 except Exception as e:  # pragma: no cover - environment/import failure path
-    raise ImportError(
-        "Failed to import SpecLibrary from core_component.validator – ensure sck-core-component is installed."
-    ) from e
+    raise ImportError("Failed to import SpecLibrary from core_component.validator – ensure sck-core-component is installed.") from e
 
 
 META_KEYS = {
@@ -102,9 +98,7 @@ class ConsumableEntry:
     properties: List[ConsumableProperty] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
-        enum_index = {
-            p.path: p.enum for p in self.properties if p.enum
-        }  # quick lookup index for completion use-cases
+        enum_index = {p.path: p.enum for p in self.properties if p.enum}  # quick lookup index for completion use-cases
         doc_urls: List[str] = []
         for p in self.properties:
             if p.doc:
@@ -141,9 +135,7 @@ class ConsumablesIndexer:
                 # Skip non-resource root keys (e.g., internal custom type definitions)
                 continue
             category = root_key.replace("::", "/")
-            entry = ConsumableEntry(
-                id=root_key, category=category, source_spec_key=root_key
-            )
+            entry = ConsumableEntry(id=root_key, category=category, source_spec_key=root_key)
             self._collect_properties(spec, prefix="", out=entry.properties)
             entries.append(entry)
 
@@ -154,9 +146,7 @@ class ConsumablesIndexer:
     # ------------------------------------------------------------------
     # Internal Helpers
     # ------------------------------------------------------------------
-    def _collect_properties(
-        self, spec: Dict[str, Any], prefix: str, out: List[ConsumableProperty]
-    ):  # noqa: C901
+    def _collect_properties(self, spec: Dict[str, Any], prefix: str, out: List[ConsumableProperty]) -> None:  # noqa: C901
         # Recurse keys that are *not* meta
         for key in sorted(spec):
             if key.startswith(self.meta_prefix):
@@ -201,9 +191,7 @@ class ConsumablesIndexer:
                     meta["required"] = False
         enum_key = META_KEYS["enum"]
         if enum_key in spec and isinstance(spec[enum_key], list):
-            enum_vals: List[str] = [
-                str(v) for v in spec[enum_key] if isinstance(v, (str, int))
-            ]
+            enum_vals: List[str] = [str(v) for v in spec[enum_key] if isinstance(v, (str, int))]
             if enum_vals:
                 meta["enum"] = enum_vals
         doc_key = META_KEYS["documentation"]
@@ -219,9 +207,7 @@ class ConsumablesIndexer:
         return meta
 
 
-def write_index_json(
-    path: str | Path, index: List[Dict[str, Any]], pretty: bool = False
-) -> None:
+def write_index_json(path: str | Path, index: List[Dict[str, Any]], pretty: bool = False) -> None:
     import json
 
     p = Path(path)

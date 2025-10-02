@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 import json
 import urllib.parse
 from datetime import datetime, timezone
@@ -6,9 +6,7 @@ from pydantic import BaseModel, Field, ConfigDict, field_validator, ValidationIn
 
 import core_framework as util
 
-DOMAIN_PREFIX = (
-    "your-api-gateway-domain-prefix"  # Replace with your actual domain prefix
-)
+DOMAIN_PREFIX = "your-api-gateway-domain-prefix"  # Replace with your actual domain prefix
 API_ID = "your-api-id"  # Replace with your actual API ID
 
 
@@ -66,49 +64,31 @@ class RequestContext(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
     resourceId: str = Field(description="API Gateway resource identifier for routing")
-    resourcePath: str = Field(
-        description="Resource path template with parameter placeholders (e.g., '/users/{id}')"
-    )
-    httpMethod: str = Field(
-        description="HTTP method for the request (GET, POST, PUT, DELETE, etc.)"
-    )
-    extendedRequestId: Optional[str] = Field(
-        None, description="Extended request ID for detailed request tracing"
-    )
+    resourcePath: str = Field(description="Resource path template with parameter placeholders (e.g., '/users/{id}')")
+    httpMethod: str = Field(description="HTTP method for the request (GET, POST, PUT, DELETE, etc.)")
+    extendedRequestId: Optional[str] = Field(None, description="Extended request ID for detailed request tracing")
     requestTime: str = Field(
         description="Human-readable request timestamp in API Gateway format",
-        default_factory=lambda: datetime.now(timezone.utc).strftime(
-            "%d/%b/%Y:%H:%M:%S %z"
-        ),
+        default_factory=lambda: datetime.now(timezone.utc).strftime("%d/%b/%Y:%H:%M:%S %z"),
     )
-    path: str = Field(
-        description="Full request path including API Gateway stage prefix"
-    )
-    accountId: Optional[str] = Field(
-        None, description="AWS account ID that owns the API Gateway"
-    )
+    path: str = Field(description="Full request path including API Gateway stage prefix")
+    accountId: Optional[str] = Field(None, description="AWS account ID that owns the API Gateway")
     protocol: str = Field(description="HTTP protocol version", default="HTTP/1.1")
     stage: str = Field(
         description="API Gateway deployment stage name (prod, dev, etc.)",
         default_factory=util.get_environment,
     )
-    domainPrefix: str = Field(
-        description="Domain prefix for the API Gateway endpoint", default=DOMAIN_PREFIX
-    )
+    domainPrefix: str = Field(description="Domain prefix for the API Gateway endpoint", default=DOMAIN_PREFIX)
     requestTimeEpoch: int = Field(
         description="Request timestamp as Unix epoch time in milliseconds",
         default_factory=lambda: int(datetime.now(timezone.utc).timestamp() * 1000),
     )
-    requestId: str = Field(
-        description="Unique identifier for this specific API request"
-    )
+    requestId: str = Field(description="Unique identifier for this specific API request")
     domainName: str = Field(
         description="Full domain name of the API Gateway endpoint",
         default=f"{DOMAIN_PREFIX}.execute-api.us-east-1.amazonaws.com",
     )
-    identity: dict = Field(
-        description="Authentication and identity information for the request"
-    )
+    identity: dict = Field(description="Authentication and identity information for the request")
     apiId: str = Field(description="API Gateway API identifier", default=API_ID)
 
 
@@ -167,43 +147,29 @@ class ProxyEvent(BaseModel):
 
     model_config = ConfigDict(populate_by_name=True)
 
-    httpMethod: str = Field(
-        description="HTTP method for the request (GET, POST, PUT, DELETE, etc.)"
-    )
-    resource: str = Field(
-        description="API resource path with parameter placeholders (e.g., '/users/{id}')"
-    )
+    httpMethod: str = Field(description="HTTP method for the request (GET, POST, PUT, DELETE, etc.)")
+    resource: str = Field(description="API resource path with parameter placeholders (e.g., '/users/{id}')")
     path: Optional[str] = Field(
         None,
         description="Actual request path with resolved parameters (e.g., '/users/123')",
     )
-    queryStringParameters: Dict[str, str] = Field(
-        description="Single-value query string parameters", default_factory=dict
-    )
+    queryStringParameters: Dict[str, str] = Field(description="Single-value query string parameters", default_factory=dict)
     multiValueQueryStringParameters: Dict[str, List[str]] = Field(
         description="Multi-value query string parameters (AWS API Gateway format)",
         default_factory=dict,
     )
-    pathParameters: Dict[str, str] = Field(
-        description="Path parameter values extracted from the URL", default_factory=dict
-    )
+    pathParameters: Dict[str, str] = Field(description="Path parameter values extracted from the URL", default_factory=dict)
     stageVariables: Dict[str, str] = Field(
         description="API Gateway stage variables for environment configuration",
         default_factory=dict,
     )
-    requestContext: RequestContext = Field(
-        description="Complete request context information from API Gateway"
-    )
-    headers: Dict[str, str] = Field(
-        description="Single-value HTTP request headers", default_factory=dict
-    )
+    requestContext: RequestContext = Field(description="Complete request context information from API Gateway")
+    headers: Dict[str, str] = Field(description="Single-value HTTP request headers", default_factory=dict)
     multiValueHeaders: Dict[str, List[str]] = Field(
         description="Multi-value HTTP headers (AWS API Gateway format)",
         default_factory=dict,
     )
-    cookies: Optional[list[str]] = Field(
-        None, description="Parsed cookies from request (AWS API Gateway v2.0+ format)"
-    )
+    cookies: Optional[list[str]] = Field(None, description="Parsed cookies from request (AWS API Gateway v2.0+ format)")
     isBase64Encoded: bool = Field(
         description="Whether the body content is base64 encoded (for binary data)",
         default=False,
@@ -226,11 +192,7 @@ class ProxyEvent(BaseModel):
         """
         # If API Gateway v2.0+ provided parsed cookies, use them
         if self.cookies:
-            return {
-                cookie.split("=", 1)[0]: cookie.split("=", 1)[1]
-                for cookie in self.cookies
-                if "=" in cookie
-            }
+            return {cookie.split("=", 1)[0]: cookie.split("=", 1)[1] for cookie in self.cookies if "=" in cookie}
 
         # Otherwise parse from Cookie header (v1.0 format)
         cookie_header = self.headers.get("Cookie", "")
@@ -238,11 +200,7 @@ class ProxyEvent(BaseModel):
             return {}
 
         cookies_list = cookie_header.split(";")
-        return {
-            cookie.split("=", 1)[0].strip(): cookie.split("=", 1)[1].strip()
-            for cookie in cookies_list
-            if "=" in cookie
-        }
+        return {cookie.split("=", 1)[0].strip(): cookie.split("=", 1)[1].strip() for cookie in cookies_list if "=" in cookie}
 
     @property
     def content_type(self) -> str:
@@ -273,9 +231,7 @@ class ProxyEvent(BaseModel):
         """
         if isinstance(body, dict):
             return body
-        content_type = info.data.get("headers", {}).get(
-            "content-type", "application/json"
-        )
+        content_type = info.data.get("headers", {}).get("content-type", "application/json")
         if util.is_json_mimetype(content_type):
             try:
                 return util.from_json(body) if body else {}
@@ -328,7 +284,7 @@ class ProxyEvent(BaseModel):
         method = self.httpMethod.upper()
         return f"{method}:{self.resource}"
 
-    def get_header(self, name: str, default: Optional[str] = None) -> Optional[str]:
+    def get_header(self, name: str, default: Optional[str] = None) -> Tuple[str, Optional[str]]:
         """Get header value case-insensitively.
 
         Args:

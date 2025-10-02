@@ -17,7 +17,7 @@ uv's handling of local wheel files through `tool.uv.sources` is unreliable, espe
 **Step 1: Build the dependency wheel**
 ```bash
 cd ../sck-core-framework
-poetry build  # Creates dist/sck_core_framework-*.whl
+uv build  # Creates dist/sck_core_framework-*.whl
 ```
 
 **Step 2: Manual virtual environment setup**

@@ -115,7 +115,9 @@
                                 "_input_type": "MessageTextInput",
                                 "display_name": "Search Query",
                                 "info": "What to search for in SCK documentation",
-                                "input_types": ["Message"],
+                                "input_types": [
+                                    "Message"
+                                ],
                                 "required": true,
                                 "show": true,
                                 "type": "str",
@@ -177,7 +179,7 @@
                                 "_input_type": "PromptInput",
                                 "display_name": "Template",
                                 "multiline": true,
-                                "value": "You are an expert Simple Cloud Kit (SCK) developer assistant with access to real-time documentation search.\n\n## Your Role:\nProvide authoritative, accurate answers about SCK development using the most current information.\n\n## Search Context:\n{search_results}\n\n## Core SCK Knowledge:\n- **Architecture**: Multi-tenant SaaS with OAuth client_id and tenant client separation\n- **Runtime**: AWS Lambda-first with synchronous handlers (NO async/await)\n- **Storage**: S3 with MagicS3Bucket patterns, presigned URL best practices\n- **APIs**: Envelope responses for /api/v1/**, OAuth compliance for /auth/v1/**\n- **Auth Flow**: Session cookies → access tokens (memory) → refresh tokens (sessionStorage)\n- **Build**: Poetry with dynamic versioning, multi-module dependency management\n\n## Response Guidelines:\n1. **Use Search Results**: Incorporate relevant findings from the search context\n2. **Provide Code Examples**: Include practical, working code with Google-style docstrings\n3. **Explain Architecture**: Connect specific implementation to overall SCK design principles\n4. **Security Focus**: Emphasize secure patterns, especially for auth and data handling\n5. **Best Practices**: Reference official SCK conventions and patterns\n6. **Source Attribution**: Mention which documentation files support your recommendations\n\n## User Question:\n{user_input}\n\n## Your Expert Response:",
+                                "value": "You are an expert Simple Cloud Kit (SCK) developer assistant with access to real-time documentation search.\n\n## Your Role:\nProvide authoritative, accurate answers about SCK development using the most current information.\n\n## Search Context:\n{search_results}\n\n## Core SCK Knowledge:\n- **Architecture**: Multi-tenant SaaS with OAuth client_id and tenant client separation\n- **Runtime**: AWS Lambda-first with synchronous handlers (NO async/await)\n- **Storage**: S3 with MagicS3Bucket patterns, presigned URL best practices\n- **APIs**: Envelope responses for /api/v1/**, OAuth compliance for /auth/v1/**\n- **Auth Flow**: Session cookies → access tokens (memory) → refresh tokens (sessionStorage)\n- **Build**: UV with dynamic versioning, multi-module dependency management\n\n## Response Guidelines:\n1. **Use Search Results**: Incorporate relevant findings from the search context\n2. **Provide Code Examples**: Include practical, working code with Google-style docstrings\n3. **Explain Architecture**: Connect specific implementation to overall SCK design principles\n4. **Security Focus**: Emphasize secure patterns, especially for auth and data handling\n5. **Best Practices**: Reference official SCK conventions and patterns\n6. **Source Attribution**: Mention which documentation files support your recommendations\n\n## User Question:\n{user_input}\n\n## Your Expert Response:",
                                 "advanced": false,
                                 "required": true,
                                 "show": true,
@@ -187,7 +189,9 @@
                                 "_input_type": "MessageTextInput",
                                 "display_name": "User Input",
                                 "info": "User's question about SCK development",
-                                "input_types": ["Message"],
+                                "input_types": [
+                                    "Message"
+                                ],
                                 "required": true,
                                 "show": true,
                                 "type": "str",
@@ -197,7 +201,9 @@
                                 "_input_type": "HandleInput",
                                 "display_name": "Search Results",
                                 "info": "Contextual search results from SCK documentation",
-                                "input_types": ["Data"],
+                                "input_types": [
+                                    "Data"
+                                ],
                                 "advanced": true,
                                 "required": false,
                                 "show": true,
@@ -335,7 +341,9 @@
                                 "_input_type": "HandleInput",
                                 "display_name": "Language Model",
                                 "info": "Enhanced language model for SCK assistance",
-                                "input_types": ["LanguageModel"],
+                                "input_types": [
+                                    "LanguageModel"
+                                ],
                                 "required": true,
                                 "show": true,
                                 "type": "LanguageModel"
@@ -344,7 +352,9 @@
                                 "_input_type": "HandleInput",
                                 "display_name": "Prompt",
                                 "info": "Enhanced prompt template with search context",
-                                "input_types": ["BasePromptTemplate"],
+                                "input_types": [
+                                    "BasePromptTemplate"
+                                ],
                                 "required": true,
                                 "show": true,
                                 "type": "BasePromptTemplate"
@@ -395,7 +405,9 @@
                                 "_input_type": "HandleInput",
                                 "display_name": "Inputs",
                                 "info": "Enhanced response message",
-                                "input_types": ["Message"],
+                                "input_types": [
+                                    "Message"
+                                ],
                                 "required": true,
                                 "show": true,
                                 "type": "Message"
@@ -459,12 +471,16 @@
                         "dataType": "ChatInput",
                         "id": "ChatInput-user-advanced",
                         "name": "message",
-                        "output_types": ["Message"]
+                        "output_types": [
+                            "Message"
+                        ]
                     },
                     "targetHandle": {
                         "fieldName": "query",
                         "id": "CustomComponent-mcp-search",
-                        "inputTypes": ["Message"],
+                        "inputTypes": [
+                            "Message"
+                        ],
                         "type": "str"
                     }
                 }
@@ -480,12 +496,16 @@
                         "dataType": "ChatInput",
                         "id": "ChatInput-user-advanced",
                         "name": "message",
-                        "output_types": ["Message"]
+                        "output_types": [
+                            "Message"
+                        ]
                     },
                     "targetHandle": {
                         "fieldName": "user_input",
                         "id": "PromptTemplate-enhanced",
-                        "inputTypes": ["Message"],
+                        "inputTypes": [
+                            "Message"
+                        ],
                         "type": "str"
                     }
                 }
@@ -501,12 +521,16 @@
                         "dataType": "CustomComponent",
                         "id": "CustomComponent-mcp-search",
                         "name": "search_results",
-                        "output_types": ["Data"]
+                        "output_types": [
+                            "Data"
+                        ]
                     },
                     "targetHandle": {
                         "fieldName": "search_results",
                         "id": "PromptTemplate-enhanced",
-                        "inputTypes": ["Data"],
+                        "inputTypes": [
+                            "Data"
+                        ],
                         "type": "Data"
                     }
                 }
@@ -522,12 +546,16 @@
                         "dataType": "PromptTemplate",
                         "id": "PromptTemplate-enhanced",
                         "name": "prompt",
-                        "output_types": ["BasePromptTemplate"]
+                        "output_types": [
+                            "BasePromptTemplate"
+                        ]
                     },
                     "targetHandle": {
                         "fieldName": "prompt",
                         "id": "LLMChain-enhanced",
-                        "inputTypes": ["BasePromptTemplate"],
+                        "inputTypes": [
+                            "BasePromptTemplate"
+                        ],
                         "type": "BasePromptTemplate"
                     }
                 }
@@ -543,12 +571,16 @@
                         "dataType": "OpenAIModel",
                         "id": "OpenAIModel-enhanced",
                         "name": "text_output",
-                        "output_types": ["LanguageModel"]
+                        "output_types": [
+                            "LanguageModel"
+                        ]
                     },
                     "targetHandle": {
                         "fieldName": "llm",
                         "id": "LLMChain-enhanced",
-                        "inputTypes": ["LanguageModel"],
+                        "inputTypes": [
+                            "LanguageModel"
+                        ],
                         "type": "LanguageModel"
                     }
                 }
@@ -564,12 +596,16 @@
                         "dataType": "LLMChain",
                         "id": "LLMChain-enhanced",
                         "name": "response",
-                        "output_types": ["Message"]
+                        "output_types": [
+                            "Message"
+                        ]
                     },
                     "targetHandle": {
                         "fieldName": "input_value",
                         "id": "ChatOutput-enhanced",
-                        "inputTypes": ["Message"],
+                        "inputTypes": [
+                            "Message"
+                        ],
                         "type": "Message"
                     }
                 }

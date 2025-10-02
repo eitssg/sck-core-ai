@@ -5,20 +5,18 @@ implementation self-contained and optional. It intentionally avoids external
 dependencies for ease of local development. Not multi-process safe (per-container only).
 """
 
-from __future__ import annotations
+from typing import Callable
 
 import os
-import threading
 import time
 import hashlib
 import json
-from typing import Any, Callable, Dict, Tuple
 
 import core_logging as log
 
+from core_helper import store
 
-_LOCK = threading.RLock()
-_STORE: dict[str, dict[str, Any]] = {}
+from core_ai.indexing.action_indexer import dataclass
 
 
 def _now() -> float:
@@ -34,6 +32,17 @@ def _ttl() -> int:
 
 def _enabled() -> bool:
     return os.getenv("CORE_AI_INTERNAL_IDEMPOTENCY_ENABLED", "true").lower() == "true"
+
+
+@dataclass
+class IdempotentMeta:
+    key: str
+    hit: bool
+    created_at: int | None
+    duration_ms: int | None
+    hits: int
+    expires_at: float
+    result: dict
 
 
 def build_key(
@@ -86,40 +95,31 @@ def run_idempotent(
     if not _enabled():
         result = producer()
         return result, {"key": key, "hit": False, "duration_ms": None, "hits": 0}
-    with _LOCK:
-        envelope = _STORE.get(key)
-        if envelope and envelope["expires_at"] > _now():
-            envelope["hits"] += 1
-            return envelope["result"], {
-                "key": key,
-                "hit": True,
-                "duration_ms": envelope["duration_ms"],
-                "created_at": envelope["created_at"],
-                "hits": envelope["hits"],
-            }
+
+    envelope: IdempotentMeta | None = store.retrieve(key)
+
+    if envelope and envelope.expires_at > _now():
+        envelope.hits += 1
+        return envelope.result, envelope.__dict__
+
     start = _now()
     result = producer()
     duration_ms = int((_now() - start) * 1000)
-    record = {
-        "result": result,
-        "created_at": int(start),
-        "duration_ms": duration_ms,
-        "hits": 1,
-        "expires_at": _now() + _ttl(),
-    }
-    with _LOCK:
-        _STORE[key] = record
+    record = IdempotentMeta(
+        key=key,
+        hit=False,
+        created_at=int(start),
+        duration_ms=duration_ms,
+        hits=1,
+        expires_at=_now() + _ttl(),
+        result=result,
+    )
+
+    store.store(key, record, ttl=_ttl())
+
     log.debug("AI local idempotent store", key=key, duration_ms=duration_ms)
-    return result, {
-        "key": key,
-        "hit": False,
-        "duration_ms": duration_ms,
-        "created_at": record["created_at"],
-        "hits": 1,
-    }
+    return result, record.__dict__
 
 
 def stats() -> dict:
-    with _LOCK:
-        valid = [k for k, v in _STORE.items() if v["expires_at"] > _now()]
-        return {"entries": len(valid), "total": len(_STORE)}
+    return {"entries": store.size()}

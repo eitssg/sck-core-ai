@@ -1,17 +1,15 @@
 [project]
 name = "sck-core-ai"
-version = "0.1.0"
+version = "1.3.0"
 description = "AI agent for YAML/CloudFormation linting and code completion using Langflow"
 readme = "README.md"
 authors = [{ name = "James Barwick", email = "jbarwick@eits.com.sg" }]
 requires-python = ">=3.11,<3.13.0"
 dependencies = [
-    # SCK Core Framework (install manually with pip first)
-    "sck-core-framework",
     # Web framework and server
     "fastapi>=0.104.0",
     "uvicorn>=0.24.0",
-    "mangum>=0.17.0",   # ASGI adapter for AWS Lambda
+    "mangum>=0.17.0", # ASGI adapter for AWS Lambda
     # HTTP client and utilities
     "httpx>=0.25.0",
     "pydantic>=2.5.0",
@@ -22,7 +20,7 @@ dependencies = [
     # Logging (additional to core_logging from sck-core-framework)
     "structlog>=23.2.0",
     # MCP server support
-    "mcp>=0.9.0",
+    "mcp[cli]>=0.9.0",
     # AWS integration
     "boto3>=1.34.0,<1.35.0", # Version constraint for langflow compatibility
     # Document processing and indexing
@@ -37,11 +35,20 @@ dependencies = [
     "chromadb==0.5.23",
     # Environment configuration
     "python-dotenv>=1.0.0",
+    # SCK Core Framework (install manually with pip first)
     "sck-core-framework",
     "sck-core-execute",
     "sck-core-component",
     "sck-core-db",
     "sck-core-runner",
+    "sck-core-deployspec",
+    "sck-core-organization",
+    "sck-core-invoker",
+    "sck-core-report",
+    "sck-core-codecommit",
+    "sck-core-api",
+    "sck-core-cli",
+    "sck-core-docs",
 ]
 
 [build-system]
@@ -114,7 +121,7 @@ extend-exclude = ''' /(.venv|build|dist|htmlcov)/ '''
 [tool.isort]
 profile = "black"
 multi_line_output = 3
-line_length = 88
+line_length = 132
 
 [tool.mypy]
 python_version = "3.11"
@@ -131,8 +138,16 @@ python_functions = ["test_*"]
 addopts = "-q"
 
 [tool.uv.sources]
+sck-core-codecommit = { path = "../sck-core-codecommit", editable = true }
 sck-core-framework = { path = "../sck-core-framework", editable = true }
-sck-core-execute = { path = "../sck-core-execute", editable = true }
-sck-core-component = { path = "../sck-core-component", editable = true }
 sck-core-db = { path = "../sck-core-db", editable = true }
+sck-core-execute = { path = "../sck-core-execute", editable = true }
+sck-core-report = { path = "../sck-core-report", editable = true }
 sck-core-runner = { path = "../sck-core-runner", editable = true }
+sck-core-component = { path = "../sck-core-component", editable = true }
+sck-core-deployspec = { path = "../sck-core-deployspec", editable = true }
+sck-core-invoker = { path = "../sck-core-invoker", editable = true }
+sck-core-organization = { path = "../sck-core-organization", editable = true }
+sck-core-api = { path = "../sck-core-api", editable = true }
+sck-core-cli = { path = "../sck-core-cli", editable = true }
+sck-core-docs = { path = "../sck-core-docs", editable = true }

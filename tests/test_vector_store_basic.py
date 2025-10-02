@@ -3,14 +3,11 @@
 These focus on exercising success paths without hitting persistence side effects.
 """
 
-import os
 import pytest
 
 from core_ai.indexing.simple_vector_store import SimpleVectorStore, SKLEARN_AVAILABLE
 
-pytestmark = pytest.mark.skipif(
-    not SKLEARN_AVAILABLE, reason="sklearn / sentence-transformers not installed"
-)
+pytestmark = pytest.mark.skipif(not SKLEARN_AVAILABLE, reason="sklearn / sentence-transformers not installed")
 
 
 def test_add_and_search_documents(tmp_path):

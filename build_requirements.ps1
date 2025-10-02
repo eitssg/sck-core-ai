@@ -13,8 +13,8 @@ Set-Location ..\sck-core-framework
 # activate virtual environment
 & .\.venv\Scripts\Activate.ps1
 
-# dump the requirements to a file using the poetry command
-poetry export -f requirements.txt --without-hashes --output ..\sck-core-ai\build_requirements.txt
+# dump the requirements to a file using the uv command
+uv export -f requirements.txt --without-hashes --output ..\sck-core-ai\build_requirements.txt
 
 # deactivate the virtual environment
 deactivate
