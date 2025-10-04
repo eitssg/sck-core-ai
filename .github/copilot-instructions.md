@@ -1,5 +1,8 @@
 # Copilot Instructions (Submodule: sck-core-ai)
 
+## Plan → Approval → Execute (Mandatory – Overrides Prior Proactive Rules)
+ALL non-trivial steps (file edits, Docker changes, Langflow workflow additions, test modifications) require an upfront plan and explicit approval. Trivial Q&A or explicit "skip plan" instructions are the only exceptions.
+
 - **Tech**: Python package (AI agent for YAML/CloudFormation processing)
 - **Precedence**: Local first; fallback to root `../../.github/copilot-instructions.md`
 - **Conventions**: Follow `../sck-core-ui/docs/backend-code-style.md` for AWS + container service patterns (this module is NOT deployed as Lambda)
