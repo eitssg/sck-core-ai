@@ -1,15 +1,21 @@
 """Action catalog indexer.
 
-Discovers action classes defined in `core_execute.actionlib.actions` and
-introspects their associated Pydantic spec models (ActionSpec subclasses)
-to build an AI-friendly catalog: action id/kind, module path, spec fields
-(name, type, required, default), and docstring summary.
+Discovers ActionResource models and their paired Action executors under
+`core_execute.actionlib.actions`. For each action, builds an AI-friendly
+catalog entry that includes:
 
-Read-only: does not mutate core_execute. Falls back gracefully if
-core_execute not installed.
+- id (action name), module path, resource class, action class
+- brief summary of what the action performs (from docstrings)
+- resource schema (fields of the ActionResource model)
+- spec params (fields of the ActionSpec model that configures execution)
+
+This index is designed for MCP/LLM context so tools can present the
+available actions, their purpose, and required/optional parameters.
+
+Read-only: does not mutate core_execute.
 """
 
-from typing import Any, Dict, List, Optional, get_type_hints
+from typing import Any, Dict, List, Optional, Tuple, get_type_hints
 
 from dataclasses import dataclass, field
 import inspect
@@ -42,20 +48,42 @@ class ActionParam:
 
 
 @dataclass
+class ModelFieldDesc:
+    name: str
+    type: str
+    required: bool
+    default: Any = None
+
+    def to_dict(self) -> Dict[str, Any]:
+        d = {"name": self.name, "type": self.type, "required": self.required}
+        if self.default is not None:
+            d["default"] = self.default
+        return d
+
+
+@dataclass
 class ActionEntry:
     id: str
     module: str
-    class_name: str
+    resource_class: str
+    action_class: Optional[str]
+    kind: Optional[str]
     summary: Optional[str]
-    params: List[ActionParam] = field(default_factory=list)
+    performs: Optional[str]
+    resource_fields: List[ModelFieldDesc] = field(default_factory=list)
+    spec_params: List[ModelFieldDesc] = field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
         return {
             "id": self.id,
             "module": self.module,
-            "class_name": self.class_name,
+            "resource_class": self.resource_class,
+            "action_class": self.action_class,
+            "kind": self.kind,
             "summary": self.summary,
-            "params": [p.to_dict() for p in self.params],
+            "performs": self.performs,
+            "resource_fields": [f.to_dict() for f in self.resource_fields],
+            "spec_params": [p.to_dict() for p in self.spec_params],
         }
 
 
@@ -63,8 +91,9 @@ class ActionIndexer:
     ACTIONS_ROOT_PKG = "core_execute.actionlib.actions"
 
     def __init__(self):
-        if BaseAction is None or ActionSpec is None:  # pragma: no cover
-            raise RuntimeError("core_execute not available")
+        # BaseAction, ActionResource, ActionSpec are expected to be available.
+        if BaseAction is None or ActionResource is None or ActionSpec is None:  # pragma: no cover
+            raise RuntimeError("core_execute/core_framework models not available")
 
     def build_index(self) -> List[Dict[str, Any]]:
         entries: List[ActionEntry] = []
@@ -79,24 +108,70 @@ class ActionIndexer:
                 module = importlib.import_module(mod)
             except Exception:
                 continue
-            for name, obj in inspect.getmembers(module, inspect.isclass):
-                if not BaseAction or not issubclass(obj, BaseAction):
+
+            # Collect classes in this module
+            classes = {name: obj for name, obj in inspect.getmembers(module, inspect.isclass)}
+
+            # Identify ActionResource subclasses ending with 'ActionResource'
+            for name, obj in classes.items():
+                if not issubclass_safe(obj, ActionResource):
                     continue
-                if obj is BaseAction:  # skip base
+                if name == ActionResource.__name__:
                     continue
-                spec_model = getattr(obj, "spec_model", None) or getattr(obj, "SpecModel", None)
-                params: List[ActionParam] = []
-                if spec_model and ActionSpec and issubclass(spec_model, ActionSpec):
-                    params = self._extract_spec_params(spec_model)
-                action_id = getattr(obj, "kind", None) or name.replace("Action", "")
-                summary = (inspect.getdoc(obj) or "").split("\n")[0][:200]
+                if not name.endswith("ActionResource"):
+                    continue
+
+                action_name = name[: -len("ActionResource")] or name
+
+                # Try to find matching Action class
+                action_cls_name = f"{action_name}Action"
+                action_cls = classes.get(action_cls_name)
+                if action_cls is not None and not issubclass_safe(action_cls, BaseAction):
+                    action_cls = None
+
+                # Determine kind from Action class or resource attribute
+                kind = None
+                if action_cls is not None:
+                    kind = getattr(action_cls, "kind", None)
+                if kind is None:
+                    kind = getattr(obj, "kind", None)
+
+                # Determine Spec model via resource -> action -> name heuristic
+                spec_model = getattr(obj, "SpecModel", None) or getattr(obj, "spec_model", None)
+                if spec_model is None and action_cls is not None:
+                    spec_model = getattr(action_cls, "SpecModel", None) or getattr(action_cls, "spec_model", None)
+                if spec_model is None:
+                    # Fallback: find Any class named <ActionName>ActionSpec
+                    candidate_name = f"{action_name}ActionSpec"
+                    cand = classes.get(candidate_name)
+                    if cand and issubclass_safe(cand, ActionSpec):
+                        spec_model = cand
+
+                # Extract schemas
+                resource_fields = self._extract_model_fields(obj)
+                spec_params = self._extract_model_fields(spec_model) if spec_model else []
+
+                # Compose summary from docstrings (resource preferred, else action)
+                rdoc_str = inspect.getdoc(obj) or ""
+                adoc_str = (inspect.getdoc(action_cls) or "") if action_cls is not None else ""
+                if rdoc_str or adoc_str:
+                    summary = (rdoc_str or adoc_str).split("\n")[0][:200]
+                    performs = (adoc_str or rdoc_str).split("\n\n")[0][:400]
+                else:
+                    summary = None
+                    performs = None
+
                 entries.append(
                     ActionEntry(
-                        id=str(action_id),
+                        id=str(kind or action_name),
                         module=mod,
-                        class_name=name,
+                        resource_class=name,
+                        action_class=action_cls.__name__ if action_cls is not None else None,
+                        kind=str(kind) if kind is not None else None,
                         summary=summary,
-                        params=params,
+                        performs=performs,
+                        resource_fields=resource_fields,
+                        spec_params=spec_params,
                     )
                 )
 
@@ -113,27 +188,39 @@ class ActionIndexer:
             mods.append(name)
         return mods
 
-    def _extract_spec_params(self, spec_model) -> List[ActionParam]:
-        params: List[ActionParam] = []
+    def _extract_model_fields(self, model) -> List[ModelFieldDesc]:
+        fields: List[ModelFieldDesc] = []
+        if model is None:
+            return fields
         try:
-            hints = get_type_hints(spec_model)
+            hints = get_type_hints(model)
         except Exception:
             hints = {}
-        # Pydantic v2: model_fields holds FieldInfo
-        for field_name, field_info in getattr(spec_model, "model_fields", {}).items():  # type: ignore[attr-defined]
+        for field_name, field_info in getattr(model, "model_fields", {}).items():  # pydantic v2
             required = field_info.is_required()
             default = None if required else field_info.default
             hint = hints.get(field_name)
-            type_name = getattr(hint, "__name__", str(hint)) if hint else "Any"
-            params.append(
-                ActionParam(
+            type_name = (
+                getattr(hint, "__name__", None) or str(hint)
+                if hint
+                else getattr(field_info.annotation, "__name__", None) or str(field_info.annotation)
+            )
+            fields.append(
+                ModelFieldDesc(
                     name=field_name,
                     type=type_name,
                     required=required,
                     default=default,
                 )
             )
-        return params
+        return fields
+
+
+def issubclass_safe(cls, parent) -> bool:
+    try:
+        return isinstance(cls, type) and isinstance(parent, type) and issubclass(cls, parent)
+    except Exception:
+        return False
 
 
 __all__ = ["ActionIndexer"]

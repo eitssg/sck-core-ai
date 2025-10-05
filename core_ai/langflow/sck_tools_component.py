@@ -11,7 +11,9 @@ from typing import List
 import sys
 from pathlib import Path
 
-from simple_sck_tools import SCKDocumentationTool, SCKCodeSearchTool, SCKArchitectureTool
+from core_ai.tools.sck_docs_tools import SCKDocumentationTool
+from core_ai.tools.sck_arch_tools import SCKArchitectureTool
+from core_ai.tools.sck_code_tools import SCKCodeSearchTool
 
 
 class DocumentationSearchInput(BaseModel):

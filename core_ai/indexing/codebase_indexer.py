@@ -6,6 +6,7 @@ embeddings for functions, classes, modules, and architectural patterns.
 """
 
 from typing import Dict, List, Optional, Any, Iterator, Union
+import os
 
 import ast
 from pathlib import Path
@@ -90,9 +91,7 @@ class CodebaseIndexer:
             "comment": 7,  # Inline comments
         }
 
-        logger.info(
-            f"Codebase indexer initialized for workspace: {self.workspace_root}"
-        )
+        logger.info(f"Codebase indexer initialized for workspace: {self.workspace_root}")
 
     def index_all_projects(self) -> Dict[str, int]:
         """
@@ -140,6 +139,12 @@ class CodebaseIndexer:
         # Find Python source directories within the project
         source_dirs = self._find_source_directories(project_path)
 
+        # 1) Index documentation (README + docs/**/*.{md,rst})
+        try:
+            indexed_count += self._index_project_docs(project_name, project_path)
+        except Exception as e:
+            logger.error(f"Error indexing docs for {project_name}: {e}")
+
         for source_dir in source_dirs:
             for python_file in self._find_python_files(source_dir):
                 try:
@@ -151,8 +156,8 @@ class CodebaseIndexer:
                         metadatas = [elem["metadata"] for elem in elements]
                         ids = [elem["id"] for elem in elements]
 
-                        # Add to vector store
-                        success = self.vector_store.add_documents(
+                        # Upsert into vector store (idempotent re-index)
+                        success = self.vector_store.upsert_documents(
                             collection_name="codebase",
                             documents=documents,
                             metadatas=metadatas,
@@ -161,19 +166,137 @@ class CodebaseIndexer:
 
                         if success:
                             indexed_count += len(elements)
-                            logger.debug(
-                                f"Indexed {len(elements)} elements from {python_file.name}"
-                            )
+                            logger.debug(f"Indexed {len(elements)} elements from {python_file.name}")
                         else:
-                            logger.error(
-                                f"Failed to index elements from {python_file.name}"
-                            )
+                            logger.error(f"Failed to index elements from {python_file.name}")
 
                 except Exception as e:
                     logger.error(f"Error processing {python_file}: {e}")
                     continue
 
         return indexed_count
+
+    # ---------------- Documentation indexing ----------------
+    def _index_project_docs(self, project_name: str, project_path: Path) -> int:
+        indexed = 0
+        for doc_path in self._find_doc_files(project_path):
+            try:
+                rel_path = self._safe_relative_path(doc_path)
+                text = doc_path.read_text(encoding="utf-8", errors="ignore")
+                chunks = self._chunk_text(text, self.max_chunk_tokens, self.chunk_overlap_tokens)
+
+                is_readme = doc_path.name.lower().startswith("readme.")
+                element_type = "readme" if is_readme else "doc"
+                fmt = (
+                    "md"
+                    if doc_path.suffix.lower() == ".md"
+                    else ("rst" if doc_path.suffix.lower() == ".rst" else doc_path.suffix.lower().lstrip("."))
+                )
+                title = self._extract_doc_title(text, fmt)
+
+                documents = chunks
+                metadatas = []
+                ids = []
+                for i, chunk in enumerate(chunks):
+                    rel_posix = rel_path.as_posix() if isinstance(rel_path, Path) else str(rel_path).replace(os.sep, "/")
+                    meta = {
+                        "source": "codebase",
+                        "project": project_name,
+                        "file_path": str(rel_posix),
+                        "element_type": element_type,
+                        "title": title,
+                        "format": fmt,
+                        "chunk_index": i,
+                        "token_count": len(self.encoding.encode(chunk)),
+                    }
+                    metadatas.append(meta)
+                    ids.append(f"{project_name}__doc__{rel_posix}__chunk-{i}")
+
+                if documents:
+                    success = self.vector_store.upsert_documents(
+                        collection_name="codebase",
+                        documents=documents,
+                        metadatas=metadatas,
+                        ids=ids,
+                    )
+                    if success:
+                        indexed += len(documents)
+                    else:
+                        logger.error(f"Failed to index docs from {doc_path.name}")
+            except Exception as e:
+                logger.error(f"Error processing doc file {doc_path}: {e}")
+        return indexed
+
+    def _find_doc_files(self, project_path: Path) -> Iterator[Path]:
+        names = {"README.md", "README.rst"}
+        # Root-level README
+        for n in names:
+            p = project_path / n
+            if p.exists() and p.is_file():
+                yield p
+        # Try package-dir README (e.g., sck-core-api/core_api/README.md)
+        package_dir = project_path / project_path.name.replace("-", "_")
+        for n in names:
+            p = package_dir / n
+            if p.exists() and p.is_file():
+                yield p
+        # docs/**/*.md|rst
+        docs_dir = project_path / "docs"
+        if docs_dir.exists() and docs_dir.is_dir():
+            for ext in ("*.md", "*.rst"):
+                for p in docs_dir.rglob(ext):
+                    if self._is_excluded_path(p):
+                        continue
+                    if p.is_file():
+                        yield p
+
+    def _chunk_text(self, text: str, max_tokens: int, overlap_tokens: int) -> List[str]:
+        try:
+            toks = self.encoding.encode(text)
+        except Exception:
+            # Fallback: no chunking if encoding fails
+            return [text]
+        if len(toks) <= max_tokens:
+            return [text]
+        chunks: List[str] = []
+        step = max(1, max_tokens - max(0, overlap_tokens))
+        for i in range(0, len(toks), step):
+            chunk_tokens = toks[i : min(i + max_tokens, len(toks))]
+            chunks.append(self.encoding.decode(chunk_tokens))
+            if i + max_tokens >= len(toks):
+                break
+        return chunks
+
+    def _extract_doc_title(self, text: str, fmt: str) -> Optional[str]:
+        # Simple heuristic: first Markdown or RST heading
+        if fmt == "md":
+            for line in text.splitlines():
+                s = line.strip()
+                if s.startswith("# ") or s.startswith("## ") or s.startswith("### "):
+                    return s.lstrip("# ").strip()
+                # Alternative underline style handled below
+        elif fmt == "rst":
+            lines = text.splitlines()
+            for i in range(len(lines) - 1):
+                title = lines[i].strip()
+                underline = lines[i + 1].strip()
+                if title and set(underline) <= set("=-~^`:") and len(underline) >= len(title):
+                    return title
+        # Fallback: first non-empty line
+        for line in text.splitlines():
+            if line.strip():
+                return line.strip()[:120]
+        return None
+
+    def _is_excluded_path(self, path: Path) -> bool:
+        s = str(path)
+        return any(pat in s for pat in self.exclude_patterns)
+
+    def _safe_relative_path(self, path: Path) -> Path:
+        try:
+            return path.relative_to(self.workspace_root)
+        except ValueError:
+            return path
 
     def _find_source_directories(self, project_path: Path) -> List[Path]:
         """
@@ -196,9 +319,7 @@ class CodebaseIndexer:
 
         # Add any directory that contains Python files and looks like source
         for item in project_path.iterdir():
-            if item.is_dir() and not any(
-                pattern in item.name for pattern in self.exclude_patterns
-            ):
+            if item.is_dir() and not any(pattern in item.name for pattern in self.exclude_patterns):
                 # Check if it contains Python files
                 if any(item.rglob("*.py")):
                     potential_dirs.append(item)
@@ -234,9 +355,7 @@ class CodebaseIndexer:
 
             yield py_file
 
-    def _process_python_file(
-        self, python_file: Path, project_name: str
-    ) -> List[Dict[str, Any]]:
+    def _process_python_file(self, python_file: Path, project_name: str) -> List[Dict[str, Any]]:
         """
         Process a Python file and extract code elements.
 
@@ -262,27 +381,19 @@ class CodebaseIndexer:
             elements = []
 
             # Module-level docstring and metadata
-            module_element = self._extract_module_info(
-                python_file, project_name, tree, source_code
-            )
+            module_element = self._extract_module_info(python_file, project_name, tree, source_code)
             if module_element:
                 elements.append(module_element)
 
             # Extract classes and functions
             for node in ast.walk(tree):
                 if isinstance(node, ast.ClassDef):
-                    class_element = self._extract_class_info(
-                        python_file, project_name, node, source_code
-                    )
+                    class_element = self._extract_class_info(python_file, project_name, node, source_code)
                     if class_element:
                         elements.append(class_element)
 
-                elif isinstance(node, ast.FunctionDef) or isinstance(
-                    node, ast.AsyncFunctionDef
-                ):
-                    function_element = self._extract_function_info(
-                        python_file, project_name, node, source_code
-                    )
+                elif isinstance(node, ast.FunctionDef) or isinstance(node, ast.AsyncFunctionDef):
+                    function_element = self._extract_function_info(python_file, project_name, node, source_code)
                     if function_element:
                         elements.append(function_element)
 
@@ -335,19 +446,13 @@ class CodebaseIndexer:
             content_parts.append(f"Documentation: {docstring}")
 
         if imports:
-            content_parts.append(
-                f"Key imports: {', '.join(sorted(set(imports))[:10])}"
-            )  # Top 10 imports
+            content_parts.append(f"Key imports: {', '.join(sorted(set(imports))[:10])}")  # Top 10 imports
 
         # Add some context about the file structure
         lines = source_code.split("\n")
         if len(lines) > 10:
             # Add first few lines as context (usually contains important imports/constants)
-            context_lines = [
-                line.strip()
-                for line in lines[:10]
-                if line.strip() and not line.strip().startswith("#")
-            ]
+            context_lines = [line.strip() for line in lines[:10] if line.strip() and not line.strip().startswith("#")]
             if context_lines:
                 content_parts.append(f"File structure: {' | '.join(context_lines[:5])}")
 
@@ -356,12 +461,13 @@ class CodebaseIndexer:
 
         content = "\n\n".join(content_parts)
 
-        element_id = f"{project_name}_module_{python_file.stem}"
+        rel_posix = relative_path.as_posix() if isinstance(relative_path, Path) else str(relative_path).replace(os.sep, "/")
+        element_id = f"{project_name}__module__{rel_posix}"
 
         metadata = {
             "source": "codebase",
             "project": project_name,
-            "file_path": str(relative_path),
+            "file_path": str(rel_posix),
             "element_type": "module",
             "element_name": python_file.stem,
             "priority": self.element_priorities["module"],
@@ -441,12 +547,14 @@ class CodebaseIndexer:
 
         content = "\n\n".join(content_parts)
 
-        element_id = f"{project_name}_class_{python_file.stem}_{node.name}"
+        rel_posix = relative_path.as_posix() if isinstance(relative_path, Path) else str(relative_path).replace(os.sep, "/")
+        lineno = getattr(node, "lineno", 0)
+        element_id = f"{project_name}__class__{rel_posix}__{node.name}@{lineno}"
 
         metadata = {
             "source": "codebase",
             "project": project_name,
-            "file_path": str(relative_path),
+            "file_path": str(rel_posix),
             "element_type": "class",
             "element_name": node.name,
             "priority": self.element_priorities["class"],
@@ -535,12 +643,14 @@ class CodebaseIndexer:
 
         content = "\n\n".join(content_parts)
 
-        element_id = f"{project_name}_{element_type}_{python_file.stem}_{node.name}"
+        rel_posix = relative_path.as_posix() if isinstance(relative_path, Path) else str(relative_path).replace(os.sep, "/")
+        lineno = getattr(node, "lineno", 0)
+        element_id = f"{project_name}__{element_type}__{rel_posix}__{node.name}@{lineno}"
 
         metadata = {
             "source": "codebase",
             "project": project_name,
-            "file_path": str(relative_path),
+            "file_path": str(rel_posix),
             "element_type": element_type,
             "element_name": node.name,
             "priority": self.element_priorities[element_type],

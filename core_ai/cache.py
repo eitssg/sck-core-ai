@@ -16,7 +16,7 @@ import core_logging as log
 
 from core_helper import store
 
-from core_ai.indexing.action_indexer import dataclass
+from dataclasses import dataclass
 
 
 def _now() -> float:

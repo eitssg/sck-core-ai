@@ -23,15 +23,25 @@ ALL non-trivial steps (file edits, Docker changes, Langflow workflow additions, 
 
 **ENFORCEMENT**: Use existing configured terminals. Stop trying to manage environments.
 
+## 🧪 UV Command Formulation (Mandatory)
+
+When proposing or executing Python-related commands in this module:
+- pip → `uv pip <args>`
+- python → `uv python <args>`
+- python -m <module> → `uv run -m <module> <args>`
+- CLI tools (pytest/black/flake8/mypy/etc.) → `uv run <tool> <args>`
+
+This complements the terminal protocol above: use the existing terminal, do not activate environments; uv resolves the environment.
+
 ## 🔧 CORE_LOGGING USAGE PROTOCOL 🔧
 
 **RULE_101_LOGGING_IMPORT**: Always import as `import core_logging as log`
 
-**RULE_102_LOGGER_ASSIGNMENT**: Set `logger = log` (NOT `log.get_logger()`)
+**RULE_102_LOGGER_ASSIGNMENT**: Use `import core_logging as log` (NOT `log.get_logger()`)
 
-**RULE_103_LOGGING_CALLS**: Use `logger.info()`, `logger.error()`, `logger.debug()` directly
+**RULE_103_LOGGING_CALLS**: Use `log.info()`, `log.error()`, `log.debug()` directly
 
-**RULE_104_NO_GET_LOGGER**: NEVER call `log.get_logger(__name__)` - core_logging is pre-configured
+**RULE_104_NO_GET_LOGGER**: NEVER call `log.get_logger(__name__)` - core_logging is pre-configured and automatically uses module name and correlation IDs.  To set a correlation ID, use `log.set_correlation_id("value")` at the start of a request or operation.  This is a thread_local context, so it works in async code and multi-threaded environments.
 
 **RULE_105_IMPORTS_AT_TOP**: ALL imports must be at top of file, not in functions
 
@@ -108,6 +118,12 @@ async def handle_lint_yaml(arguments: dict) -> types.TextContent:
 - **Configuration**: Flow IDs and endpoints via environment variables
 
 ## YAML/CloudFormation Processing Rules
+### YAML Parsing Policy (Local to sck-core-ai)
+- Use core_framework for YAML parsing in ALL modules. Example:
+    - `import core_framework as util`, `data = util.read_yaml(stream)`, `util.write_yaml(data, stream)`, `data = util.from_yaml(string)`, `string = util.to_yaml(data)`
+- Do not use try/except around imports; add dependencies instead.
+ - Prefer core_framework YAML helpers where available: `from_yaml`, `to_yaml`, `read_yaml`, `write_yaml`, `load_yaml_file`. These incorporate custom constructors/tags and !Include handling.
+
 
 ### Validation Hierarchy
 1. **Syntax Check**: Basic YAML/JSON parsing
@@ -210,32 +226,6 @@ pip install -r requirements-dev.txt  # If you create this file
 - Avoid direct RST syntax (`::`, `:param:`, etc.) in docstrings - use Google format instead
 - Example sections should use `>>>` for doctests or simple code examples
 - This ensures proper IDE interpretation while maintaining clean Sphinx documentation
-
-## Code Quality Standards
-Example of RST-compatible docstring::
-
-    from typing import Dict, List, Optional
-    import structlog
-
-    logger = structlog.get_logger(__name__)
-
-    async def lint_yaml_content(
-        content: str,
-        options: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
-        """
-        Lint YAML content using AI agent.
-        
-        :param content: Raw YAML string to validate
-        :param options: Optional validation configuration
-        :returns: Validation result with errors and suggestions
-        :raises ValidationError: If content cannot be processed
-        
-        Example::
-        
-            logger.info("Starting YAML validation", content_length=len(content))
-            # Implementation here
-        """
 
 ## Contradiction Detection & Resolution
 

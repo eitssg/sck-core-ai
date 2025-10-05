@@ -16,11 +16,11 @@ Utility:
         the previous interface while honoring the strict import contract.
 """
 
-from .simple_vector_store import SimpleVectorStore as VectorStore  # type: ignore
 from .documentation_indexer import DocumentationIndexer  # type: ignore
 from .codebase_indexer import CodebaseIndexer  # type: ignore
 from .context_manager import ContextManager  # type: ignore
 from .consumables_indexer import ConsumablesIndexer  # type: ignore
+from .vector_store import VectorStore  # type: ignore
 
 __all__ = [
     "VectorStore",

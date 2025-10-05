@@ -6,10 +6,6 @@ readme = "README.md"
 authors = [{ name = "James Barwick", email = "jbarwick@eits.com.sg" }]
 requires-python = ">=3.11,<3.13.0"
 dependencies = [
-    # Web framework and server
-    "fastapi>=0.104.0",
-    "uvicorn>=0.24.0",
-    "mangum>=0.17.0", # ASGI adapter for AWS Lambda
     # HTTP client and utilities
     "httpx>=0.25.0",
     "pydantic>=2.5.0",
@@ -108,7 +104,6 @@ vectordb = [
 ]
 
 [project.scripts]
-sck-ai-server = "core_ai.server:main"
 sck-ai-mcp = "core_ai.mcp_server:main"
 
 [tool.black]
