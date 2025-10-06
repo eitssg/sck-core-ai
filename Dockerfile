@@ -6,7 +6,7 @@
 # Fast to understand, easy to tweak.
 ###############################################
 
-FROM python:3.12-slim AS base 
+FROM python:3.12-slim@sha256:47ae396f09c1303b8653019811a8498470603d7ffefc29cb07c88f1f8cb3d19f AS base  
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
   PYTHONUNBUFFERED=1 \
@@ -17,6 +17,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 WORKDIR $APP_HOME
 
 RUN apt-get update \
+  && apt-get upgrade -y \
   && apt-get install -y --no-install-recommends git curl build-essential \
   && rm -rf /var/lib/apt/lists/*
 
