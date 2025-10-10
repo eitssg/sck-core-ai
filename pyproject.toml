@@ -17,8 +17,6 @@ dependencies = [
     "structlog>=23.2.0",
     # MCP server support
     "mcp[cli]>=0.9.0",
-    # AWS integration
-    "boto3>=1.34.0,<1.35.0", # Version constraint for langflow compatibility
     # Document processing and indexing
     "sentence-transformers>=2.2.2",
     "beautifulsoup4>=4.12.0",
@@ -28,7 +26,7 @@ dependencies = [
     "numpy>=1.24.0",
     "scikit-learn>=1.3.0",
     # Vector DB (align with Langflow 1.1.x which pins chromadb==0.5.23)
-    "chromadb==0.5.23",
+    "chromadb>=1.0.0",
     # Environment configuration
     "python-dotenv>=1.0.0",
     # SCK Core Framework (install manually with pip first)
@@ -79,7 +77,7 @@ dev = [
 # Note: These may have build issues on Python 3.13, use Python 3.11/3.12 if needed
 ai = [
     # Langflow orchestrates UI + flow execution.
-    "langflow>=1.5.0",
+    "langflow>=1.6.4",
     # LangChain stack: allow both late 0.2.x (needed by Langflow 1.5.x) and 0.3.x when supported
     # Using >=0.2.30 as compromise floor (post tool consolidation) while retaining <0.4.0 ceiling
     "langchain-core>=0.2.30",
@@ -93,14 +91,6 @@ ai = [
     # Model provider SDKs
     "openai>=1.37.0",
     "anthropic>=0.29.0",
-]
-
-# Vector database dependencies (optional, install with: uv pip install --extra vectordb)
-# Note: ChromaDB requires Rust toolchain and may fail to build
-vectordb = [
-    # Provide explicit chromadb pin to allow installing vectordb extra without ai extra
-    "chromadb==0.5.23",
-    "qdrant-client>=1.7.0,<2.0.0", # Alternative vector database
 ]
 
 [project.scripts]
