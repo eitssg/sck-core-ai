@@ -73,3 +73,8 @@
 2025-10-05 00:24:55 [-] [Unknown.lifespan] [INFO] MCP server starting
 2025-10-05 00:24:55 [-] [Unknown.lifespan] [INFO] MCP server started successfully
 2025-10-05 00:25:23 [-] [Unknown.lifespan] [INFO] MCP server shutdown
+2025-10-10 10:11:48 [-] [core_ai.langflow.client.__init__] [INFO] Langflow client initialized
+2025-10-10 10:11:49 [-] [core_ai.indexing.vector_store.__init__] [INFO] Vector store initialized (persist='d:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-ai\data\vectordb', model='all-MiniLM-L6-v2')
+2025-10-10 10:11:49 [-] [core_ai.indexing.documentation_indexer.__init__] [INFO] Documentation indexer initialized for: d:\Development\simple-cloud-kit-oss\simple-cloud-kit\sck-core-docs\build
+2025-10-10 10:11:49 [-] [core_ai.indexing.codebase_indexer.__init__] [INFO] Codebase indexer initialized for workspace: d:\Development\simple-cloud-kit-oss\simple-cloud-kit
+2025-10-10 10:11:50 [-] [core_ai.indexing.context_manager.__init__] [INFO] Indexing system initialized with workspace: d:\Development\simple-cloud-kit-oss\simple-cloud-kit
