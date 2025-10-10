@@ -30,17 +30,18 @@ An AI-powered development assistant that combines YAML/CloudFormation analysis w
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   API Gateway   │───▶│  Lambda Handler │───▶│  Langflow Agent │
+│   API Gateway   │───>│  Lambda Handler │───>│  Langflow Agent │───> Response
 └─────────────────┘    └─────────────────┘    └─────────────────┘
-                                                        │
-                                                        ▼
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   MCP Client    │───▶│   MCP Server    │───▶│  AI Processing  │
-│   (VS Code)     │    │   Interface     │    │   Pipeline      │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
+                                                       │
+                                                       v
+┌─────────────────┐                           ┌─────────────────┐    ┌─────────────────┐
+│   MCP Client    │──────────────────────────>│   MCP Server    │───>│  AI Processing  │
+│   (VS Code)     │                           │   Interface     │    │   Pipeline      │
+└─────────────────┘                           └─────────────────┘    └─────────────────┘
 ```
 
 ## Installation
+credits payments mas banking legacy technology upgrades tools digital payments crypto 
 
 ### Development Setup
 

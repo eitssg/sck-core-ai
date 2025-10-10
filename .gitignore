@@ -16,3 +16,4 @@ build/
 .pyre/
 htmlcov/
 .coverage
+node_modules/
