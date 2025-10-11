@@ -78,8 +78,6 @@ dev = [
 ai = [
     # Langflow orchestrates UI + flow execution.
     "langflow>=1.6.4",
-    # LangChain stack: allow both late 0.2.x (needed by Langflow 1.5.x) and 0.3.x when supported
-    # Using >=0.2.30 as compromise floor (post tool consolidation) while retaining <0.4.0 ceiling
     "langchain-core>=0.2.30",
     "langchain-community>=0.2.30",
     "langchain>=0.2.30",
@@ -92,6 +90,7 @@ ai = [
     "openai>=1.37.0",
     "anthropic>=0.29.0",
 ]
+
 
 [project.scripts]
 sck-ai-mcp = "core_ai.mcp_server:main"

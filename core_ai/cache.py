@@ -98,7 +98,10 @@ def run_idempotent(
 
     envelope: IdempotentMeta | None = store.retrieve(key)
 
+    log.debug(f"Cache {"MISS" if not envelope else "HIT"} for key={key}")
+
     if envelope and envelope.expires_at > _now():
+        envelope.hit = True
         envelope.hits += 1
         return envelope.result, envelope.__dict__
 
@@ -117,7 +120,7 @@ def run_idempotent(
 
     store.store(key, record, ttl=_ttl())
 
-    log.debug("AI local idempotent store", key=key, duration_ms=duration_ms)
+    log.debug("AI local idempotent store key=%s, duration_ms=%s", key, duration_ms)
     return result, record.__dict__
 
 

@@ -84,6 +84,7 @@ class TestLangflowClient:
 
         result = client.process_sync(inputs)
 
+        assert "valid" in result, f"Check for errors {result['message']}"
         assert result["valid"] is True
         assert result["errors"] == []
 
