@@ -1,6 +1,7 @@
 """Test cases for Langflow client integration."""
 
 import json
+import pytest
 from unittest.mock import Mock, patch
 
 from core_ai.langflow.client import LangflowClient
@@ -14,7 +15,7 @@ class TestLangflowClient:
         client = LangflowClient()
 
         assert client.base_url == "http://localhost:7860"
-        assert client.flow_id == "yaml-cf-ai-agent-v1"
+        assert client.flow_id == "56357c5c-b705-4926-b6a2-c167bec8c9eb"
         assert client.timeout == 30
         assert client.api_key is None
 
@@ -70,6 +71,7 @@ class TestLangflowClient:
         """Test successful workflow processing."""
         # Mock httpx response
         mock_response = Mock()
+        mock_response.status_code = 200
         mock_response.json.return_value = {
             "outputs": [{"outputs": [{"results": {"message": {"text": json.dumps({"valid": True, "errors": []})}}}]}]
         }
@@ -84,7 +86,7 @@ class TestLangflowClient:
 
         result = client.process_sync(inputs)
 
-        assert "valid" in result, f"Check for errors {result['message']}"
+        assert "valid" in result
         assert result["valid"] is True
         assert result["errors"] == []
 
@@ -103,7 +105,7 @@ class TestLangflowClient:
 
         assert result["status"] == "error"
         assert result["code"] == 500
-        assert "Connection error" in result["message"]
+        assert "All Langflow execution attempts failed" in result["message"]
 
     def test_health_check_no_httpx(self):
         """Test health check when httpx is not available."""

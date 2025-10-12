@@ -192,7 +192,7 @@ async def get_capabilities_tool() -> Sequence[TextContent]:
     annotations=ToolAnnotations(title="YAML Lint Tool"),
     structured_output=False,
 )
-async def lint_yaml_tool(content: str, mode: LintModes = LintModes.syntax, strict: bool = True) -> Sequence[TextContent]:
+async def lint_yaml_tool(content: str, mode: str = "syntax", strict: bool = True) -> Sequence[TextContent]:
     """Lint YAML documents."""
     try:
         log.info("Linting YAML content")
@@ -369,6 +369,330 @@ async def get_indexing_status() -> Sequence[TextContent]:
             return process_exception(message="Unexpected response format")
     except Exception as e:
         log.error(f"Get indexing stats tool failed: {e}")
+        return process_exception(e)
+
+
+@mcp.tool(
+    name="list_consumables",
+    description="List all available SCK consumables (pre-built infrastructure components)",
+    title="List SCK Consumables",
+    annotations=ToolAnnotations(title="List SCK Consumables"),
+    structured_output=False,
+)
+async def list_consumables() -> Sequence[TextContent]:
+    """List all available SCK consumables."""
+    try:
+        log.info("Listing SCK consumables")
+
+        # Get the consumables directory path
+        import os
+        from pathlib import Path
+
+        # Find the consumables directory relative to this file
+        current_dir = Path(__file__).parent
+        consumables_dir = current_dir.parent / "core_component" / "compiler" / "consumables"
+
+        if not consumables_dir.exists():
+            return [
+                TextContent(
+                    type="text",
+                    text=json.dumps(
+                        {"status": "error", "message": "Consumables directory not found", "path": str(consumables_dir)}, indent=2
+                    ),
+                )
+            ]
+
+        consumables = []
+
+        # Walk through AWS consumables
+        aws_dir = consumables_dir / "AWS"
+        if aws_dir.exists():
+            for service_dir in aws_dir.iterdir():
+                if service_dir.is_dir():
+                    service_name = service_dir.name
+                    components = []
+
+                    for component_dir in service_dir.iterdir():
+                        if component_dir.is_dir():
+                            component_name = component_dir.name
+                            components.append(component_name)
+
+                    if components:
+                        consumables.append({"service": service_name, "components": components})
+
+        result = {
+            "status": "success",
+            "data": {
+                "consumables": consumables,
+                "description": "SCK consumables are pre-built, reusable infrastructure components that include CloudFormation specs, deployment actions, and template files for common AWS services.",
+            },
+        }
+
+        return [TextContent(type="text", text=json.dumps(result, indent=2))]
+    except Exception as e:
+        log.error(f"List consumables tool failed: {e}")
+        return process_exception(e)
+
+
+@mcp.tool(
+    name="get_consumable_details",
+    description="Get detailed information about a specific SCK consumable",
+    title="Get Consumable Details",
+    annotations=ToolAnnotations(title="Get Consumable Details"),
+    structured_output=False,
+)
+async def get_consumable_details(service: str, component: str) -> Sequence[TextContent]:
+    """Get details about a specific consumable."""
+    try:
+        log.info("Getting consumable details", service=service, component=component)
+
+        import os
+        from pathlib import Path
+
+        current_dir = Path(__file__).parent
+        consumable_dir = current_dir.parent / "core_component" / "compiler" / "consumables" / "AWS" / service / component
+
+        if not consumable_dir.exists():
+            return [
+                TextContent(
+                    type="text",
+                    text=json.dumps(
+                        {
+                            "status": "error",
+                            "message": f"Consumable not found: AWS/{service}/{component}",
+                            "available_services": [
+                                "S3",
+                                "RDS",
+                                "EFS",
+                                "DynamoDB",
+                                "ElastiCache",
+                                "SNS",
+                                "SQS",
+                                "IAM",
+                                "AutoScale",
+                                "LoadBalancedInstances",
+                                "StaticWebsite",
+                                "Serverless",
+                                "Cluster",
+                                "DocDB",
+                                "Redshift",
+                                "MSK",
+                                "SecretsManager",
+                                "ApplicationLoadBalancer",
+                                "NetworkLoadBalancer",
+                                "VPCEndpoint",
+                                "ACMPCA",
+                                "Image",
+                                "UnencryptedImage",
+                            ],
+                        },
+                        indent=2,
+                    ),
+                )
+            ]
+
+        details = {
+            "service": service,
+            "component": component,
+            "has_specs": (consumable_dir / "specs").exists(),
+            "has_actions": (consumable_dir / "actions").exists(),
+            "has_files": (consumable_dir / "files").exists(),
+            "description": f"SCK consumable for AWS {service} {component}. Includes CloudFormation specifications, deployment actions, and template files.",
+        }
+
+        # Try to read the spec file
+        spec_file = consumable_dir / "specs" / f"AWS_{service}_{component}.yaml"
+        if spec_file.exists():
+            try:
+                import core_framework as util
+
+                spec_content = util.load_yaml_file(str(spec_file))
+                details["spec_preview"] = spec_content
+            except Exception as e:
+                details["spec_error"] = str(e)
+
+        # List available actions
+        actions_dir = consumable_dir / "actions"
+        if actions_dir.exists():
+            details["available_actions"] = [f.name for f in actions_dir.glob("*.actions")]
+
+        result = {"status": "success", "data": details}
+
+        return [TextContent(type="text", text=json.dumps(result, indent=2))]
+    except Exception as e:
+        log.error(f"Get consumable details tool failed: {e}")
+        return process_exception(e)
+
+
+@mcp.tool(
+    name="list_actions",
+    description="List all available SCK actions (deployment operations)",
+    title="List SCK Actions",
+    annotations=ToolAnnotations(title="List SCK Actions"),
+    structured_output=False,
+)
+async def list_actions() -> Sequence[TextContent]:
+    """List all available SCK actions."""
+    try:
+        log.info("Listing SCK actions")
+
+        # Get action library information
+        import os
+        from pathlib import Path
+
+        current_dir = Path(__file__).parent
+        actions_dir = current_dir.parent / "core_execute" / "actionlib" / "actions"
+
+        actions = []
+
+        if actions_dir.exists():
+            # AWS actions
+            aws_dir = actions_dir / "aws"
+            if aws_dir.exists():
+                aws_actions = []
+                for action_file in aws_dir.glob("*.py"):
+                    if not action_file.name.startswith("__"):
+                        action_name = action_file.stem
+                        aws_actions.append(action_name)
+                if aws_actions:
+                    actions.append(
+                        {
+                            "category": "AWS",
+                            "actions": aws_actions,
+                            "description": "Actions for AWS service operations (S3, EC2, RDS, etc.)",
+                        }
+                    )
+
+            # System actions
+            system_dir = actions_dir / "system"
+            if system_dir.exists():
+                system_actions = []
+                for action_file in system_dir.glob("*.py"):
+                    if not action_file.name.startswith("__"):
+                        action_name = action_file.stem
+                        system_actions.append(action_name)
+                if system_actions:
+                    actions.append(
+                        {"category": "System", "actions": system_actions, "description": "System-level actions (NoOp, Wait, etc.)"}
+                    )
+
+        result = {
+            "status": "success",
+            "data": {
+                "actions": actions,
+                "description": "SCK actions are the smallest unit of work executed during deployments. They are organized by AWS services and system operations.",
+            },
+        }
+
+        return [TextContent(type="text", text=json.dumps(result, indent=2))]
+    except Exception as e:
+        log.error(f"List actions tool failed: {e}")
+        return process_exception(e)
+
+
+@mcp.tool(
+    name="list_tasks",
+    description="List all available SCK tasks (collections of actions)",
+    title="List SCK Tasks",
+    annotations=ToolAnnotations(title="List SCK Tasks"),
+    structured_output=False,
+)
+async def list_tasks() -> Sequence[TextContent]:
+    """List all available SCK tasks."""
+    try:
+        log.info("Listing SCK tasks")
+
+        tasks = [
+            {
+                "name": "compile",
+                "description": "Compile deployment specifications into action resources",
+                "purpose": "Transform YAML specs into executable action lists",
+            },
+            {
+                "name": "plan",
+                "description": "Validate and plan deployment changes without executing",
+                "purpose": "Preview what will be deployed",
+            },
+            {"name": "apply", "description": "Apply planned changes to infrastructure", "purpose": "Execute the actual deployment"},
+            {
+                "name": "deploy",
+                "description": "Full deployment workflow (compile + plan + apply)",
+                "purpose": "Complete infrastructure deployment",
+            },
+            {
+                "name": "release",
+                "description": "Promote deployment to production/release environment",
+                "purpose": "Move from staging to production",
+            },
+            {"name": "teardown", "description": "Remove deployed infrastructure", "purpose": "Clean up resources"},
+        ]
+
+        result = {
+            "status": "success",
+            "data": {
+                "tasks": tasks,
+                "description": "SCK tasks are collections of actions that perform high-level deployment operations. Tasks are executed by the core-runner module.",
+            },
+        }
+
+        return [TextContent(type="text", text=json.dumps(result, indent=2))]
+    except Exception as e:
+        log.error(f"List tasks tool failed: {e}")
+        return process_exception(e)
+
+
+@mcp.tool(
+    name="explain_sck_concepts",
+    description="Explain SCK core concepts (consumables, actions, tasks, components)",
+    title="Explain SCK Concepts",
+    annotations=ToolAnnotations(title="Explain SCK Concepts"),
+    structured_output=False,
+)
+async def explain_sck_concepts() -> Sequence[TextContent]:
+    """Explain SCK core concepts."""
+    try:
+        log.info("Explaining SCK concepts")
+
+        concepts = {
+            "consumables": {
+                "definition": "Pre-built, reusable infrastructure components that encapsulate AWS service configurations",
+                "components": ["specs (YAML schemas)", "actions (deployment steps)", "files (CloudFormation templates)"],
+                "examples": ["S3 Bucket", "RDS Instance", "EFS File System", "DynamoDB Table"],
+                "purpose": "Standardize common infrastructure patterns and reduce boilerplate",
+            },
+            "actions": {
+                "definition": "Smallest unit of work executed during SCK deployments",
+                "types": ["AWS actions (service operations)", "System actions (control flow)"],
+                "examples": ["AWS::S3::CreateBucket", "SYSTEM::NoOp", "AWS::EC2::RunInstances"],
+                "purpose": "Atomic, composable deployment operations",
+            },
+            "tasks": {
+                "definition": "Collections of actions that perform high-level deployment operations",
+                "examples": ["compile", "plan", "apply", "deploy", "release", "teardown"],
+                "purpose": "Orchestrate complex deployment workflows",
+            },
+            "components": {
+                "definition": "User-defined infrastructure units built from consumables",
+                "structure": "YAML configuration files that reference consumables and specify parameters",
+                "purpose": "Allow customization while leveraging standardized building blocks",
+            },
+            "architecture": {
+                "core_execute": "Executes ActionResource actions via Step Functions",
+                "core_runner": "Orchestrates ActionResource execution (runs core_execute step functions)",
+                "core_component": "Compiles components into CloudFormation",
+                "core_deployspec": "Converts deployment specs to ActionResources objects",
+                "core_invoker": "Orchestrates task execution (compile, plan, apply, etc.)",
+                "core_api": "Exposes REST API for external integrations AWS API Gateway or FastAPI for CLI or UI",
+                "core_cli": "Command-line interface for user interaction",
+                "core_ui": "Web-based user interface for managing deployments",
+            },
+        }
+
+        result = {"status": "success", "data": concepts}
+
+        return [TextContent(type="text", text=json.dumps(result, indent=2))]
+    except Exception as e:
+        log.error(f"Explain SCK concepts tool failed: {e}")
         return process_exception(e)
 
 

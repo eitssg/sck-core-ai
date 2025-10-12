@@ -9,6 +9,7 @@ import time
 from typing import Any, Dict, Optional
 import httpx
 import core_logging as logger
+import core_framework as util
 
 # NOTE: Tests patch this flag to simulate absence of httpx without using guarded imports.
 # We import httpx unconditionally (fail-fast policy) but allow tests to force a "not available" path.
@@ -25,8 +26,8 @@ class LangflowClient:
 
     def __init__(
         self,
-        base_url: str = "http://localhost:7860",
-        flow_id: str = "yaml-cf-ai-agent-v1",
+        base_url: Optional[str] = None,
+        flow_id: Optional[str] = None,
         timeout: int = 30,
         api_key: Optional[str] = None,
     ):
@@ -34,23 +35,21 @@ class LangflowClient:
         Initialize Langflow client.
 
         Args:
-            base_url: Langflow server URL
-            flow_id: Default flow ID to execute
+            base_url: Langflow server URL (defaults to LANGFLOW_BASE_URL env var)
+            flow_id: Default flow ID to execute (defaults to LANGFLOW_FLOW_ID env var)
             timeout: Request timeout in seconds
-            api_key: Optional API key for authentication
+            api_key: Optional API key for authentication (defaults to LANGFLOW_API_KEY env var)
         """
-        self.base_url = base_url.rstrip("/")
-        self.flow_id = flow_id
+        self.base_url = (base_url or util.get_langflow_base_url()).rstrip("/")
+        self.flow_id = flow_id or util.get_langflow_flow_id()
         self.timeout = timeout
-        self.api_key = api_key
+        self.api_key = api_key or util.get_langflow_api_key()
 
         # Build API endpoints
         self.api_base = f"{self.base_url}/api/v1"
         self.flows_endpoint = f"{self.api_base}/flows"
 
-        logger.info(
-            "Langflow client initialized", base_url=self.base_url, flow_id=self.flow_id
-        )
+        logger.info("Langflow client initialized", base_url=self.base_url, flow_id=self.flow_id)
 
     def process_sync(
         self,
@@ -83,12 +82,7 @@ class LangflowClient:
 
         try:
             # Prepare canonical payload components (some Langflow versions expect different shapes)
-            base_input_value = (
-                inputs.get("input_value")
-                or inputs.get("text")
-                or inputs.get("prompt")
-                or ""
-            )
+            base_input_value = inputs.get("input_value") or inputs.get("text") or inputs.get("prompt") or ""
             base_tweaks = tweaks or inputs.get("tweaks") or {}
 
             # Common payload variants we will attempt (ordered). Newer Langflow builds typically
@@ -191,11 +185,7 @@ class LangflowClient:
                 "status": "error",
                 "code": 500,
                 "message": f"Langflow processing failed: {str(e)}",
-                "data": (
-                    {"attempts": attempt_errors}
-                    if "attempt_errors" in locals()
-                    else None
-                ),
+                "data": ({"attempts": attempt_errors} if "attempt_errors" in locals() else None),
                 "metadata": {
                     "flow_id": target_flow_id,
                     "processing_time_ms": int(processing_time * 1000),
@@ -203,9 +193,7 @@ class LangflowClient:
                 },
             }
 
-    def _format_response(
-        self, raw_result: Any, processing_time: float
-    ) -> Dict[str, Any]:
+    def _format_response(self, raw_result: Any, processing_time: float) -> Dict[str, Any]:
         """
         Format Langflow response into SCK envelope structure.
 
@@ -225,11 +213,7 @@ class LangflowClient:
                     # Get first output result
                     first_output = outputs[0]
                     output_data = first_output.get("outputs", [{}])[0]
-                    result_text = (
-                        output_data.get("results", {})
-                        .get("message", {})
-                        .get("text", "")
-                    )
+                    result_text = output_data.get("results", {}).get("message", {}).get("text", "")
 
                     # Try to parse as JSON if it looks like structured data
                     try:
@@ -308,10 +292,7 @@ class LangflowClient:
         }
 
         # Add CloudFormation-specific mock data if it looks like CF
-        if any(
-            keyword in content.lower()
-            for keyword in ["resources:", "aws::", "cloudformation"]
-        ):
+        if any(keyword in content.lower() for keyword in ["resources:", "aws::", "cloudformation"]):
             mock_data["cloudformation"] = {
                 "template_version": "2010-09-09",
                 "resource_count": 2,
@@ -355,9 +336,7 @@ class LangflowClient:
                 return {
                     "status": "healthy",
                     "available": True,
-                    "langflow_version": response.headers.get(
-                        "X-Langflow-Version", "unknown"
-                    ),
+                    "langflow_version": response.headers.get("X-Langflow-Version", "unknown"),
                     "response_time_ms": response.elapsed.total_seconds() * 1000,
                 }
 
