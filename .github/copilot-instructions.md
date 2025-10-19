@@ -7,21 +7,10 @@ ALL non-trivial steps (file edits, Docker changes, Langflow workflow additions, 
 - **Precedence**: Local first; fallback to root `../../.github/copilot-instructions.md`
 - **Conventions**: Follow `../sck-core-ui/docs/backend-code-style.md` for AWS + container service patterns (this module is NOT deployed as Lambda)
 
-## 🤖 LLM TERMINAL EXECUTION PROTOCOL 🤖
-
-**ABSOLUTE RULES - NO EXCEPTIONS:**
-
-**RULE_001_USE_ACTIVE_TERMINAL**: ALWAYS use the currently active terminal - it already has the correct environment
-
-**RULE_002_VERIFY_WITH_LAST_COMMAND**: Use `terminal_last_command` to confirm terminal is in correct project directory
-
-**RULE_003_NO_ENVIRONMENT_MANAGEMENT**: NEVER try to activate virtual environments - user has already configured each terminal
-
-**RULE_004_TRUST_EXISTING_SETUP**: If terminal shows correct directory, trust that environment is correct
-
-**RULE_005_MODULE_NOT_FOUND_MEANS_WRONG_TERMINAL**: If "ModuleNotFoundError", ask user to switch to correct terminal instead of trying to fix environment
-
-**ENFORCEMENT**: Use existing configured terminals. Stop trying to manage environments.
+## Backward Compatibility (Explicitly Forbidden)
+- Do **not** implement fallback, legacy, or backward-compatibility branches in this submodule.
+- Prefer removing obsolete code paths instead of guarding them with feature flags.
+- When behavior changes, update dependent callers/tests rather than adding shims.
 
 ## 🧪 UV Command Formulation (Mandatory)
 
@@ -36,6 +25,10 @@ This complements the terminal protocol above: use the existing terminal, do not 
 ## 🔧 CORE_LOGGING USAGE PROTOCOL 🔧
 
 **RULE_101_LOGGING_IMPORT**: Always import as `import core_logging as log`
+
+**CORRELATION_ID**: Use `log.set_correlation_id("value")` at start of request/operation to set context. This is thread_local and works in async/multi-threaded code.
+
+**JSON_LOGGING**: Logs by default are strings, to use JSON, set the environment variable LOG_AS_JSON=true.  The variable is inspected at each new handler creation, so it can be toggled when you add a new identity.  Best to assume this is handled at boot time.
 
 **RULE_102_LOGGER_ASSIGNMENT**: Use `import core_logging as log` (NOT `log.get_logger()`)
 
@@ -56,8 +49,6 @@ This complements the terminal protocol above: use the existing terminal, do not 
 **RULE_203_NO_SYS_PATH_HACKS**: NEVER manipulate sys.path or use hacky import workarounds
 
 **RULE_204_ASK_FOR_STRUCTURE**: When needing new Python files or modules, ASK the developer how they want the structure organized
-
-**RULE_205_INDIVIDUAL_FUNCTIONS_ONLY**: Claude can generate good individual Python functions and classes, but cannot architect proper module structure
 
 **EXAMPLES OF FORBIDDEN PATTERNS**:
 ```python
@@ -84,32 +75,12 @@ from local_module import something
 - **SCK Framework Compliance**: Use `core_framework`, `core_logging`, `core_helper.aws` for consistency with other modules
 - **Async/Sync Strategy**: Prefer synchronous core execution for determinism; async allowed for I/O parallelism (MCP, external API calls)
 
-### Container Service Entry Point (FastAPI)
-```python
-from fastapi import FastAPI
-import core_logging as log
-
-app = FastAPI()
-
-@app.post("/ai/generate")
-def generate(payload: dict):
-    """Generate AI content using Langflow flow execution (sync core path)."""
-    result = langflow_client.process_sync(payload)
-    return {"status": "success", "data": result}
-```
-
 ### MCP Server Patterns
-```python
-# CORRECT: Async MCP server methods
-from mcp import types
-import asyncio
-
-async def handle_lint_yaml(arguments: dict) -> types.TextContent:
-    # Convert to sync Langflow call in thread pool
-    loop = asyncio.get_event_loop()
-    result = await loop.run_in_executor(None, langflow_client.process_sync, arguments)
-    return types.TextContent(text=json.dumps(result))
-```
+- **Tool Exposure**: Each agent function exposed as an MCP tool with clear type annotations
+- **Input Validation**: Validate and sanitize all inputs at the MCP tool boundary
+- **Error Handling**: Convert exceptions to structured SCK error responses
+- **Logging**: Use `core_logging` with `import core_logging as log` for structured logs with correlation IDs.  On entry point, set correlation ID from request context with `log.set_correlation_id(...)`
+- **FastMCP**: Utilize the FastMCP server framework for efficient request handling and concurrency
 
 ### Langflow Integration Standards
 - **Flow Management**: Store flows in `langflow/` directory as JSON exports
@@ -132,86 +103,11 @@ async def handle_lint_yaml(arguments: dict) -> types.TextContent:
 4. **Security Analysis**: IAM policies, security groups, encryption
 5. **Cost Optimization**: Resource sizing recommendations
 
-### Response Envelope Standards
-```python
-# CORRECT: Structured validation response
-{
-    "status": "success",
-    "code": 200, 
-    "data": {
-        "valid": False,
-        "errors": [
-            {
-                "line": 42,
-                "column": 10,
-                "severity": "error",
-                "code": "CF001",
-                "message": "Invalid resource type",
-                "suggestion": "Use AWS::EC2::Instance instead"
-            }
-        ],
-        "warnings": [...],
-        "suggestions": [...],
-        "metrics": {
-            "processing_time_ms": 150,
-            "langflow_execution_id": "uuid"
-        }
-    }
-}
-```
-
 ### Code Completion Patterns
 - **Context-Aware**: Parse existing template structure for relevant suggestions
 - **Resource-Specific**: Tailor completions based on CloudFormation resource types
 - **Best Practices**: Include security and cost optimization in suggestions
 - **Multi-Format**: Support both YAML and JSON CloudFormation templates
-
-## Development Workflow Standards
-
-{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVersion": "2024-11-05", "capabilities": {"tools": {}}, "clientInfo": {"name": "test-client", "version": "1.0.0"}}}### Local Development Setup (Hybrid Approach)
-
-**CRITICAL**: uv has limitations with local wheel installations. Use this proven hybrid approach:
-
-```bash
-# Step 1: Build sck-core-framework wheel first
-cd ../sck-core-framework
-uv build                    # Creates wheel in dist/
-
-# Step 2: Create and activate virtual environment manually
-cd ../sck-core-ai
-python -m venv .venv           # Create clean venv
-.\.venv\Scripts\Activate.ps1   # Windows PowerShell
-# OR
-source .venv/bin/activate      # Linux/Mac
-
-# Step 3: Install local wheel with pip (RELIABLE)
-pip install ../sck-core-framework/dist/sck_core_framework-*.whl
-
-# Step 4: Install remaining dependencies with uv (FAST)
-uv pip install -e .            # Install current project in editable mode
-uv pip install pytest black flake8 mypy  # Dev dependencies
-
-# Step 5: Verify installation
-python -c "import core_logging; print('Success!')"
-pytest                         # Run tests
-```
-
-### Why This Hybrid Approach?
-
-- **Manual venv**: Full control, no hidden uv magic
-- **pip for local wheels**: Mature, reliable installation
-- **uv for PyPI packages**: Fast, modern dependency resolution
-- **Predictable**: Works every time, no surprises
-
-### Alternative: Pure Traditional Approach
-```bash
-# If uv continues to cause issues, use pure pip:
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install ../sck-core-framework/dist/sck_core_framework-*.whl
-pip install -e .
-pip install -r requirements-dev.txt  # If you create this file
-```
 
 ### Testing Requirements
 - **Unit Tests**: Individual agent functions and Langflow integrations
@@ -225,7 +121,24 @@ pip install -r requirements-dev.txt  # If you create this file
 - Napoleon extension will convert Google format to RST for Sphinx processing
 - Avoid direct RST syntax (`::`, `:param:`, etc.) in docstrings - use Google format instead
 - Example sections should use `>>>` for doctests or simple code examples
-- This ensures proper IDE interpretation while maintaining clean Sphinx documentation
+  - Examples and code in docstring should include a single >>> prompt line, followed by indented code lines and is terminated with a blank line.
+  ```python
+  def code():
+    """ Example function.
+
+    Example:
+    >>> # Code comment
+        code()  
+        42
+        .
+        sample = 43
+        assert sample == 43
+    
+    Returns:
+        int: The answer to life, the universe, and everything.
+    """
+    return 42
+  ```
 
 ## Contradiction Detection & Resolution
 
@@ -246,56 +159,6 @@ pip install -r requirements-dev.txt  # If you create this file
 - **API Consistency**: REST endpoints must follow SCK envelope format from `../sck-core-ui/docs/backend-code-style.md`
 - **Authentication**: When deployed, respect SCK auth patterns for protected endpoints
 - **Monitoring**: Use `core_logging` for structured logs compatible with SCK observability
-
-## Example Implementations
-
-### Langflow Workflow Structure
-```json
-{
-  "flow_id": "yaml-linter-v1",
-  "nodes": [
-    {
-      "id": "input",
-      "type": "TextInput", 
-      "data": {"input_key": "yaml_content"}
-    },
-    {
-      "id": "parser",
-      "type": "YAMLParser",
-      "inputs": {"text": "input.output"}
-    },
-    {
-      "id": "validator", 
-      "type": "CloudFormationValidator",
-      "inputs": {"parsed_yaml": "parser.output"}
-    },
-    {
-      "id": "ai_suggestions",
-      "type": "OpenAIChat",
-      "inputs": {"context": "validator.errors"}
-    }
-  ]
-}
-```
-
-### MCP Server Tool Definition
-```python
-@mcp_server.tool()
-async def lint_cloudformation_template(
-    template: str,
-    region: str = "us-east-1",
-    strict: bool = True
-) -> str:
-    """
-    Validate CloudFormation template with AI-powered suggestions.
-    
-    Args:
-        template: CloudFormation template (YAML or JSON)
-        region: AWS region for validation context
-        strict: Enable strict validation rules
-    """
-    # Implementation using Langflow
-```
 
 ## Standalone Clone Note
 

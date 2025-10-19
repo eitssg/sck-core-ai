@@ -8,6 +8,7 @@ documentation and codebase indexes for AI assistant queries.
 from typing import Any, Dict, List, Optional, Tuple
 from pathlib import Path
 import os
+from operator import itemgetter
 
 import core_logging as log
 
@@ -211,11 +212,10 @@ class ContextManager:
         if weights:
             allocations = self._allocate_counts_multi(max_results, weights)
         else:
-            # Backward compatibility with older two-weight strategy
-            d, c = self._allocate_counts(
-                max_results, strategy_config.get("doc_weight", 0.0), strategy_config.get("code_weight", 0.0)
-            )
-            allocations = {"documentation": d, "codebase": c, "consumables": 0, "actions": 0}
+            # return error or no weighted allocation
+            doc_weight = strategy_config.get("doc_weight", 0.5)
+            code_weight = strategy_config.get("code_weight", 0.5)
+            allocations = {"documentation": doc_weight, "codebase": code_weight, "consumables": 0, "actions": 0}
 
         context = {
             "query": query,
@@ -289,7 +289,7 @@ class ContextManager:
                     "documentation": strategy_config.get("doc_weight", 0),
                     "codebase": strategy_config.get("code_weight", 0),
                 }
-                ordered = sorted(weights_for_topup.items(), key=lambda kv: kv[1], reverse=True)
+                ordered = sorted(weights_for_topup.items(), key=itemgetter(1), reverse=True)
                 for src, _w in ordered:
                     if shortfall <= 0:
                         break
