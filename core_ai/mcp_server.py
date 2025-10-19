@@ -696,7 +696,12 @@ async def explain_sck_concepts() -> Sequence[TextContent]:
         return process_exception(e)
 
 
-if __name__ == "__main__":
-    # Run the async main method
+def main():
+    """Main entry point for MCP server."""
     log.info("Starting MCP stdio transport")
     mcp.run(transport="stdio")
+
+
+if __name__ == "__main__":
+    # Run the async main method
+    main()
